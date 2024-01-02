@@ -1,0 +1,398 @@
+---
+title: "Example Notebook to Analyse and Visualize Data from a Micro Scenario-based Study"
+author:
+  - name: "Philipp Brauner"
+    orcid: 0000-0003-2837-5181
+    affiliation: 
+      - name: RWTH Aachen University, Communication Science
+        city: Aachen
+        country: Germany
+        url: www.comm.rwth-aachen.de
+date-format: long
+doi: "not yet"
+title-block-banner: "true"
+abstract: > 
+  This is an example R notebook that examplifies the analysis and visualization of micro scenario-based studies. Micro scenarios are an approach to assess the social acceptance of technologies and their determining factors and a visual-spatial mapping of the outcomes. They facilitate the assessment of many technologies in parallel, a ranking of the technologies based on different criteria, and an analysis of which individual factors and technology-based attributions relate to the overall assessment of the technologies. Based on senthetic survey data, the notebook illustrates how to recode the data, how to aggregate scenario evaluations as user factors, how the topic evaluations can be calculated, and they can be visualized using the programming language R, ggplot and tidycverse.
+keywords:
+  - Micro scenarios
+  - R
+funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG,
+German Research Foundation) under Germany’s Excellence Strategy — EXC-
+2023 Internet of Production — 390621612."
+---
+
+# Introduction
+
+The micro scenario approach facilitates measuring people's perception of various topics, and relating them to individual user factors (research perspective 1), a ranking of these topics, and a visio-spatial mapping to identify conflicting issues (research perspective 2).
+
+An example may be the analysis of the risk-utility tradeoffs between different technologies: Do people have different risk or utility dispositions, do people assign different risks and utilities to different technologies, are the risk-utility trade-offs compareable for different technologies and can the risk-utility tradeoff be quantified.
+
+The main article presents details on this approach and outlines how to design and analyse studies. You can find and cite the main article here:
+
+-   Brauner, P. et al. (2024), Visual Maps of Technology Acceptance -- Spatial Mapping of Factors Influencing Social Acceptance of Technologies Using Micro Scenarios, XXX
+
+This notebook exemplifies the calculation of data for the the two different research perspectives (as user factor and as topic factor) of the micro scenario approach using R. Of course, all transformation can equally be done in other software packages.
+
+For this example, we use synthetic data that is simulated but similar to real survey data. This makes it easier to follow our approach, as the data has not to be cleaned from unneccessary variables or erroneous inputs form participants. Further, the data clearly follows the pre-specified properties.
+
+The remainder of this notebook is structured as follows: First, we load the required packages, then we create synthetic data that we use as our input (replace this with your real data). Second, we transform the data into the long format (see, for example, <https://tidyr.tidyverse.org/reference/pivot_longer.html>), then we analyse the data as a user factor (perspective 1), and then as a topic factor (perspective 2); including a visualization of the outcomes.
+
+# Preparation
+
+## Load required libraries.
+
+For the actual analysis, we build on the `tidyverse` and `ggplot` packages. For creating the synthetic data, we further use the `faux` package that allows the generation of data based on specific properties (e.g., pre-defined means and correlations between the variables).
+
+```{r LOADLIBRARIES}
+# Creating the fake data builds on this site
+# https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html
+library(faux)    # create simulated data based on given properties
+library(matrixcalc)
+library(tidyverse)
+library(scales)  # format_percent
+library(ggplot2) # graphics
+library(ggrepel) # label placement in the scatter plot
+library(knitr)   # Tables
+```
+
+## Create Synthetic Data
+
+For this demo, we will use synthetic data that simulates the properties from real survey data. Here, we first create a dataset that is similar to data from the survey tool Qualtrics. The figure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
+
+![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center"}
+
+The created data set will contain several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then N=12 (adjustable) topic assessments with two variables for each evaluation dimension for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
+
+For the synthetic data, we have N topics and two evaluation dimensions and define that they should be inversly correlated and have an intercept. We further define that the evaluations of the first and the second evaluation dimension are strongly correlated within and negatively correlated between the topics. The data is randomized to roughly but not exactly fit to this scheme (as if it was randomly drawn from a population parametrized this way).
+
+The variables for the topic evaluations must follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
+
+```{r CREATEDATA}
+N <- 12  # number of topics to simulate
+
+# Generate mean evaluations A and B, inversly correlated and with some noise, and an intercept
+evaluationA <- numeric(N)
+evaluationB <- numeric(N)
+for (i in 1:N) {
+  evaluationA[i] <- (N/2-i)/(N+4) + rnorm(1, mean=0, sd=0.05)
+  evaluationB[i] <- 1/6 - (N/2-i)/(2*N) + rnorm(1, mean=0, sd=0.05) 
+}
+
+# Generate a correlation matrix with random correlations in the specified range
+generate_cor_matrix <- function(n, range = c(0.2, 0.6)) {
+  corr_values <- matrix(runif(n^2, range[1], range[2]), nrow = n)
+  for (i in 1:n) {
+    for(j in 1:n) {
+      corr_values[i,j] = max(-1, min(1, corr_values[i,j])) # check bounds
+    }
+  }
+  for (i in 1:n) {
+    for(j in 1:n) {
+      corr_values[i,j] = corr_values[j,i] # symmetric please
+    }
+  }
+  diag(corr_values) <- 1  # Set diagonal to 1
+  corr_values
+}
+
+# Generating covariance matrices for variables A and B
+cor_matrix_A <- generate_cor_matrix(N)
+cor_matrix_B <- generate_cor_matrix(N, range = c(0.3, 0.5))
+
+# Generating negative correlations between variables A and B
+negative_corr <- -.25     # r between A and B
+cor_matrix_AB <- matrix(negative_corr, nrow = N, ncol = N)
+
+# Combining covariance matrices for A, A and B, and B
+# Must be symmetric and positive-definite
+cor_matrix <- matrix(0, nrow = 2 * N, ncol = 2 * N)
+cor_matrix[1:N, 1:N] <- cor_matrix_A # upper-left
+cor_matrix[(N + 1):(2 * N), (N + 1):(2 * N)] <- cor_matrix_B # lower-right
+cor_matrix[1:N, (N + 1):(2 * N)] <- cor_matrix_AB 
+cor_matrix[(N + 1):(2 * N), 1:N] <- t(cor_matrix_AB) #transposed for neg. covariances
+```
+
+Check if we can continue. Why? We need a symmetric and positive-definite matrix to generate our random data based on the defined parameters. A correlation matrix is by definition symmetric and positive semi-definite. If we now encounter a correlation matrix that's not positive semi-definite, it could be due to numerical precision issues or errors in computation, especially when dealing with very large matrices or when there are near-linear dependencies between variables. Then repeate the steps above. It should work out after a few tries...
+
+Note: Suggestions on how to fix this are appreciated. This is not required if you already have real survey data, as it only affects the creation of synthetic data.
+
+```{r include=FALSE}
+print(paste0("Diagnostics for simulated correlation matrix:"))
+print(paste0(" - isSemmetric: ", isSymmetric(cor_matrix)))
+print(paste0(" - is positiv-definite: ", is.positive.definite(cor_matrix)))
+```
+
+Now create the synthetic data based on the previously defined means and correlation parameters. Name the variables following the required schema. We provide population parameters and draw a random sample based on these.
+
+```{r}
+combinedMeans = c(evaluationA, evaluationB)
+varnames <- c(paste0("a", 1:N, "_matrix_1"), paste0("a", 1:N, "_matrix_2"))
+
+data <- rnorm_multi(
+  varnames = varnames,
+  n = 100, # sample size, i.e., number of participants in the survey
+  mu = combinedMeans,
+  sd = 0.25,
+  r = cor_matrix,
+  empirical = FALSE
+)
+```
+
+## Recode data
+
+First, ensure that the bounds are met (e.g., values between -1 and +1; due to the random sampling, this may otherwise not always be the case). Next, convert the percent scores to the typical survey data domain, i.e., discrete values from 1 to 7.
+
+```{r}
+data <- as.data.frame(data) %>%
+  dplyr::mutate(across(everything(), ~ ifelse(. < -1, -1, ifelse(. > 1, 1, .)))) %>%
+  dplyr::mutate(across(everything(), ~ (.+1)/2)) %>%
+  dplyr::mutate(across(everything(), ~ (6*.))) %>%
+  dplyr::mutate(across(everything(), ~ 1 + round(.)))
+```
+
+Lastly, let's add a participant ID and a poorly simulated user variable (calculated from the already simulated data and thus strongly correlated).
+
+```{r}
+data <- data %>%
+  dplyr::mutate(id = paste0("fakeparticipantid-", row_number())) %>%
+  dplyr::mutate(uservariable = rnorm_pre(a1_matrix_1+a2_matrix_1, mu = 10, sd = 2, r = 0.5)) %>%
+  dplyr::relocate(id, uservariable)
+```
+
+# Analysis of the data
+
+## Setup
+
+First, read the list of queried topics from a `.csv` file (can easily be adjusted to your needs). Second, define queried evaluation dimensions. Here, we have a vector of two dimensions, but one can define more depending on your research questions and survey.
+
+```{r}
+TOPICS <- read.csv2("matrixlabels.csv") 
+DIMENSIONS = c("risk", "utility")  
+```
+
+## Long Format
+
+Next, the topic evaluations from the survey data is transformed into the long format using `pivot_longer` (one row with a single value for each participant, topic, and evaluation dimension; one row per observation). Hereto, we use that the variables for the topic evaluations in the original data table have a systematic naming convention (see above).
+
+The resulting data set contains a participant identifier, identifier for the topic and the evaluation dimension, and lastly a column for the value. We use this format as the foundation for the later transformation steps.
+
+```{r SURVEYTOLONG}
+evaluationsLong <- data %>% 
+  # selects columns id and "aNUMBER_matrix_NUMBER" (scheme from loop&repeat)
+  dplyr::select(id, matches("a\\d+\\_matrix\\_\\d+")) %>%
+  tidyr::pivot_longer(
+    cols = matches("a\\d+\\_matrix\\_\\d+"), # topics and their evaluations
+    names_to = c("question", "dimension"),
+    names_pattern = "(.*)_matrix_(.*)",   # Separate topic ID and evaluation ID 
+    values_to = "value",
+    values_drop_na = FALSE) %>%
+    dplyr::mutate( dimension = as.numeric(dimension) ) %>%
+    dplyr::mutate( dimension = DIMENSIONS[dimension]) %>%  # change to readable dimension names
+    dplyr::mutate( value = -(((value - 1)/3) - 1))  # rescale value from [ 1...7 ] to [ -100%...100% ]
+```
+
+## Perspective 1: As user factor
+
+The first perspective offers a straight forward view on the data: For each evaluation dimension (e.g., *risk* and *utility*), we calculate average scores across all queried topics. These scores can be considered as a user factor or individual differences, e.g., one can study if these overall attributions differ between the participants and if they relate to other queried user factors (e.g, if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales).
+
+We then re-join these user factors with the original data using, for example, `dplyr::join_left()`. Afterwards, the calculated average evaluations can be considered as individual differences and related with other user factors from the survey.
+
+```{r PERSPECTIVE1_USERFACTOR}
+evaluationByParticipant <- evaluationsLong %>%
+  tidyr::pivot_wider(names_from = dimension, values_from = value) %>%
+  dplyr::group_by(id) %>%
+  dplyr::summarize(
+    across(
+      all_of( DIMENSIONS ),  # Select only evaluation dimensions
+      list( mean = ~mean(., na.rm = TRUE),
+            median = ~median(., na.rm = TRUE),
+            sd = ~sd(., na.rm = TRUE)),
+      .names = "{.col}_{.fn}"  # Scheme to define column names
+    ), .groups="drop"
+  ) %>%
+  dplyr::left_join(data, by="id")
+```
+
+#### Example research questions:
+
+How is the average perceived *risk* of the participants?
+
+```{r PERSPECTIVE1_VARIABLESUMMARYRISK}
+summary(evaluationByParticipant$risk_mean)
+```
+
+How is the average perceived *utility* of the participants?
+
+```{r PERSPECTIVE1_VARIABLESUMMARYUZTILITY}
+summary(evaluationByParticipant$utility_mean)
+```
+
+Does *uservariable* from the survey correlate to *risk*?
+
+```{r PERSPECTIVE1_USERVARIABLECORRELATION}
+cor(evaluationByParticipant$risk_mean,
+    evaluationByParticipant$uservariable)
+```
+
+Does uservariable correlate with the average *perceived utility*?
+
+```{r}
+cor(evaluationByParticipant$utility_mean,
+    evaluationByParticipant$uservariable)
+```
+
+## Perspective 2: Topic factors
+
+Next, we delve into the analysis of the topic evaluations. First, we report the average evaluations (e.g, *risk* and *utility*) across all queried topics.
+
+### Calculate Average evaluations
+
+Based on the long format, we group by evaluation dimension and aggregate across all topics and participants. Note: For full sampling, the results are the same as for perspective 1 (see above).
+
+```{r PERSPECTIVE2_OVERVIEW}
+# MEAN and SD of all evaluation dimensions across all queried topics
+evaluationByDimension <- evaluationsLong %>%
+  dplyr::group_by( dimension ) %>%
+  dplyr::summarise( mean = mean(value, na.rm = TRUE),
+                    sd = sd(value, na.rm = TRUE),
+                    .groups="drop")
+
+knitr::kable(
+  evaluationByDimension)
+```
+
+### Plot average evaluations across all topics and participants
+
+```{r PERSPECTIVE2_PLOTOVERVIEW}
+# Plot the average evaluations across all topics and participants
+overallDimension <- ggplot(evaluationByDimension,
+  aes(x = dimension, y = mean)) + 
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = percent_format(),
+                     limits=c( -1, +1 )) +
+  labs(x = "Evaluation Dimension",
+       y = "Values",
+       title = "Average Evaluation across all Dimensions and Participants")
+overallDimension
+```
+
+### Prepare Individual Topics
+
+We now calculate the average evaluations for each topic across all participants. The resulting data frame has N rows for the number of topics we have queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., *risk* and *utility*). Lastly, we attach the labels for each topic using `dplyr::left_join()`. The figure shows how the resulting data is structured.
+
+![Resulting data format for the evaluation of the topics. Each row stores the mean evaluation (and its dispersion) of a topic. This data can then be further analysed.](figures/topicdata.png)
+
+The output can then be tabulated, sorted or filtered by highest/lowest evaluations, or visualized.
+
+```{r PERSPECTIVE2_TOPICFACTOR}
+# Average evaluation of the topics (as a topic factor)
+evaluationByTopic <-  evaluationsLong %>%
+  tidyr::pivot_wider(
+    names_from = dimension,
+    values_from = value) %>%
+  dplyr::group_by( question ) %>%
+  dplyr::summarize(
+    across(
+      all_of( DIMENSIONS ),  # Select the variables from var_names
+      list(mean = ~mean(., na.rm = TRUE),
+      	   sd = ~sd(., na.rm = TRUE)),
+      .names = "{.col}_{.fn}"    # Define column names for the results
+    ), .groups="drop"
+  ) %>%
+  dplyr::left_join(TOPICS, by="question") # attach question labels
+```
+
+Print a table with the results:
+
+```{r}
+knitr::kable(
+  evaluationByTopic %>%
+    dplyr::select(-question, -ends_with("_sd"), -shortlabel) %>%
+    dplyr::relocate(label))
+```
+
+### Topic Correlations
+
+We now analyse the correlation between the evaluation dimensions across the topics. In the example, we now study if the attribute *risk* is related to the attributed *utility* for the different topics under investigation. In this example, we have only two target variables for the topic evaluations. With more variables, one can also do more complex analyses, such as if a linear model with *risk* and *utility* explains the overall *valence* towards the queried topics.
+
+Note: We do not analyse the indivdual differences of the participants, but the correlations between the topics as attributed by the participants.
+
+```{r}
+evaluationByTopic %>%
+  dplyr::select(ends_with("_mean")) %>%
+  correlation::correlation()
+```
+
+### Visualize the Topics
+
+Lastly, the results are visualized as a scatter plot. The plot facilitates the visual identification of the spread of the topics on a spatial map defined by the evaluation dimension, if there is (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics have very different evaluations than the others (outliers).
+
+```{r PERSPECTIVE2_EXAMPLEPLOT}
+scatterPlot <- evaluationByTopic %>%
+  ggplot( aes( x = risk_mean,
+               y = utility_mean,
+               label = shortlabel)) + 
+  coord_cartesian(clip = "on") +
+  # diagonal line indicating where both dimensions are congruent 
+  annotate("segment",
+           x = -1, y = +1,
+           xend = +1, yend = -1,
+           colour = "black",
+           linewidth = 0.25,
+           linetype = 2) +
+  # Annotate the quadrants
+  geom_label(aes(x = -1, y = -1, label = "LOW RISK & LOW UTILITY"),
+             vjust = "middle", hjust = "inward",
+             size = 1.75,
+             label.size = NA, color="black", fill = "#c7ddf2") +
+  geom_label(aes(x = -1, y = +1, label = "LOW RISK & HIGH UTILITY"),
+             vjust = "middle", hjust = "inward",
+             size = 1.75,
+             label.size = NA, color="black", fill = "#c7ddf2") + 
+  geom_label(aes(x = +1, y = -1, label = "HIGH RISK & LOW UTILITY"),
+             vjust = "middle", hjust = "inward",
+             size = 1.75,
+             label.size = NA, color="black", fill = "#c7ddf2") + 
+  geom_label(aes(x = +1, y = +1, label = "HIGH RISK & HIGH UTILITY"),
+             vjust = "middle", hjust = "inward",
+             size = 1.75,
+             label.size = NA, color="black", fill = "#c7ddf2") + 
+  # add the labels...
+  geom_label_repel(
+    max.time = 3,
+    color = "black",
+    fill = "gray95",
+    force_pull   = 0,
+    max.overlaps = Inf,
+    ylim = c(-Inf, Inf),
+    xlim = c(-Inf, Inf),
+    segment.color ="#00549f",
+    segment.size = 0.25,
+    min.segment.length = 0,
+    size = 2.5,
+    label.size = NA,
+    label.padding = 0.105,
+    box.padding = 0.125
+  ) +
+  geom_point() +      # geom for the data points
+  geom_smooth(method = "lm", se = TRUE) +
+  labs( title = "Illustration of the risk-utility tradeoff ...",
+        x = "AVERAGE ESTIMATED RISK\n(without risk — risky)",
+        y = "AVERAGE ESTIMATED UTILITY\n(useless — useful)") +
+  scale_x_continuous(labels = percent_format()) +  # limits=c( -1, +1 )
+  scale_y_continuous(labels = percent_format()) # limits=c( -1, +1 )
+scatterPlot
+
+```
+
+# Closing remarks
+
+This notebook demonstrates how surveys based on the micro-scenario approach can be analyszed and visualized. It provides runnable code for studying both research perspectives (individual differences and topic evaluation) that can be adapted to fit your own survey and data.
+
+Please be aware of the limitations of this approach (e.g., when are point estimations admissible, can biased results occur due to to biased sampling of topics) and consult the main articles for further reference.
+
+# Acknowledgements
+
+This approach has evolved over a longer period of time and through several research projects. We would like to thank all those who have directly or indirectly, consciously or unconsciously, inspired us to take a closer look at this approach and who have given us the opportunity to apply this approach in various contexts.
+
+Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC- 2023 Internet of Production — 390621612.
