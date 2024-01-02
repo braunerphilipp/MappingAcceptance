@@ -307,7 +307,7 @@ Print a table with the results:
 ```{r}
 knitr::kable(
   evaluationByTopic %>%
-    dplyr::select(-question, -ends_with("_sd"), -shortlabel) %>%
+    dplyr::select(-question, -shortlabel) %>%
     dplyr::relocate(label))
 ```
 
@@ -328,6 +328,9 @@ evaluationByTopic %>%
 Lastly, the results are visualized as a scatter plot. The plot facilitates the visual identification of the spread of the topics on a spatial map defined by the evaluation dimension, if there is (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics have very different evaluations than the others (outliers).
 
 ```{r PERSPECTIVE2_EXAMPLEPLOT}
+#| fig-cap: "Scatter plot of the evaluations of the micro scenaris."
+#| warning: false
+
 scatterPlot <- evaluationByTopic %>%
   ggplot( aes( x = risk_mean,
                y = utility_mean,
