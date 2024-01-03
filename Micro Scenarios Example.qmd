@@ -96,7 +96,7 @@ The resulting data set contains a participant identifier, identifier for the top
 
 ```{r SURVEYTOLONG}
 evaluationsLong <- data %>% 
-  # selects columns id and "aNUMBER_matrix_NUMBER" (scheme from loop&repeat)
+  # selects columns id and "aNUMBER_matrix_NUMBER" (scheme from loop&merge)
   dplyr::select(id, matches("a\\d+\\_matrix\\_\\d+")) %>%
   tidyr::pivot_longer(
     cols = matches("a\\d+\\_matrix\\_\\d+"), # topics and their evaluations
