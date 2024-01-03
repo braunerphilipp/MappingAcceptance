@@ -1,0 +1,162 @@
+---
+title: "Simulate Data for Micro Scenario-Analysis and Visualisation"
+author:
+  - name: "Philipp Brauner"
+    orcid: 0000-0003-2837-5181
+    affiliation: 
+      - name: RWTH Aachen University, Communication Science
+        city: Aachen
+        country: Germany
+        url: www.comm.rwth-aachen.de
+date-format: long
+doi: "not yet"
+title-block-banner: "true"
+abstract: > 
+  This is an Quarto notebook to create synthetic data using the faux package to examplify the anaylsis and visualiation of micro scenarios. The generated dataset is similar to data sets exported by Qualtrics and its Loop & Merge function. The data has some predefined properties, such as well-defined means and correlations within and between the evaluation dimensions.
+keywords:
+  - Micro scenarios
+  - R
+funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG,
+German Research Foundation) under Germany’s Excellence Strategy — EXC-
+2023 Internet of Production — 390621612."
+---
+
+# Introduction
+
+# Load libraries
+
+For the actual analysis, we build on the `tidyverse` and `ggplot` packages. For creating the synthetic data, we further use the `faux` package that allows the generation of data based on specific properties (e.g., pre-defined means and correlations between the variables).
+
+```{r LOADLIBRARIES}
+# Creating the fake data builds on this site
+# https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html
+library(faux)    # create simulated data based on given properties
+library(matrixcalc)
+library(tidyverse)
+library(scales)  # format_percent
+library(ggplot2) # graphics
+library(ggrepel) # label placement in the scatter plot
+library(knitr)   # Tables
+```
+
+# Create Synthetic Data
+
+Here, we create synthetic data that simulates the properties from real survey data. Here, we first create a dataset that is similar to data from the survey tool Qualtrics.
+The figure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
+
+![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center"}
+
+The created data set will contain several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then N=12 (adjustable) topic assessments with two variables for each evaluation dimension for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
+
+For the synthetic data, we have N topics and two evaluation dimensions and define that they should be inversely correlated and have an intercept.
+
+```{r DATAPOINTS}
+N <- 12  # number of topics to simulate
+
+# Generate mean evaluations A and B, inversly correlated and with some noise, and an intercept
+evaluationA <- numeric(N)
+evaluationB <- numeric(N)
+for (i in 1:N) {
+  evaluationA[i] <- (N/2-i)/(N+4) + rnorm(1, mean=0, sd=0.05)
+  evaluationB[i] <- 1/6 - (N/2-i)/(2*N) + rnorm(1, mean=0, sd=0.05) 
+}
+
+combinedMeans = c(evaluationA, evaluationB)
+```
+
+The variables for the topic evaluations must follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
+```{r DEFINEVARIABLENAMES}
+varnames <- c(paste0("a", 1:N, "_matrix_1"), paste0("a", 1:N, "_matrix_2"))
+```
+
+We further define that the evaluations of the first and the second evaluation dimension are strongly correlated within and negatively correlated between the topics. The data is randomized to roughly but not exactly fit to this scheme (as if it was randomly drawn from a population parametrized this way).
+
+```{r DATACORRELATIONS}
+# Generate correlation matrix with random correlations in the specified range
+generate_cor_matrix <- function(n, range = c(0.2, 0.6)) {
+  corr_values <- matrix(runif(n^2, range[1], range[2]), nrow = n)
+  for (i in 1:n) {
+    for(j in 1:n) {
+      corr_values[i,j] = max(-1, min(1, corr_values[i,j])) # check bounds
+    }
+  }
+  for (i in 1:n) {
+    for(j in 1:n) {
+      corr_values[i,j] = corr_values[j,i] # symmetric please
+    }
+  }
+  diag(corr_values) <- 1  # Set diagonal to 1
+  corr_values
+}
+
+# Generating covariance matrices for variables A and B
+cor_matrix_A <- generate_cor_matrix(N)
+cor_matrix_B <- generate_cor_matrix(N, range = c(0.3, 0.5))
+
+# Generating negative correlations between variables A and B
+negative_corr <- -.25     # r between A and B
+cor_matrix_AB <- matrix(negative_corr, nrow = N, ncol = N)
+
+# Combining covariance matrices for A, A and B, and B
+# Must be symmetric and positive-definite
+cor_matrix <- matrix(0, nrow = 2 * N, ncol = 2 * N)
+cor_matrix[1:N, 1:N] <- cor_matrix_A # upper-left
+cor_matrix[(N + 1):(2 * N), (N + 1):(2 * N)] <- cor_matrix_B # lower-right
+cor_matrix[1:N, (N + 1):(2 * N)] <- cor_matrix_AB 
+cor_matrix[(N + 1):(2 * N), 1:N] <- t(cor_matrix_AB) #transposed for neg. covariances
+```
+
+# Check the validity of the data
+
+Check if we can continue. Why? We need a symmetric and positive-definite matrix to generate our random data based on the defined parameters. A correlation matrix is by definition symmetric and positive semi-definite. If we now encounter a correlation matrix that's not positive semi-definite, it could be due to numerical precision issues or errors in computation, especially when dealing with very large matrices or when there are near-linear dependencies between variables. Then repeate the steps above. It should work out after a few tries...
+
+Note: Suggestions on how to fix this are appreciated. This is not required if you already have real survey data, as it only affects the creation of synthetic data.
+
+```{r CHECKVALIDITY, include=FALSE}
+print(paste0("Diagnostics for simulated correlation matrix:"))
+print(paste0(" - isSemmetric: ", isSymmetric(cor_matrix)))
+print(paste0(" - is positiv-definite: ", is.positive.definite(cor_matrix)))
+```
+
+Now we create the synthetic data based on the previously defined means and correlation parameters. Name the variables following the required schema. We provide population parameters and draw a random sample based on these.
+
+```{r GENERATEDATAMATRIX}
+data <- rnorm_multi(
+  varnames = varnames,
+  n = 100, # sample size, i.e., number of participants in the survey
+  mu = combinedMeans,
+  sd = 0.25,
+  r = cor_matrix,
+  empirical = FALSE
+)
+```
+
+# Recode data
+
+Lastly, we record the data to resemble typical survey data. First, ensure that the bounds are met (e.g., values between -1 and +1; due to the random sampling, this may otherwise not always be the case). Next, convert the percent scores to the typical survey data domain, i.e., discrete values from 1 to 7.
+
+```{r BOUNDSANDDISCRETISATION}
+data <- as.data.frame(data) %>%
+  dplyr::mutate(across(everything(), ~ ifelse(. < -1, -1, ifelse(. > 1, 1, .)))) %>%
+  dplyr::mutate(across(everything(), ~ (.+1)/2)) %>%
+  dplyr::mutate(across(everything(), ~ (6*.))) %>%
+  dplyr::mutate(across(everything(), ~ 1 + round(.)))
+```
+
+Lastly, let's add a participant ID and a simulated user variable (calculated from the already simulated data and thus strongly correlated).
+
+```{r ADDEXTRAVARIABLES}
+data <- data %>%
+  dplyr::mutate(id = paste0("fakeparticipantid-", row_number())) %>%
+  dplyr::mutate(uservariable = rnorm_pre(a1_matrix_1+a2_matrix_1, mu = 10, sd = 2, r = 0.5)) %>%
+  dplyr::relocate(id, uservariable)
+```
+
+# Save data
+
+Finally, we save the generated data to a RDS file for the actual analysis and visualization. The main notebook uses this data.
+
+```{r SAVEDATA}
+saveRDS(data, "syntheticdata.rds")
+```
+

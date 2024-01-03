@@ -12,42 +12,39 @@ date-format: long
 doi: "not yet"
 title-block-banner: "true"
 abstract: > 
-  This is an example R notebook that examplifies the analysis and visualization of micro scenario-based studies. Micro scenarios are an approach to assess the social acceptance of technologies and their determining factors and a visual-spatial mapping of the outcomes. They facilitate the assessment of many technologies in parallel, a ranking of the technologies based on different criteria, and an analysis of which individual factors and technology-based attributions relate to the overall assessment of the technologies. Based on senthetic survey data, the notebook illustrates how to recode the data, how to aggregate scenario evaluations as user factors, how the topic evaluations can be calculated, and they can be visualized using the programming language R, ggplot and tidycverse.
+  This is an example R notebook that examplifies the analysis and visualization of micro scenario-based studies. Micro scenarios are an approach to assess the social acceptance of technologies and their determining factors and a visual-spatial mapping of the outcomes. They facilitate the assessment of many technologies in parallel, a ranking of the technologies based on different criteria, and an analysis of which individual factors and technology-based attributions relate to the overall assessment of the technologies. Based on senthetic survey data (seperate notebook), the notebook illustrates how to recode the data, how to aggregate scenario evaluations as user factors, how the topic evaluations can be calculated, and they can be visualized using the programming language R, ggplot and tidycverse.
 keywords:
   - Micro scenarios
   - R
-funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG,
-German Research Foundation) under Germany’s Excellence Strategy — EXC-
-2023 Internet of Production — 390621612."
+funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC-2023 Internet of Production — 390621612."
+editor: 
+  markdown: 
+    wrap: sentence
 ---
 
 # Introduction
 
 The micro scenario approach facilitates measuring people's perception of various topics, and relating them to individual user factors (research perspective 1), a ranking of these topics, and a visio-spatial mapping to identify conflicting issues (research perspective 2).
 
-An example may be the analysis of the risk-utility tradeoffs between different technologies: Do people have different risk or utility dispositions, do people assign different risks and utilities to different technologies, are the risk-utility trade-offs compareable for different technologies and can the risk-utility tradeoff be quantified.
+An example may be the analysis of the risk-utility trade-offs between different technologies: Do people have different risk or utility dispositions, do people assign different risks and utilities to different technologies, are the risk-utility trade-offs comparable for different technologies and can the risk-utility trade-off be quantified.
 
 The main article presents details on this approach and outlines how to design and analyse studies. You can find and cite the main article here:
 
 -   Brauner, P. et al. (2024), Visual Maps of Technology Acceptance -- Spatial Mapping of Factors Influencing Social Acceptance of Technologies Using Micro Scenarios, XXX
 
-This notebook exemplifies the calculation of data for the the two different research perspectives (as user factor and as topic factor) of the micro scenario approach using R. Of course, all transformation can equally be done in other software packages.
+This notebook exemplifies the calculation of data for the the two different research perspectives (perspective 1: as user factor and perspective 2: as topic factor) of the micro scenario approach using R. Of course, all transformation can equally be done with other software.
 
-For this example, we use synthetic data that is simulated but similar to real survey data. This makes it easier to follow our approach, as the data has not to be cleaned from unneccessary variables or erroneous inputs form participants. Further, the data clearly follows the pre-specified properties.
+For this example, we use synthetic data that is simulated but similar to real survey data. This makes it easier to follow our approach, as the data has not to be cleaned from unnecessary variables or erroneous inputs form participants. Further, the data clearly follows the pre-specified properties. The creation of the synthetic data is presented in the companion notebook in the same folder.
 
 The remainder of this notebook is structured as follows: First, we load the required packages, then we create synthetic data that we use as our input (replace this with your real data). Second, we transform the data into the long format (see, for example, <https://tidyr.tidyverse.org/reference/pivot_longer.html>), then we analyse the data as a user factor (perspective 1), and then as a topic factor (perspective 2); including a visualization of the outcomes.
 
 # Preparation
 
-## Load required libraries.
+## Load required libraries
 
 For the actual analysis, we build on the `tidyverse` and `ggplot` packages. For creating the synthetic data, we further use the `faux` package that allows the generation of data based on specific properties (e.g., pre-defined means and correlations between the variables).
 
 ```{r LOADLIBRARIES}
-# Creating the fake data builds on this site
-# https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html
-library(faux)    # create simulated data based on given properties
-library(matrixcalc)
 library(tidyverse)
 library(scales)  # format_percent
 library(ggplot2) # graphics
@@ -55,111 +52,28 @@ library(ggrepel) # label placement in the scatter plot
 library(knitr)   # Tables
 ```
 
-## Create Synthetic Data
+## Load Data
 
-For this demo, we will use synthetic data that simulates the properties from real survey data. Here, we first create a dataset that is similar to data from the survey tool Qualtrics. The figure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
+For this demo, we will load synthetic data that simulates the properties from real survey data.
 
-![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center"}
+The strucutre of the data is very similar to the data export from the survey tool Qualtrics. The creation of the synthetic data is documented in the companion notebook in the same folder.
 
-The created data set will contain several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then N=12 (adjustable) topic assessments with two variables for each evaluation dimension for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
-
-For the synthetic data, we have N topics and two evaluation dimensions and define that they should be inversly correlated and have an intercept. We further define that the evaluations of the first and the second evaluation dimension are strongly correlated within and negatively correlated between the topics. The data is randomized to roughly but not exactly fit to this scheme (as if it was randomly drawn from a population parametrized this way).
-
-The variables for the topic evaluations must follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
-
-```{r CREATEDATA}
-N <- 12  # number of topics to simulate
-
-# Generate mean evaluations A and B, inversly correlated and with some noise, and an intercept
-evaluationA <- numeric(N)
-evaluationB <- numeric(N)
-for (i in 1:N) {
-  evaluationA[i] <- (N/2-i)/(N+4) + rnorm(1, mean=0, sd=0.05)
-  evaluationB[i] <- 1/6 - (N/2-i)/(2*N) + rnorm(1, mean=0, sd=0.05) 
-}
-
-# Generate a correlation matrix with random correlations in the specified range
-generate_cor_matrix <- function(n, range = c(0.2, 0.6)) {
-  corr_values <- matrix(runif(n^2, range[1], range[2]), nrow = n)
-  for (i in 1:n) {
-    for(j in 1:n) {
-      corr_values[i,j] = max(-1, min(1, corr_values[i,j])) # check bounds
-    }
-  }
-  for (i in 1:n) {
-    for(j in 1:n) {
-      corr_values[i,j] = corr_values[j,i] # symmetric please
-    }
-  }
-  diag(corr_values) <- 1  # Set diagonal to 1
-  corr_values
-}
-
-# Generating covariance matrices for variables A and B
-cor_matrix_A <- generate_cor_matrix(N)
-cor_matrix_B <- generate_cor_matrix(N, range = c(0.3, 0.5))
-
-# Generating negative correlations between variables A and B
-negative_corr <- -.25     # r between A and B
-cor_matrix_AB <- matrix(negative_corr, nrow = N, ncol = N)
-
-# Combining covariance matrices for A, A and B, and B
-# Must be symmetric and positive-definite
-cor_matrix <- matrix(0, nrow = 2 * N, ncol = 2 * N)
-cor_matrix[1:N, 1:N] <- cor_matrix_A # upper-left
-cor_matrix[(N + 1):(2 * N), (N + 1):(2 * N)] <- cor_matrix_B # lower-right
-cor_matrix[1:N, (N + 1):(2 * N)] <- cor_matrix_AB 
-cor_matrix[(N + 1):(2 * N), 1:N] <- t(cor_matrix_AB) #transposed for neg. covariances
+```{r LOADDATA}
+  data <- readRDS("syntheticdata.rds")
+  str(data)
 ```
 
-Check if we can continue. Why? We need a symmetric and positive-definite matrix to generate our random data based on the defined parameters. A correlation matrix is by definition symmetric and positive semi-definite. If we now encounter a correlation matrix that's not positive semi-definite, it could be due to numerical precision issues or errors in computation, especially when dealing with very large matrices or when there are near-linear dependencies between variables. Then repeate the steps above. It should work out after a few tries...
+@fig-surveysdatastructure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
 
-Note: Suggestions on how to fix this are appreciated. This is not required if you already have real survey data, as it only affects the creation of synthetic data.
+![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center",#fig-surveysdatastructure}
 
-```{r include=FALSE}
-print(paste0("Diagnostics for simulated correlation matrix:"))
-print(paste0(" - isSemmetric: ", isSymmetric(cor_matrix)))
-print(paste0(" - is positiv-definite: ", is.positive.definite(cor_matrix)))
-```
+The loaded data set contains several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then an arbitrary number of topic assessments (N in our example) with variables for each evaluation dimension (two in this example) for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
 
-Now create the synthetic data based on the previously defined means and correlation parameters. Name the variables following the required schema. We provide population parameters and draw a random sample based on these.
-
-```{r}
-combinedMeans = c(evaluationA, evaluationB)
-varnames <- c(paste0("a", 1:N, "_matrix_1"), paste0("a", 1:N, "_matrix_2"))
-
-data <- rnorm_multi(
-  varnames = varnames,
-  n = 100, # sample size, i.e., number of participants in the survey
-  mu = combinedMeans,
-  sd = 0.25,
-  r = cor_matrix,
-  empirical = FALSE
-)
-```
-
-## Recode data
-
-First, ensure that the bounds are met (e.g., values between -1 and +1; due to the random sampling, this may otherwise not always be the case). Next, convert the percent scores to the typical survey data domain, i.e., discrete values from 1 to 7.
-
-```{r}
-data <- as.data.frame(data) %>%
-  dplyr::mutate(across(everything(), ~ ifelse(. < -1, -1, ifelse(. > 1, 1, .)))) %>%
-  dplyr::mutate(across(everything(), ~ (.+1)/2)) %>%
-  dplyr::mutate(across(everything(), ~ (6*.))) %>%
-  dplyr::mutate(across(everything(), ~ 1 + round(.)))
-```
-
-Lastly, let's add a participant ID and a poorly simulated user variable (calculated from the already simulated data and thus strongly correlated).
-
-```{r}
-data <- data %>%
-  dplyr::mutate(id = paste0("fakeparticipantid-", row_number())) %>%
-  dplyr::mutate(uservariable = rnorm_pre(a1_matrix_1+a2_matrix_1, mu = 10, sd = 2, r = 0.5)) %>%
-  dplyr::relocate(id, uservariable)
-```
+The variables for the topic evaluations follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
 
 # Analysis of the data
+
+After the (synthetic) survey data is loaded to the variable `data`, we now start the actual analysis.
 
 ## Setup
 
@@ -302,9 +216,11 @@ evaluationByTopic <-  evaluationsLong %>%
   dplyr::left_join(TOPICS, by="question") # attach question labels
 ```
 
-Print a table with the results:
+The result can be printed as a table (see Table @tbl-topics).
 
 ```{r}
+#| label: tbl-topics
+#| tbl-cap: Average evaluation of the queried topics.
 knitr::kable(
   evaluationByTopic %>%
     dplyr::select(-question, -shortlabel) %>%
