@@ -12,9 +12,10 @@ date-format: long
 doi: "not yet"
 title-block-banner: "true"
 abstract: > 
-  This is an example R notebook that examplifies the analysis and visualization of micro scenario-based studies. Micro scenarios are an approach to assess the social acceptance of technologies and their determining factors and a visual-spatial mapping of the outcomes. They facilitate the assessment of many technologies in parallel, a ranking of the technologies based on different criteria, and an analysis of which individual factors and technology-based attributions relate to the overall assessment of the technologies. Based on senthetic survey data (seperate notebook), the notebook illustrates how to recode the data, how to aggregate scenario evaluations as user factors, how the topic evaluations can be calculated, and they can be visualized using the programming language R, ggplot and tidycverse.
+  This is an example R notebook that demonstrates the analysis and visualisation of micro-scenario based studies. Micro-scenarios are an approach to assessing the social acceptance of technologies and the factors that determine it, and a visual-spatial mapping of the results. They facilitate the assessment of many technologies in parallel, the ranking of technologies based on different criteria, and the analysis of how individual factors and technology-based attributions relate to the overall assessment of technologies. Based on synthetic survey data (generated in a separate notebook), the notebook illustrates how to re-code the data, how to aggregate scenario scores as user factors, how to calculate topic scores, and how to visualise them using the programming language R, ggplot and tidyverse.
 keywords:
   - Micro scenarios
+  - Topic Mapping
   - R
 funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC-2023 Internet of Production — 390621612."
 editor: 
