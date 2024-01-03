@@ -12,7 +12,7 @@ date-format: long
 doi: "not yet"
 title-block-banner: "true"
 abstract: > 
-  This is an Quarto notebook to create synthetic data using the faux package to examplify the anaylsis and visualiation of micro scenarios. The generated dataset is similar to data sets exported by Qualtrics and its Loop & Merge function. The data has some predefined properties, such as well-defined means and correlations within and between the evaluation dimensions.
+  This is a Quarto notebook to generate synthetic data using the `faux` package to illustrate the analysis and visualisation of micro-scenarios. The generated dataset is similar to datasets exported from Qualtrics and its Loop & Merge function. The data has some pre-defined characteristics, such as well-defined means and correlations within and between the evaluation dimensions.
 keywords:
   - Micro scenarios
   - R
@@ -21,13 +21,24 @@ funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Fo
 
 # Introduction
 
+This notebook generates synthetic data for demonstrating how to analyse a micro-scenario based study.
+The notebook for the analysis can be found in the very same folder.
+The main article presents details on this approach and outlines how to design and analyse studies. You can find and cite the main article here:
+
+-   Brauner, P. et al. (2024), Visual Maps of Technology Acceptance -- Spatial Mapping of Factors Influencing Social Acceptance of Technologies Using Micro Scenarios, XXX
+
+General idea of this simulated dataset is that it resembles the data export from typical survey software systems, such as Qualtrics.
+However, the data is clean, as it does not contain additional variables, speeders, or erroneous inputs that need to be cleaned.
+Also, the data is designed to show the desired properties of a micro scenario-based survey, e.g., that the topics follow a specific pattern and the evaluation dimensions have a defined correlation pattern. 
+
+We use the `faux` package for generating the synthetic data and we learned this from the [package vignette]( https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html).
+
 # Load libraries
 
-For the actual analysis, we build on the `tidyverse` and `ggplot` packages. For creating the synthetic data, we further use the `faux` package that allows the generation of data based on specific properties (e.g., pre-defined means and correlations between the variables).
+For the actual analysis, we build on the `tidyverse` and `ggplot` packages.
+For creating the synthetic data, we further use the `faux` package that allows the generation of data based on specific properties (e.g., pre-defined means and correlations between the variables).
 
 ```{r LOADLIBRARIES}
-# Creating the fake data builds on this site
-# https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html
 library(faux)    # create simulated data based on given properties
 library(matrixcalc)
 library(tidyverse)
@@ -40,9 +51,9 @@ library(knitr)   # Tables
 # Create Synthetic Data
 
 Here, we create synthetic data that simulates the properties from real survey data. Here, we first create a dataset that is similar to data from the survey tool Qualtrics.
-The figure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
+@fig-surveysdatastructure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
 
-![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center"}
+![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
 
 The created data set will contain several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then N=12 (adjustable) topic assessments with two variables for each evaluation dimension for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
 
