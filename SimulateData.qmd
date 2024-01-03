@@ -16,9 +16,7 @@ abstract: >
 keywords:
   - Micro scenarios
   - R
-funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG,
-German Research Foundation) under Germany’s Excellence Strategy — EXC-
-2023 Internet of Production — 390621612."
+funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC-2023 Internet of Production — 390621612."
 ---
 
 # Introduction
