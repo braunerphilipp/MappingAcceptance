@@ -36,7 +36,7 @@ This notebook exemplifies the calculation of data for the the two different rese
 
 For this example, we use synthetic data that is simulated but similar to real survey data. This makes it easier to follow our approach, as the data has not to be cleaned from unnecessary variables or erroneous inputs form participants. Further, the data clearly follows the pre-specified properties. The creation of the synthetic data is presented in the companion notebook in the same folder.
 
-The remainder of this notebook is structured as follows: First, we load the required packages, then we create synthetic data that we use as our input (replace this with your real data). Second, we transform the data into the long format (see, for example, <https://tidyr.tidyverse.org/reference/pivot_longer.html>), then we analyse the data as a user factor (perspective 1), and then as a topic factor (perspective 2); including a visualization of the outcomes.
+The remainder of this notebook is structured as follows: First, we load the required packages, then we create synthetic data that we use as our input (replace this with your real data). Second, we transform the data into the long format (see, for example, <https://tidyr.tidyverse.org/reference/pivot_longer.html>), then we analyse the data as a user factor (research perspective 1), and then as a topic factor (research perspective 2); including a visualization of the outcomes.
 
 # Preparation
 
@@ -65,7 +65,7 @@ The strucutre of the data is very similar to the data export from the survey too
 
 @fig-surveysdatastructure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
 
-![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center",#fig-surveysdatastructure}
+![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
 
 The loaded data set contains several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then an arbitrary number of topic assessments (N in our example) with variables for each evaluation dimension (two in this example) for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
 
@@ -77,9 +77,10 @@ After the (synthetic) survey data is loaded to the variable `data`, we now start
 
 ## Setup
 
-First, read the list of queried topics from a `.csv` file (can easily be adjusted to your needs). Second, define queried evaluation dimensions. Here, we have a vector of two dimensions, but one can define more depending on your research questions and survey.
+First, read the list of queried topics and their labels from a `.csv` file (can easily be adjusted to your needs).
+Second, define queried evaluation dimensions. Here, we have a vector of two dimensions, but one can define more depending on your research questions and survey.
 
-```{r}
+```{r LOADLABELS}
 TOPICS <- read.csv2("matrixlabels.csv") 
 DIMENSIONS = c("risk", "utility")  
 ```
@@ -143,14 +144,14 @@ summary(evaluationByParticipant$utility_mean)
 
 Does *uservariable* from the survey correlate to *risk*?
 
-```{r PERSPECTIVE1_USERVARIABLECORRELATION}
+```{r PERSPECTIVE1_USERVARIABLERISK}
 cor(evaluationByParticipant$risk_mean,
     evaluationByParticipant$uservariable)
 ```
 
 Does uservariable correlate with the average *perceived utility*?
 
-```{r}
+```{r PERSPECTIVE1_USERVARIABLEUTILITY}
 cor(evaluationByParticipant$utility_mean,
     evaluationByParticipant$uservariable)
 ```
@@ -177,8 +178,11 @@ knitr::kable(
 
 ### Plot average evaluations across all topics and participants
 
+@fig-evaluations
+
 ```{r PERSPECTIVE2_PLOTOVERVIEW}
-# Plot the average evaluations across all topics and participants
+#| label: fig-evaluations
+#| fig-cap: "Mean evaluation across all topics and aggregated across all participants."
 overallDimension <- ggplot(evaluationByDimension,
   aes(x = dimension, y = mean)) + 
   geom_bar(stat = "identity") +
@@ -192,9 +196,9 @@ overallDimension
 
 ### Prepare Individual Topics
 
-We now calculate the average evaluations for each topic across all participants. The resulting data frame has N rows for the number of topics we have queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., *risk* and *utility*). Lastly, we attach the labels for each topic using `dplyr::left_join()`. The figure shows how the resulting data is structured.
+We now calculate the average evaluations for each topic across all participants. The resulting data frame has N rows for the number of topics we have queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., *risk* and *utility*). Lastly, we attach the labels for each topic using `dplyr::left_join()`. @fig-topicdatastructure shows how the resulting data is structured.
 
-![Resulting data format for the evaluation of the topics. Each row stores the mean evaluation (and its dispersion) of a topic. This data can then be further analysed.](figures/topicdata.png)
+![Resulting data format for the evaluation of the topics. Each row stores the mean evaluation (and its dispersion) of a topic. This data can then be further analysed.](figures/topicdata.png){fig-align="center" #fig-topicdatastructure}
 
 The output can then be tabulated, sorted or filtered by highest/lowest evaluations, or visualized.
 
@@ -216,7 +220,7 @@ evaluationByTopic <-  evaluationsLong %>%
   dplyr::left_join(TOPICS, by="question") # attach question labels
 ```
 
-The result can be printed as a table (see Table @tbl-topics).
+The result can be printed as a table (see @tbl-topics).
 
 ```{r}
 #| label: tbl-topics
@@ -231,9 +235,9 @@ knitr::kable(
 
 We now analyse the correlation between the evaluation dimensions across the topics. In the example, we now study if the attribute *risk* is related to the attributed *utility* for the different topics under investigation. In this example, we have only two target variables for the topic evaluations. With more variables, one can also do more complex analyses, such as if a linear model with *risk* and *utility* explains the overall *valence* towards the queried topics.
 
-Note: We do not analyse the indivdual differences of the participants, but the correlations between the topics as attributed by the participants.
+Note: We do not analyse the individual differences of the participants, but the correlations between the topics as attributed by the participants.
 
-```{r}
+```{r TOPICCORRELATIONS}
 evaluationByTopic %>%
   dplyr::select(ends_with("_mean")) %>%
   correlation::correlation()
@@ -241,10 +245,12 @@ evaluationByTopic %>%
 
 ### Visualize the Topics
 
-Lastly, the results are visualized as a scatter plot. The plot facilitates the visual identification of the spread of the topics on a spatial map defined by the evaluation dimension, if there is (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics have very different evaluations than the others (outliers).
+Lastly, the results are visualized as a scatter plot.
+The plot in @fig-topicscatterplot facilitates the visual identification of the spread of the topics on a spatial map defined by the evaluation dimension, if there is (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics have very different evaluations than the others (outliers).
 
 ```{r PERSPECTIVE2_EXAMPLEPLOT}
-#| fig-cap: "Scatter plot of the evaluations of the micro scenaris."
+#| label: fig-topicscatterplot
+#| fig-cap: "Scatter plot of the evaluations of the micro scenarios."
 #| warning: false
 
 scatterPlot <- evaluationByTopic %>%
@@ -301,14 +307,13 @@ scatterPlot <- evaluationByTopic %>%
   scale_x_continuous(labels = percent_format()) +  # limits=c( -1, +1 )
   scale_y_continuous(labels = percent_format()) # limits=c( -1, +1 )
 scatterPlot
-
 ```
 
 # Closing remarks
 
 This notebook demonstrates how surveys based on the micro-scenario approach can be analyszed and visualized. It provides runnable code for studying both research perspectives (individual differences and topic evaluation) that can be adapted to fit your own survey and data.
 
-Please be aware of the limitations of this approach (e.g., when are point estimations admissible, can biased results occur due to to biased sampling of topics) and consult the main articles for further reference.
+Please be aware of the limitations of this approach (e.g., when are point estimations admissible, can biased results occur due to to biased sampling of topics) and consult the main articles for further reference and mitigation strategies.
 
 # Acknowledgements
 
