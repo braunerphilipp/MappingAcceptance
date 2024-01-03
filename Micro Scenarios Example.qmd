@@ -55,17 +55,19 @@ library(knitr)   # Tables
 ## Load Data
 
 For this demo, we will load synthetic data that simulates the properties from real survey data.
-
-The strucutre of the data is very similar to the data export from the survey tool Qualtrics. The creation of the synthetic data is documented in the companion notebook in the same folder.
-
-```{r LOADDATA}
-  data <- readRDS("syntheticdata.rds")
-  str(data)
-```
-
 @fig-surveysdatastructure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
 
 ![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
+
+The structure of the data is very similar to the data export from the survey tool Qualtrics. The creation of the synthetic data is documented in the companion notebook in the same folder.
+
+```{r LOADDATA}
+  data <- readRDS("syntheticdata.rds")
+```
+The structure of the data looks as follows:
+```{r PRINTSTRUCTURE, echo=FALSE}
+  str(data)
+```
 
 The loaded data set contains several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then an arbitrary number of topic assessments (N in our example) with variables for each evaluation dimension (two in this example) for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
 
@@ -163,6 +165,7 @@ Next, we delve into the analysis of the topic evaluations. First, we report the 
 ### Calculate Average evaluations
 
 Based on the long format, we group by evaluation dimension and aggregate across all topics and participants. Note: For full sampling, the results are the same as for perspective 1 (see above).
+@tbl-dimensions and @fig-evaluations show the result of this calculation.
 
 ```{r PERSPECTIVE2_OVERVIEW}
 # MEAN and SD of all evaluation dimensions across all queried topics
@@ -171,14 +174,13 @@ evaluationByDimension <- evaluationsLong %>%
   dplyr::summarise( mean = mean(value, na.rm = TRUE),
                     sd = sd(value, na.rm = TRUE),
                     .groups="drop")
-
-knitr::kable(
-  evaluationByDimension)
 ```
 
-### Plot average evaluations across all topics and participants
-
-@fig-evaluations
+```{r TABLEDIMENSIONS, echo=FALSE}
+#| label: tbl-dimensions
+#| tbl-cap: Averages for each evaluation dimension across all queried topics and across all participants.
+knitr::kable(evaluationByDimension)
+```
 
 ```{r PERSPECTIVE2_PLOTOVERVIEW}
 #| label: fig-evaluations
@@ -201,9 +203,10 @@ We now calculate the average evaluations for each topic across all participants.
 ![Resulting data format for the evaluation of the topics. Each row stores the mean evaluation (and its dispersion) of a topic. This data can then be further analysed.](figures/topicdata.png){fig-align="center" #fig-topicdatastructure}
 
 The output can then be tabulated, sorted or filtered by highest/lowest evaluations, or visualized.
+@tbl-topics shows the unsorted/unfiltered result.
+
 
 ```{r PERSPECTIVE2_TOPICFACTOR}
-# Average evaluation of the topics (as a topic factor)
 evaluationByTopic <-  evaluationsLong %>%
   tidyr::pivot_wider(
     names_from = dimension,
@@ -220,9 +223,7 @@ evaluationByTopic <-  evaluationsLong %>%
   dplyr::left_join(TOPICS, by="question") # attach question labels
 ```
 
-The result can be printed as a table (see @tbl-topics).
-
-```{r}
+```{r TABLETOPICS, echo=FALSE}
 #| label: tbl-topics
 #| tbl-cap: Average evaluation of the queried topics.
 knitr::kable(
@@ -233,14 +234,19 @@ knitr::kable(
 
 ### Topic Correlations
 
-We now analyse the correlation between the evaluation dimensions across the topics. In the example, we now study if the attribute *risk* is related to the attributed *utility* for the different topics under investigation. In this example, we have only two target variables for the topic evaluations. With more variables, one can also do more complex analyses, such as if a linear model with *risk* and *utility* explains the overall *valence* towards the queried topics.
+Next, we analyse the correlation between the evaluation dimensions across the topics. In the example in @tbl-topiccorrelations, we study if the attribute *risk* is related to the attributed *utility* for the different topics under investigation.
+In this example, we have only two target variables for the topic evaluations.
+With more variables, one can also do more complex analyses, such as if a linear model with *risk* and *utility* explains the overall *valence* towards the queried topics.
 
 Note: We do not analyse the individual differences of the participants, but the correlations between the topics as attributed by the participants.
 
 ```{r TOPICCORRELATIONS}
+#| label: tbl-topiccorrelations
+#| tbl-cap: Correlations between the evaluation dimensions across all topics
 evaluationByTopic %>%
   dplyr::select(ends_with("_mean")) %>%
-  correlation::correlation()
+  correlation::correlation() %>%
+ kable()
 ```
 
 ### Visualize the Topics
