@@ -64,22 +64,25 @@ N <- 12  # number of topics to simulate
 TOPICS <- read.csv2("matrixlabels.csv") 
 
 # Generate mean evaluations A and B, inversly correlated and with some noise, and an intercept
-evaluationA <- numeric(N)
-evaluationB <- numeric(N)
+
+evaluationA <- seq(-0.75, 0.45, length.out = N)
+evaluationB <- seq(-0.5, 0.2, length.out = N)
+
+# Add some random noise
 for (i in 1:N) {
-  evaluationA[i] <- (N/2-i)/(N+4) + rnorm(1, mean=0, sd=0.05)
-  evaluationB[i] <- 1/6 - (N/2-i)/(2*N) + rnorm(1, mean=0, sd=0.05) 
+  evaluationA[i] <- evaluationA[i] + rnorm(1, mean=0, sd=0.05)
+  evaluationB[i] <- evaluationB[i] - rnorm(1, mean=0, sd=0.05) 
 }
 
 # Purposefully defined outlier
-evaluationA[5] <- 0
-evaluationB[5] <- -1/3
+evaluationA[5] <- -1/3
+evaluationB[5] <- +1/4
 combinedMeans = c(evaluationA, evaluationB)
 ```
 
 ```{r ILLUSTRATION, echo=FALSE}
 #| label: fig-targettopicevaluations
-#| fig-cap: "Target topic evaluations. Noise will be added in a later step."
+#| fig-cap: "Target topic evaluations. Noise due to random sampling will be added in a later step."
 # Create a data frame from the vectors
 labels = TOPICS$label[1:N]
 data <- data.frame(evaluationA, evaluationB, labels)
@@ -93,7 +96,11 @@ ggplot(data, aes(x = evaluationA,
   labs(x = "Evaluation A",
        y = "Evaluation B",
        title = "Scatter Plot of the Targeted Evaluations A and B",
-       subtitle = "This is the basis for the generated survey data which contains additional noise")
+       subtitle = "This is the basis for the generated survey data which contains additional noise") +
+  scale_x_continuous(labels = percent_format(),
+                     limits=c( -1, +1 )) +
+  scale_y_continuous(labels = percent_format(),
+                     limits=c( -1, +1 ))
 ```
 
 The variables for the topic evaluations must follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
