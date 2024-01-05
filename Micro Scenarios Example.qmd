@@ -107,6 +107,10 @@ evaluationsLong <- data %>%
     dplyr::mutate( dimension = as.numeric(dimension) ) %>%
     dplyr::mutate( dimension = DIMENSIONS[dimension]) %>%  # change to readable dimension names
     dplyr::mutate( value = -(((value - 1)/3) - 1))  # rescale value from [ 1...7 ] to [ -100%...100% ]
+
+# Recode some of the evaluation dimensions if necessary
+evaluationsLong <- evaluationsLong %>%
+  dplyr::mutate( value = if_else(dimension!="risk", value, -value))
 ```
 
 ## Perspective 1: As user factor
@@ -265,6 +269,8 @@ scatterPlot <- evaluationByTopic %>%
                y = utility_mean,
                label = shortlabel)) + 
   coord_cartesian(clip = "on") +
+  geom_vline(xintercept = 0, size = 0.25, color="black", linetype=1) + 
+  geom_hline(yintercept = 0, size = 0.25, color="black", linetype=1) + 
   # diagonal line indicating where both dimensions are congruent 
   annotate("segment",
            x = -1, y = +1,
@@ -309,16 +315,23 @@ scatterPlot <- evaluationByTopic %>%
   geom_point() +      # geom for the data points
   geom_smooth(method = "lm", se = TRUE) +
   labs( title = "Illustration of the risk-utility tradeoff ...",
-        x = "AVERAGE ESTIMATED RISK\n(without risk — risky)",
+        caption = "Based on synthetic data for illustrative purposes. See linked companion notebook.",
+        x = "AVERAGE ESTIMATED RISK\n(without risk — very risky)",
         y = "AVERAGE ESTIMATED UTILITY\n(useless — useful)") +
-  scale_x_continuous(labels = percent_format()) +  # limits=c( -1, +1 )
-  scale_y_continuous(labels = percent_format()) # limits=c( -1, +1 )
+  scale_x_continuous(labels = percent_format(), limits=c( -1, +1 )) +
+  scale_y_continuous(labels = percent_format(), limits=c( -1, +1 ))
 scatterPlot
+
+ggsave("simulatedriskutility.pdf",
+       plot = scatterPlot,
+       width = 8, height = 6,
+       units = "in")
 ```
 
 # Closing remarks
 
-This notebook demonstrates how surveys based on the micro-scenario approach can be analyszed and visualized. It provides runnable code for studying both research perspectives (individual differences and topic evaluation) that can be adapted to fit your own survey and data.
+This notebook demonstrates how surveys based on the micro-scenario approach can be analysed and visualized. It provides runnable code for studying both research perspectives (individual differences and topic evaluation) that can be adapted to fit your own survey and data.
+Please pay particular attention to the correct coding and polarization of the input variables.
 
 Please be aware of the limitations of this approach (e.g., when are point estimations admissible, can biased results occur due to to biased sampling of topics) and consult the main articles for further reference and mitigation strategies.
 

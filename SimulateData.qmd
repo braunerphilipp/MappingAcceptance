@@ -65,8 +65,8 @@ TOPICS <- read.csv2("matrixlabels.csv")
 
 # Generate mean evaluations A and B, inversly correlated and with some noise, and an intercept
 
-evaluationA <- seq(-0.75, 0.45, length.out = N)
-evaluationB <- seq(-0.5, 0.2, length.out = N)
+evaluationA <- seq(-0.75, 0.60, length.out = N)
+evaluationB <- seq(-0.65, 0.2, length.out = N)
 
 # Add some random noise
 for (i in 1:N) {
