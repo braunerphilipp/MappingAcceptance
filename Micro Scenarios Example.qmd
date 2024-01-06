@@ -25,9 +25,11 @@ editor:
 
 # Introduction
 
-The micro scenario approach facilitates measuring people's perception of various topics, and relating them to individual user factors (research perspective 1), a ranking of these topics, and a visio-spatial mapping to identify conflicting issues (research perspective 2).
+The micro scenario approach facilitates measuring people's attributions towards various topics, and relating them to individual user factors (research perspective 1), a ranking of these topics, and a visio-spatial mapping to identify conflicting issues (research perspective 2) in a single survey.
 
-An example may be the analysis of the risk-utility trade-offs between different technologies: Do people have different risk or utility dispositions, do people assign different risks and utilities to different technologies, are the risk-utility trade-offs comparable for different technologies and can the risk-utility trade-off be quantified.
+An example may be the analysis of the risk-utility trade-offs between different technologies: Do people have different risk or utility dispositions, do people assign different risks and utilities to different technologies, are the risk-utility trade-offs comparable for different technologies and can the risk-utility trade-off be quantified. @fig-concept illustrates the general approach.
+
+![General approach of the micro-scenarios: A single survey captures the evaluations of various topics, which are then condidered as topic evaluations and mapped spatially to analyze the relationships between the topics.](figures/concept.png){fig-align="center" #fig-concept}
 
 The main article presents details on this approach and outlines how to design and analyse studies. You can find and cite the main article here:
 
