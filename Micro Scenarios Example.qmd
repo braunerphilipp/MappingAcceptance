@@ -315,7 +315,7 @@ scatterPlot <- evaluationByTopic %>%
   geom_point() +      # geom for the data points
   geom_smooth(method = "lm", se = TRUE) +
   labs( title = "Illustration of the risk-utility tradeoff ...",
-        caption = "Based on synthetic data for illustrative purposes. See linked companion notebook.",
+        caption = "Based on synthetic data for illustrative purposes. See linked companion notebook under https://osf.io/96ep5/",
         x = "AVERAGE ESTIMATED RISK\n(without risk — very risky)",
         y = "AVERAGE ESTIMATED UTILITY\n(useless — useful)") +
   scale_x_continuous(labels = percent_format(), limits=c( -1, +1 )) +
