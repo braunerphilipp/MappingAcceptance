@@ -12,7 +12,7 @@ date-format: long
 doi: "not yet"
 title-block-banner: "true"
 abstract: > 
-  This is an example R notebook that demonstrates the analysis and visualisation of micro-scenario based studies. Micro-scenarios are an approach to assessing the social acceptance of technologies and the factors that determine it, and a visual-spatial mapping of the results. They facilitate the assessment of many technologies in parallel, the ranking of technologies based on different criteria, and the analysis of how individual factors and technology-based attributions relate to the overall assessment of technologies. Based on synthetic survey data (generated in a separate notebook), the notebook illustrates how to re-code the data, how to aggregate scenario scores as user factors, how to calculate topic scores, and how to visualise them using the programming language R, ggplot and tidyverse.
+  This is an example R notebook that demonstrates the analysis and visualisation of micro-scenario based studies. Micro-scenarios are an approach for assessing the social acceptance of technologies and the factors that determine it, and a visual-spatial mapping of the results. They facilitate the assessment of many technologies in parallel, the ranking of technologies based on different criteria, and the analysis of how individual factors and technology-based attributions relate to the overall assessment of technologies. Based on synthetic survey data (generated in a separate notebook), the notebook illustrates how to re-code the data, how to aggregate scenario scores as user factors, how to calculate topic scores, and how to visualise them using the programming language R, ggplot and tidyverse.
 keywords:
   - Micro scenarios
   - Topic Mapping
@@ -72,7 +72,7 @@ The structure of the data looks as follows:
   str(data)
 ```
 
-The loaded data set contains several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then an arbitrary number of topic assessments (N in our example) with variables for each evaluation dimension (two in this example) for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
+The loaded data set contains several variables: First, a unique user identifier (id), an user variable (e.g., attitude towards a topic), then an arbitrary number of topic assessments (N in our example) with variables for each evaluation dimension (two in this example) for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
 
 The variables for the topic evaluations follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
 
@@ -117,6 +117,10 @@ evaluationsLong <- evaluationsLong %>%
 
 ## Perspective 1: As user factor
 
+TODO: WARUM BRAUCHE ICH DAS.
+Microszenarien sind messwiederholung. disposition. unabhöngig von der konkreten topic.
+
+
 The first perspective offers a straight forward view on the data: For each evaluation dimension (e.g., *risk* and *utility*), we calculate average scores across all queried topics. These scores can be considered as a user factor or individual differences, e.g., one can study if these overall attributions differ between the participants and if they relate to other queried user factors (e.g, if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales).
 
 We then re-join these user factors with the original data using, for example, `dplyr::join_left()`. Afterwards, the calculated average evaluations can be considered as individual differences and related with other user factors from the survey.
@@ -129,7 +133,7 @@ evaluationByParticipant <- evaluationsLong %>%
     across(
       all_of( DIMENSIONS ),  # Select only evaluation dimensions
       list( mean = ~mean(., na.rm = TRUE),
-            median = ~median(., na.rm = TRUE),
+#            median = ~median(., na.rm = TRUE),
             sd = ~sd(., na.rm = TRUE)),
       .names = "{.col}_{.fn}"  # Scheme to define column names
     ), .groups="drop"
@@ -154,18 +158,34 @@ summary(evaluationByParticipant$utility_mean)
 Does *uservariable* from the survey correlate to *risk*?
 
 ```{r PERSPECTIVE1_USERVARIABLERISK}
-cor(evaluationByParticipant$risk_mean,
+cor.test(evaluationByParticipant$risk_mean,
     evaluationByParticipant$uservariable)
 ```
 
 Does uservariable correlate with the average *perceived utility*?
 
 ```{r PERSPECTIVE1_USERVARIABLEUTILITY}
-cor(evaluationByParticipant$utility_mean,
+cor.test(evaluationByParticipant$utility_mean,
     evaluationByParticipant$uservariable)
 ```
 
 ## Perspective 2: Topic factors
+
+TODO: WARUM BRAUCHE ICH DAS.
+
+[ ] Konstentenz: Wechselt von Valenz und Expectancy. auf Risk und Utility.
+=> Besser nur Risk und Utility.
+
+[ ] Rustikale Grafik 3.
+
+[ ] Median weglassen. Kommt plötzlich und nur einmal.
+
+[ ] (outlier) -> (absichtlicher deliberate outlier)
+
+[ ] Regressionsgrade hinter die Punkte.
+
+[ ] darstellungsorm erinnert an das kanu-modell - basismerkmal, 
+
 
 Next, we delve into the analysis of the topic evaluations. First, we report the average evaluations (e.g, *risk* and *utility*) across all queried topics.
 
@@ -314,8 +334,8 @@ scatterPlot <- evaluationByTopic %>%
     label.padding = 0.105,
     box.padding = 0.125
   ) +
-  geom_point() +      # geom for the data points
   geom_smooth(method = "lm", se = TRUE) +
+  geom_point() +      # geom for the data points
   labs( title = "Illustration of the risk-utility tradeoff ...",
         caption = "Based on synthetic data for illustrative purposes. See linked companion notebook under https://osf.io/96ep5/",
         x = "AVERAGE ESTIMATED RISK\n(without risk — very risky)",
@@ -340,5 +360,6 @@ Please be aware of the limitations of this approach (e.g., when are point estima
 # Acknowledgements
 
 This approach has evolved over a longer period of time and through several research projects. We would like to thank all those who have directly or indirectly, consciously or unconsciously, inspired us to take a closer look at this approach and who have given us the opportunity to apply this approach in various contexts.
+Special thanks to Julian Hildebrandt for feedback on an earlier version of this notebook.
 
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC- 2023 Internet of Production — 390621612.
