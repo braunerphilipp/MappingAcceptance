@@ -199,3 +199,9 @@ Finally, we save the generated data to a RDS file for the actual analysis and vi
 saveRDS(data, "syntheticdata.rds")
 ```
 
+# Acknowledgements
+
+This approach has evolved over a longer period of time and through several research projects. We would like to thank all those who have directly or indirectly, consciously or unconsciously, inspired us to take a closer look at this approach and who have given us the opportunity to apply this approach in various contexts.
+Special thanks to Julian Hildebrandt for feedback on an earlier version of this notebook.
+
+Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC- 2023 Internet of Production — 390621612.
