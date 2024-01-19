@@ -8,6 +8,13 @@ author:
         city: Aachen
         country: Germany
         url: www.comm.rwth-aachen.de
+  - name: "Julia Offermann"
+    orcid: 0000-0003-1870-2775
+    affiliation: 
+      - name: RWTH Aachen University, Communication Science
+        city: Aachen
+        country: Germany
+        url: www.comm.rwth-aachen.de
 date-format: long
 doi: "not yet"
 title-block-banner: "true"
@@ -36,9 +43,9 @@ Figure @fig-concept illustrates the overall approach.
 
 ![The micro-scenario approach involves consolidating evaluations of diverse topics in a single survey. These evaluations are treated as topic assessments and spatially mapped to analyze the interrelationships among them.](figures/concept.png){fig-align="center" #fig-concept}
 
-The main article provides comprehensive insights into this approach and outlines the methodology for designing and analyzing studies. You can locate and cite the main article here: [insert citation information].
+The main article provides comprehensive insights into this approach and outlines the methodology for designing and analyzing studies. You can locate and cite the main article here:
 
--   Brauner, P. et al. (2024), Visual Maps of Technology Acceptance -- Spatial Mapping of Factors Influencing Social Acceptance of Technologies Using Micro Scenarios, XXX
+> Mapping Perceptions -- Micro Scenarios for Creating Visual Cognitive Maps of the Social Acceptance of Technologies, Philipp Brauner, Julia Offermann, prePrint
 
 This notebook demonstrates the calculation of data for the two research perspectives of the micro-scenario approach (Perspective 1: user factor and Perspective 2: topic factor) using R.
 Note that all transformations and calculations can also be performed using other software.
@@ -112,9 +119,11 @@ DIMENSIONS = c("risk", "utility")
 
 ## Long Format
 
-Next, the topic evaluations from the survey data is transformed into the long format using `pivot_longer` (one row with a single value for each participant, topic, and evaluation dimension; one row per observation). Hereto, we use that the variables for the topic evaluations in the original data table have a systematic naming convention (see above).
+Next, the topic evaluations from the survey data is transformed into the long format using `pivot_longer` (one row with a single value for each participant, topic, and evaluation dimension; one row per observation).
+Hereto, we use that the variables for the topic evaluations in the original data table have a systematic naming convention (see above).
 
-The resulting data set contains a participant identifier, identifier for the topic and the evaluation dimension, and lastly a column for the value. We use this format as the foundation for the later transformation steps.
+The resulting data set contains a participant identifier, identifier for the topic and the evaluation dimension, and lastly a column for the value.
+We use this format as the foundation for the later transformation steps.
 
 ```{r SURVEYTOLONG}
 evaluationsLong <- data %>% 
@@ -138,7 +147,8 @@ evaluationsLong <- evaluationsLong %>%
 ## Perspective 1: As user factor
 
 The initial perspective provides a straightforward view of the data.
-The different presented scenarios serve as a basis for the repeated measurement of the same latent construct and the resulting score can be regarded as a user factor (or individual differences).
+The different presented scenarios serve as a basis for the repeated measurement of the same latent construct and the resulting score can be interpreted as a user factor (or individual differences).
+
 For each evaluation dimension (e.g., *risk* and *utility*), we compute average scores across all queried topics.
 Using these cores one can, for instance, investigate if the overall attributions differ among participants or if they correlate with other queried user factors.
 For example, exploring if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales.
@@ -192,23 +202,8 @@ cor.test(evaluationByParticipant$utility_mean,
 
 ## Perspective 2: Topic factors
 
-TODO: WARUM BRAUCHE ICH DAS.
-
-[ ] Konstentenz: Wechselt von Valenz und Expectancy. auf Risk und Utility.
-=> Besser nur Risk und Utility.
-
-[ ] Rustikale Grafik 3.
-
-[ ] Median weglassen. Kommt plötzlich und nur einmal.
-
-[ ] (outlier) -> (absichtlicher deliberate outlier)
-
-[ ] Regressionsgrade hinter die Punkte.
-
-[ ] darstellungsorm erinnert an das kanu-modell - basismerkmal, 
-
-
-Next, we delve into the analysis of topic evaluations.
+Next, we delve into the analysis of topic evaluations: 
+Instead of looking at how individual participants perceive the topics as a whole, only all test subject assessments are assigned to the respective topics, for example in order to be able to rank the technologies in terms of the evaluation dimensions.
 We start with reporting the average evaluations (e.g., *risk* and *utility*) across all queried topics.
 
 ### Calculate Average evaluations
@@ -229,7 +224,11 @@ evaluationByDimension <- evaluationsLong %>%
 ```{r TABLEDIMENSIONS, echo=FALSE}
 #| label: tbl-dimensions
 #| tbl-cap: Averages for each evaluation dimension across all queried topics and across all participants.
-knitr::kable(evaluationByDimension)
+knitr::kable(evaluationByDimension %>%
+  dplyr::mutate(
+    mean = round(mean, 2), 
+    sd = round(sd, 2))
+)
 ```
 
 ```{r PERSPECTIVE2_PLOTOVERVIEW}
@@ -282,7 +281,13 @@ evaluationByTopic <-  evaluationsLong %>%
 knitr::kable(
   evaluationByTopic %>%
     dplyr::select(-question, -shortlabel) %>%
-    dplyr::relocate(label))
+    dplyr::relocate(label) %>%
+    dplyr::mutate(
+      risk_mean = round(risk_mean, 2),
+      risk_sd = round(risk_sd, 2),
+      utility_mean = round(utility_mean, 2),
+      utility_sd = round(utility_sd, 2)
+    ))
 ```
 
 ### Topic Correlations
@@ -393,4 +398,4 @@ This approach has evolved through an extended period and across numerous researc
 We extend our gratitude to all who have, directly or indirectly, consciously or unconsciously, inspired us to delve into this approach and provided opportunities for its application in diverse contexts.
 Special thanks to Julian Hildebrandt for feedback on an earlier version of this notebook.
 
-Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC- 2023 Internet of Production — 390621612.
+Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy -- EXC- 2023 Internet of Production -- 390621612.

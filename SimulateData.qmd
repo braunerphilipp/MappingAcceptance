@@ -8,6 +8,13 @@ author:
         city: Aachen
         country: Germany
         url: www.comm.rwth-aachen.de
+  - name: "Julia Offermann"
+    orcid: 0000-0003-1870-2775
+    affiliation: 
+      - name: RWTH Aachen University, Communication Science
+        city: Aachen
+        country: Germany
+        url: www.comm.rwth-aachen.de
 date-format: long
 doi: "not yet"
 title-block-banner: "true"
@@ -24,9 +31,9 @@ funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Fo
 This notebook generates synthetic data to demonstrate the analysis of a micro-scenario based study.
 The corresponding analysis notebook is located in the same folder.
 For detailed information on this approach and guidance on designing and analysing studies, please refer to the main article.
-You can find and cite the main article here: [insert citation information].
+You can find and cite the main article here:.
 
--   Brauner, P. et al. (2024), Visual Maps of Technology Acceptance -- Spatial Mapping of Factors Influencing Social Acceptance of Technologies Using Micro Scenarios, XXX
+> Mapping Perceptions -- Micro Scenarios for Creating Visual Cognitive Maps of the Social Acceptance of Technologies, Philipp Brauner, Julia Offermann, prePrint
 
 The general concept behind this simulated dataset is to mimic the data export from typical survey software systems, like Qualtrics.
 However, the data is clean, devoid of additional variables, speeders, or erroneous inputs requiring cleaning.
@@ -216,4 +223,4 @@ Over an extended period and across various research projects, this approach has 
 We extend our gratitude to all who have, directly or indirectly, consciously or unconsciously, inspired us to delve into this approach and provided opportunities for its application in diverse contexts.
 Special thanks to Julian Hildebrandt for providing feedback on an earlier version of this notebook.
 
-Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC- 2023 Internet of Production — 390621612.
+Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy -- EXC- 2023 Internet of Production -- 390621612.
