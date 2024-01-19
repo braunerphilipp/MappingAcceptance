@@ -12,7 +12,7 @@ date-format: long
 doi: "not yet"
 title-block-banner: "true"
 abstract: > 
-  This is an example R notebook that demonstrates the analysis and visualisation of micro-scenario based studies. Micro-scenarios are an approach for assessing the social acceptance of technologies and the factors that determine it, and a visual-spatial mapping of the results. They facilitate the assessment of many technologies in parallel, the ranking of technologies based on different criteria, and the analysis of how individual factors and technology-based attributions relate to the overall assessment of technologies. Based on synthetic survey data (generated in a separate notebook), the notebook illustrates how to re-code the data, how to aggregate scenario scores as user factors, how to calculate topic scores, and how to visualise them using the programming language R, ggplot and tidyverse.
+  This R notebook serves as an example, demonstrating the analysis and visualization of micro-scenario-based studies. Micro-scenarios provide an approach for evaluating the social acceptance of technologies and the determining factors, along with a visual-spatial mapping of the results. They enable the simultaneous assessment of multiple technologies, ranking them based on different criteria, and analyzing how individual factors and technology-based attributions correlate with the overall assessment of technologies. Utilizing synthetic survey data (generated in a separate notebook), this notebook illustrates how to recode the data, aggregate scenario scores as user factors, calculate topic scores, and visualize them using the R programming language, along with ggplot and tidyverse.
 keywords:
   - Micro scenarios
   - Topic Mapping
@@ -25,27 +25,39 @@ editor:
 
 # Introduction
 
-The micro scenario approach facilitates measuring people's attributions towards various topics, and relating them to individual user factors (research perspective 1), a ranking of these topics, and a visio-spatial mapping to identify conflicting issues (research perspective 2) in a single survey.
+The micro-scenario approach simplifies measuring people's opinions on different topics.
+It connects these opinions to individual user factors (research perspective 1), ranks the topics, and creates a visual map to pinpoint conflicting issues (research perspective 2), all within a single survey.
 
-An example may be the analysis of the risk-utility trade-offs between different technologies: Do people have different risk or utility dispositions, do people assign different risks and utilities to different technologies, are the risk-utility trade-offs comparable for different technologies and can the risk-utility trade-off be quantified. @fig-concept illustrates the general approach.
+For instance, consider analysing risk-utility trade-offs among various technologies:
+Do individuals attribute varying risks and utilities to distinct technologies?
+Are people predisposed to different risk or utility perceptions?
+Is the comparability of risk-utility trade-offs consistent across different technologies, and can these trade-offs be quantified?
+Figure @fig-concept illustrates the overall approach.
 
-![General approach of the micro-scenarios: A single survey captures the evaluations of various topics, which are then condidered as topic evaluations and mapped spatially to analyze the relationships between the topics.](figures/concept.png){fig-align="center" #fig-concept}
+![The micro-scenario approach involves consolidating evaluations of diverse topics in a single survey. These evaluations are treated as topic assessments and spatially mapped to analyze the interrelationships among them.](figures/concept.png){fig-align="center" #fig-concept}
 
-The main article presents details on this approach and outlines how to design and analyse studies. You can find and cite the main article here:
+The main article provides comprehensive insights into this approach and outlines the methodology for designing and analyzing studies. You can locate and cite the main article here: [insert citation information].
 
 -   Brauner, P. et al. (2024), Visual Maps of Technology Acceptance -- Spatial Mapping of Factors Influencing Social Acceptance of Technologies Using Micro Scenarios, XXX
 
-This notebook exemplifies the calculation of data for the the two different research perspectives (perspective 1: as user factor and perspective 2: as topic factor) of the micro scenario approach using R. Of course, all transformation can equally be done with other software.
+This notebook demonstrates the calculation of data for the two research perspectives of the micro-scenario approach (Perspective 1: user factor and Perspective 2: topic factor) using R.
+Note that all transformations and calculations can also be performed using other software.
 
-For this example, we use synthetic data that is simulated but similar to real survey data. This makes it easier to follow our approach, as the data has not to be cleaned from unnecessary variables or erroneous inputs form participants. Further, the data clearly follows the pre-specified properties. The creation of the synthetic data is presented in the companion notebook in the same folder.
+In this example, we utilize synthetic data generated to resemble real survey data.
+This choice simplifies the follow-through of our approach, eliminating the need for cleaning the data from irrelevant variables or erroneous participant inputs.
+Additionally, the synthetic data adheres to pre-specified properties.
+The creation of the synthetic data is detailed in the companion notebook within the same folder.
 
-The remainder of this notebook is structured as follows: First, we load the required packages, then we create synthetic data that we use as our input (replace this with your real data). Second, we transform the data into the long format (see, for example, <https://tidyr.tidyverse.org/reference/pivot_longer.html>), then we analyse the data as a user factor (research perspective 1), and then as a topic factor (research perspective 2); including a visualization of the outcomes.
+The rest of this notebook is organized as follows:
+Firstly, we load the necessary packages, followed by the creation of synthetic data for our input (replace this with your actual data).
+Secondly, we transform the data into the long format (refer to, for instance, <https://tidyr.tidyverse.org/reference/pivot_longer.html>), proceed to analyse the data as a user factor (research perspective 1), and subsequently as a topic factor which includes visualizing the outcomes (research perspective 2). 
 
 # Preparation
 
 ## Load required libraries
 
-For the actual analysis, we build on the `tidyverse` and `ggplot` packages. For creating the synthetic data, we further use the `faux` package that allows the generation of data based on specific properties (e.g., pre-defined means and correlations between the variables).
+In our analysis, we mainly use the `tidyverse` and `ggplot` packages.
+To generate synthetic data, we also employ the `faux` package, which facilitates data generation with specific properties, such as pre-defined means and correlations between variables (see second notebook).
 
 ```{r LOADLIBRARIES}
 library(tidyverse)
@@ -57,33 +69,41 @@ library(knitr)   # Tables
 
 ## Load Data
 
-For this demo, we will load synthetic data that simulates the properties from real survey data.
-@fig-surveysdatastructure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
+In this demonstration, we will load synthetic data that emulates the properties found in real survey data.
+Figure @fig-surveysdatastructure illustrates the structure of a standard dataset from survey tools, where each row represents the responses from an individual participant.
 
-![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
+![Illustration of typical survey data utilizing the micro-scenario approach, featuring user demographics, additional user factors, and topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
 
-The structure of the data is very similar to the data export from the survey tool Qualtrics. The creation of the synthetic data is documented in the companion notebook in the same folder.
+The data structure closely resembles the data export from the Qualtrics survey tool.
+The process of generating synthetic data is documented in the companion notebook within the same folder.
 
 ```{r LOADDATA}
   data <- readRDS("syntheticdata.rds")
 ```
+
 The structure of the data looks as follows:
+
 ```{r PRINTSTRUCTURE, echo=FALSE}
   str(data)
 ```
 
-The loaded data set contains several variables: First, a unique user identifier (id), an user variable (e.g., attitude towards a topic), then an arbitrary number of topic assessments (N in our example) with variables for each evaluation dimension (two in this example) for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
+The loaded dataset has various variables.
+Initially, there's a unique user identifier (`id`), followed by a user variable (e.g., attitude towards a topic).
+Subsequently, there are an arbitrary number of topic assessments (*N* in our example) with variables for each evaluation dimension.
+In this instance, we use *perceived risk* and *perceived utility* as examples for the topic evaluations. However, one can employ different or additional evaluation dimensions (as detailed in the article).
 
-The variables for the topic evaluations follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
+The variables for the topic evaluations adhere to a standardized naming scheme, i.e., `a01_matrix_02`, where `01` denotes the ID of the queried topic, `02` represents the queried evaluation dimension, and `matrix` stands for the name of the variable block in the survey tool.
+This naming scheme is employed by Quartics.
 
 # Analysis of the data
 
-After the (synthetic) survey data is loaded to the variable `data`, we now start the actual analysis.
+Once the (synthetic) survey data is loaded into the variable `data`, we can commence the actual analysis.
 
 ## Setup
 
-First, read the list of queried topics and their labels from a `.csv` file (can easily be adjusted to your needs).
-Second, define queried evaluation dimensions. Here, we have a vector of two dimensions, but one can define more depending on your research questions and survey.
+Firstly, read the list of queried topics and their labels from a `.csv` file (adjustable based on your needs).
+Secondly, define the queried evaluation dimensions.
+In this instance, we have a vector of two dimensions, but one can define more based on your research questions and survey structure.
 
 ```{r LOADLABELS}
 TOPICS <- read.csv2("matrixlabels.csv") 
@@ -117,13 +137,14 @@ evaluationsLong <- evaluationsLong %>%
 
 ## Perspective 1: As user factor
 
-TODO: WARUM BRAUCHE ICH DAS.
-Microszenarien sind messwiederholung. disposition. unabhöngig von der konkreten topic.
+The initial perspective provides a straightforward view of the data.
+The different presented scenarios serve as a basis for the repeated measurement of the same latent construct and the resulting score can be regarded as a user factor (or individual differences).
+For each evaluation dimension (e.g., *risk* and *utility*), we compute average scores across all queried topics.
+Using these cores one can, for instance, investigate if the overall attributions differ among participants or if they correlate with other queried user factors.
+For example, exploring if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales.
 
-
-The first perspective offers a straight forward view on the data: For each evaluation dimension (e.g., *risk* and *utility*), we calculate average scores across all queried topics. These scores can be considered as a user factor or individual differences, e.g., one can study if these overall attributions differ between the participants and if they relate to other queried user factors (e.g, if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales).
-
-We then re-join these user factors with the original data using, for example, `dplyr::join_left()`. Afterwards, the calculated average evaluations can be considered as individual differences and related with other user factors from the survey.
+Subsequently, we rejoin these user factors with the original data using, for instance, `dplyr::left_join()`.
+Afterwards, the calculated average evaluations can be regarded as individual differences and correlated with other user factors obtained from the survey.
 
 ```{r PERSPECTIVE1_USERFACTOR}
 evaluationByParticipant <- evaluationsLong %>%
@@ -187,12 +208,14 @@ TODO: WARUM BRAUCHE ICH DAS.
 [ ] darstellungsorm erinnert an das kanu-modell - basismerkmal, 
 
 
-Next, we delve into the analysis of the topic evaluations. First, we report the average evaluations (e.g, *risk* and *utility*) across all queried topics.
+Next, we delve into the analysis of topic evaluations.
+We start with reporting the average evaluations (e.g., *risk* and *utility*) across all queried topics.
 
 ### Calculate Average evaluations
 
-Based on the long format, we group by evaluation dimension and aggregate across all topics and participants. Note: For full sampling, the results are the same as for perspective 1 (see above).
-@tbl-dimensions and @fig-evaluations show the result of this calculation.
+Using the long format, we group by evaluation dimension and aggregate across all topics and participants.
+Note: For a complete sample, the results are equivalent to perspective 1 (see above).
+Tables @tbl-dimensions and Figure @fig-evaluations depict the outcome of this calculation.
 
 ```{r PERSPECTIVE2_OVERVIEW}
 # MEAN and SD of all evaluation dimensions across all queried topics
@@ -225,12 +248,15 @@ overallDimension
 
 ### Prepare Individual Topics
 
-We now calculate the average evaluations for each topic across all participants. The resulting data frame has N rows for the number of topics we have queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., *risk* and *utility*). Lastly, we attach the labels for each topic using `dplyr::left_join()`. @fig-topicdatastructure shows how the resulting data is structured.
+Now, we compute the average evaluations for each topic across all participants.
+The resulting data frame contains N rows for the number of topics queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., *risk* and *utility*).
+Finally, we associate labels with each topic using `dplyr::left_join()`.
+Figure @fig-topicdatastructure illustrates the structure of the resulting data.
 
-![Resulting data format for the evaluation of the topics. Each row stores the mean evaluation (and its dispersion) of a topic. This data can then be further analysed.](figures/topicdata.png){fig-align="center" #fig-topicdatastructure}
+![The resulting data format displays the evaluation of topics. Each row contains the mean evaluation (along with its dispersion) for a specific topic. This structured data can be subjected to further analysis.](figures/topicdata.png){fig-align="center" #fig-topicdatastructure}
 
-The output can then be tabulated, sorted or filtered by highest/lowest evaluations, or visualized.
-@tbl-topics shows the unsorted/unfiltered result.
+The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized.
+Table @tbl-topics displays the unsorted and unfiltered results.
 
 
 ```{r PERSPECTIVE2_TOPICFACTOR}
@@ -261,11 +287,12 @@ knitr::kable(
 
 ### Topic Correlations
 
-Next, we analyse the correlation between the evaluation dimensions across the topics. In the example in @tbl-topiccorrelations, we study if the attribute *risk* is related to the attributed *utility* for the different topics under investigation.
+Next, we analyse the correlation between the evaluation dimensions across the topics.
+In the example in Table @tbl-topiccorrelations, we investigate if the attribute *risk* is related to the attributed *utility* for the different topics under consideration.
 In this example, we have only two target variables for the topic evaluations.
-With more variables, one can also do more complex analyses, such as if a linear model with *risk* and *utility* explains the overall *valence* towards the queried topics.
+With more variables, more complex analyses become possible: Such as determining if and to what degree a linear model with *risk* and *utility* explains the overall *valence* towards the queried topics.
 
-Note: We do not analyse the individual differences of the participants, but the correlations between the topics as attributed by the participants.
+Note: Our analysis focuses on the correlations between the topics as attributed by the participants, rather than individual differences among participants.
 
 ```{r TOPICCORRELATIONS}
 #| label: tbl-topiccorrelations
@@ -278,8 +305,9 @@ evaluationByTopic %>%
 
 ### Visualize the Topics
 
-Lastly, the results are visualized as a scatter plot.
-The plot in @fig-topicscatterplot facilitates the visual identification of the spread of the topics on a spatial map defined by the evaluation dimension, if there is (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics have very different evaluations than the others (outliers).
+Finally, the results are presented through a scatter plot.
+The plot in Figure @fig-topicscatterplot allows for the visual identification of the dispersion of topics on a spatial map defined by the evaluation dimension.
+It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers).
 
 ```{r PERSPECTIVE2_EXAMPLEPLOT}
 #| label: fig-topicscatterplot
@@ -352,14 +380,17 @@ ggsave("simulatedriskutility.pdf",
 
 # Closing remarks
 
-This notebook demonstrates how surveys based on the micro-scenario approach can be analysed and visualized. It provides runnable code for studying both research perspectives (individual differences and topic evaluation) that can be adapted to fit your own survey and data.
-Please pay particular attention to the correct coding and polarization of the input variables.
+This notebook showcases the analysis and visualization of surveys using the micro-scenario approach.
+It includes executable code for examining both research perspectives (individual differences and topic evaluation), which can be adjusted to suit your own survey and data.
+Ensure accurate coding and polarization of input variables.
 
-Please be aware of the limitations of this approach (e.g., when are point estimations admissible, can biased results occur due to to biased sampling of topics) and consult the main articles for further reference and mitigation strategies.
+It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from topic sampling), and refer to the main articles for further guidance and strategies for mitigation.
+
 
 # Acknowledgements
 
-This approach has evolved over a longer period of time and through several research projects. We would like to thank all those who have directly or indirectly, consciously or unconsciously, inspired us to take a closer look at this approach and who have given us the opportunity to apply this approach in various contexts.
+This approach has evolved through an extended period and across numerous research projects. 
+We extend our gratitude to all who have, directly or indirectly, consciously or unconsciously, inspired us to delve into this approach and provided opportunities for its application in diverse contexts.
 Special thanks to Julian Hildebrandt for feedback on an earlier version of this notebook.
 
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC- 2023 Internet of Production — 390621612.

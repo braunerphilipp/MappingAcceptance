@@ -12,7 +12,7 @@ date-format: long
 doi: "not yet"
 title-block-banner: "true"
 abstract: > 
-  This is a Quarto notebook to generate synthetic data using the `faux` package to illustrate the analysis and visualisation of micro-scenarios. The generated dataset is similar to datasets exported from Qualtrics and its Loop & Merge function. The data has some pre-defined characteristics, such as well-defined means and correlations within and between the evaluation dimensions.
+  This Quarto notebook is designed to generate synthetic data using the `faux` package, providing an illustration for the analysis and visualization of micro-scenarios. The generated dataset closely resembles datasets exported from Qualtrics and its Loop & Merge function. The data incorporates pre-defined characteristics, including well-defined means and correlations within and between the evaluation dimensions.
 keywords:
   - Micro scenarios
   - R
@@ -21,22 +21,22 @@ funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Fo
 
 # Introduction
 
-This notebook generates synthetic data for demonstrating how to analyse a micro-scenario based study.
-The notebook for the analysis can be found in the very same folder.
-The main article presents details on this approach and outlines how to design and analyse studies. You can find and cite the main article here:
+This notebook generates synthetic data to demonstrate the analysis of a micro-scenario based study.
+The corresponding analysis notebook is located in the same folder.
+For detailed information on this approach and guidance on designing and analysing studies, please refer to the main article.
+You can find and cite the main article here: [insert citation information].
 
 -   Brauner, P. et al. (2024), Visual Maps of Technology Acceptance -- Spatial Mapping of Factors Influencing Social Acceptance of Technologies Using Micro Scenarios, XXX
 
-General idea of this simulated dataset is that it resembles the data export from typical survey software systems, such as Qualtrics.
-However, the data is clean, as it does not contain additional variables, speeders, or erroneous inputs that need to be cleaned.
-Also, the data is designed to show the desired properties of a micro scenario-based survey, e.g., that the topics follow a specific pattern and the evaluation dimensions have a defined correlation pattern. 
+The general concept behind this simulated dataset is to mimic the data export from typical survey software systems, like Qualtrics.
+However, the data is clean, devoid of additional variables, speeders, or erroneous inputs requiring cleaning.
+Furthermore, the dataset is structured to exhibit the desired properties of a micro-scenario-based survey, showcasing specific patterns among topics and a defined correlation pattern for evaluation dimensions.
 
-We use the `faux` package for generating the synthetic data and we learned this from the [package vignette]( https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html).
+For generating synthetic data, we use the `faux` package, and guidance for this can be found in the [package vignette](https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html).
 
 # Load libraries
 
-For the actual analysis, we build on the `tidyverse` and `ggplot` packages.
-For creating the synthetic data, we further use the `faux` package that allows the generation of data based on specific properties (e.g., pre-defined means and correlations between the variables).
+In the analysis, we rely on the `tidyverse` and `ggplot` packages. Additionally, for generating synthetic data with specific properties (e.g., pre-defined means and correlations between variables), we utilize the `faux` package.
 
 ```{r LOADLIBRARIES}
 library(faux)    # create simulated data based on given properties
@@ -50,14 +50,17 @@ library(knitr)   # Tables
 
 # Create Synthetic Data
 
-Here, we create synthetic data that simulates the properties from real survey data. Here, we first create a dataset that is similar to data from the survey tool Qualtrics.
-@fig-surveysdatastructure illustrates the layout of a typical data set from survey tools, where each row represents the responses from a single participant.
+In this section, we generate synthetic data that simulates properties akin to real survey data. Initially, we create a dataset resembling data from the survey tool Qualtrics. Figure @fig-surveysdatastructure illustrates the structure of a standard dataset from survey tools, where each row represents the responses from a single participant.
 
-![Illustration of typical data from a survey with the micro scenario approach with user demographics, additional user factors, and the topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
+![Illustration of typical survey data utilizing the micro-scenario approach, incorporating user demographics, additional user factors, and topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
 
-The created data set will contain several variables: First, an unique user identifier (id), an user variable (e.g., attitude towards a topic), then N=12 (adjustable) topic assessments with two variables for each evaluation dimension for each topic. As an example, we use *perceived risk* and *perceived utility* for the topic evaluations. Of course, one can use different or more evaluation dimensions (see article).
+The generated dataset will include several variables.
+Initially, a unique user identifier (id) is assigned, followed by a user variable (e.g., attitude towards a topic).
+Subsequently, *N=12* (adjustable) topic assessments are included, with two variables for each evaluation dimension for each topic.
+In this instance, *perceived risk* and *perceived utility* are used as examples for topic evaluations.
+However, one can utilize different or additional evaluation dimensions (as detailed in the article).
 
-For the synthetic data, we have N topics and two evaluation dimensions and define that they should be inversely correlated and have an intercept.
+For the synthetic data, we specify $N$ topics and two evaluation dimensions, defining that they should be inversely correlated with an intercept.
 
 ```{r DATAPOINTS}
 N <- 12  # number of topics to simulate
@@ -103,12 +106,15 @@ ggplot(data, aes(x = evaluationA,
                      limits=c( -1, +1 ))
 ```
 
-The variables for the topic evaluations must follow a standardized naming scheme, i.e., `a01_matrix_02`, where `01` stands for the ID of the queried topic, `02` for the queried evaluation dimension, and `matrix` for the name of the variable block in the survey tool. That is the naming scheme Quartics uses.
+The variables for the topic evaluations must adhere to a standardized naming scheme, i.e., `a01_matrix_02`, where `01` represents the ID of the queried topic, `02` stands for the queried evaluation dimension, and `matrix` denotes the name of the variable block in the survey tool.
+This is the naming scheme used by Quartics.
+
 ```{r DEFINEVARIABLENAMES}
 varnames <- c(paste0("a", 1:N, "_matrix_1"), paste0("a", 1:N, "_matrix_2"))
 ```
 
-We further define that the evaluations of the first and the second evaluation dimension are strongly correlated within and negatively correlated between the topics. The data is randomized to roughly but not exactly fit to this scheme (as if it was randomly drawn from a population parametrized this way).
+Additionally, we specify that the evaluations of the first and second evaluation dimensions are strongly correlated within topics and negatively correlated between topics.
+The data is randomized to approximately, but not exactly, align with this scheme, simulating a scenario as if it were randomly drawn from a population parametrized in this manner.
 
 ```{r DATACORRELATIONS}
 # Generate correlation matrix with random correlations in the specified range
@@ -147,9 +153,9 @@ cor_matrix[(N + 1):(2 * N), 1:N] <- t(cor_matrix_AB) #transposed for neg. covari
 
 # Check the validity of the data
 
-Check if we can continue. Why? We need a symmetric and positive-definite matrix to generate our random data based on the defined parameters. A correlation matrix is by definition symmetric and positive semi-definite. If we now encounter a correlation matrix that's not positive semi-definite, it could be due to numerical precision issues or errors in computation, especially when dealing with very large matrices or when there are near-linear dependencies between variables. Then repeate the steps above. It should work out after a few tries...
+Before proceeding, let's perform a check. Why? We require a symmetric and positive-definite matrix to generate random data based on the defined parameters. A correlation matrix is, by definition, symmetric and positive semi-definite. If we encounter a correlation matrix that is not positive semi-definite, it could be due to numerical precision issues or errors in computation, particularly when dealing with very large matrices or near-linear dependencies between variables. If this occurs, repeat the steps above—it should work out after a few tries.
 
-Note: Suggestions on how to fix this are appreciated. This is not required if you already have real survey data, as it only affects the creation of synthetic data.
+Request to the readers: Any suggestions on how to address this issue are appreciated. However, this step is not necessary if you already have real survey data, as it specifically pertains to the creation of synthetic data.
 
 ```{r CHECKVALIDITY, include=FALSE}
 print(paste0("Diagnostics for simulated correlation matrix:"))
@@ -157,7 +163,9 @@ print(paste0(" - isSemmetric: ", isSymmetric(cor_matrix)))
 print(paste0(" - is positiv-definite: ", is.positive.definite(cor_matrix)))
 ```
 
-Now we create the synthetic data based on the previously defined means and correlation parameters. Name the variables following the required schema. We provide population parameters and draw a random sample based on these.
+Now, let's create the synthetic data based on the previously defined means and correlation parameters.
+Name the variables following the required schema.
+We provide population parameters and draw a random sample based on these.
 
 ```{r GENERATEDATAMATRIX}
 data <- rnorm_multi(
@@ -172,7 +180,9 @@ data <- rnorm_multi(
 
 # Recode data
 
-Lastly, we record the data to resemble typical survey data. First, ensure that the bounds are met (e.g., values between -1 and +1; due to the random sampling, this may otherwise not always be the case). Next, convert the percent scores to the typical survey data domain, i.e., discrete values from 1 to 7.
+Finally, we record the data to resemble typical survey data.
+Firstly, ensure that the bounds are met (e.g., values between $-1$ and $+1$; due to random sampling, this may not always be the case).
+Next, convert the percent scores to the typical survey data domain, i.e., discrete values from $1$ to $7$.
 
 ```{r BOUNDSANDDISCRETISATION}
 data <- as.data.frame(data) %>%
@@ -182,7 +192,7 @@ data <- as.data.frame(data) %>%
   dplyr::mutate(across(everything(), ~ 1 + round(.)))
 ```
 
-Lastly, let's add a participant ID and a simulated user variable (calculated from the already simulated data and thus strongly correlated).
+Ultimately, let's add a participant ID and a simulated user variable, calculated from the already simulated data and therefore strongly correlated.
 
 ```{r ADDEXTRAVARIABLES}
 data <- data %>%
@@ -193,7 +203,8 @@ data <- data %>%
 
 # Save data
 
-Finally, we save the generated data to a RDS file for the actual analysis and visualization. The main notebook uses this data.
+Finally, we save the generated data to an RDS file for the actual analysis and visualization.
+The main notebook in the same folder utilizes this data.
 
 ```{r SAVEDATA}
 saveRDS(data, "syntheticdata.rds")
@@ -201,7 +212,8 @@ saveRDS(data, "syntheticdata.rds")
 
 # Acknowledgements
 
-This approach has evolved over a longer period of time and through several research projects. We would like to thank all those who have directly or indirectly, consciously or unconsciously, inspired us to take a closer look at this approach and who have given us the opportunity to apply this approach in various contexts.
-Special thanks to Julian Hildebrandt for feedback on an earlier version of this notebook.
+Over an extended period and across various research projects, this approach has evolved.
+We extend our gratitude to all who have, directly or indirectly, consciously or unconsciously, inspired us to delve into this approach and provided opportunities for its application in diverse contexts.
+Special thanks to Julian Hildebrandt for providing feedback on an earlier version of this notebook.
 
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC- 2023 Internet of Production — 390621612.
