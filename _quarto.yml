@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Mapping Acceptance"
+  search: false
+  body-footer: | 
+    | **Acknowledgements**: 
+    | This approach evolved over time and through several research projects.
+    | I would like to thank all those who have directly or indirectly, consciously or unconsciously, inspired me to take a closer look at this approach and who have given me the opportunity to apply this approach in various contexts. In particular, I would like to thank:
+    | Julia Offermann, for indispensable discussions about this approach and so much encouragement and constructive comments during the last meters of the manuscript.
+    | Ralf Philipsen, without whom the very first study with that approach would never have happened, as we developed the crazy idea to explore the benefits of barriers of using "side-by-side" questions in Limesurvey.
+    | Martina Ziefle for igniting scientific curiosity and motivating me to embark on a journey of boundless creativity and exploration.
+    | Felix Glawe, Luca Liehner, and Luisa Vervier for working on a study that took this concept to another level.
+    | Julian Hildebrandt for in-depth discussions on the approach and for validating the accompanying code.
+    | Tim Schmeckel for feedback on the draft of this article.
+    | Throughout the process I received feedback from reviewers that helped to question this approach and improve the foundation of this approach.
+    | No scientific method of the social sciences alone will fully answer all of our questions.
+    | We hope that this method provides a fresh perspective on exciting and relevant questions.
+    | Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy -- EXC- 2023 Internet of Production -- 390621612.
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: analysis.qmd
+        text: Analysis of Micro Scenarios
+      - href: synthetic.qmd
+        text: Generration of Demo Data
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+  pdf:
+    documentclass: report

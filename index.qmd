@@ -1,0 +1,78 @@
+---
+title: "Mapping Acceptance: Assessing Emerging Technologies and Concepts through Micro Scenarios"
+author:
+  - name: "Philipp Brauner"
+    orcid: 0000-0003-2837-5181
+    affiliation: 
+      - name: RWTH Aachen University, Communication Science
+        city: Aachen
+        country: Germany
+        url: www.comm.rwth-aachen.de
+date-format: long
+title-block-banner: "true"
+abstract: > 
+  As technology evolves rapidly, understanding public perception becomes increasingly crucial. This article introduces an integrative method for evaluating mental models and social acceptance of various technologies. Our approach utilizes micro scenarios coupled with visual-spatial mapping, offering a comprehensive perspective that contrasts with traditional methods focused on detailed assessments of limited scenarios. This methodology allows for simultaneous evaluation of multiple technologies on visio-spatial maps, facilitating a comparative ranking based on diverse criteria and an exploration of the interplay between individual factors and technology attributes in shaping public opinion. Our approach provides a framework for researchers and policymakers to gauge critical issues and to identify factors pivotal to acceptance. We illustrate this methodology with examples from our research, offering practical guidelines and R code to enable others in conducting similar studies. This paper aims to bridge the gap between technological advancement and societal perception, offering a tool for more informed decision-making in the realm of technology development and policy.
+keywords:
+  - cognitive maps
+  - technology acceptance
+  - micro scenarios
+  - psychometric paradigm
+  - technology assessment
+  - mental models
+  - Topic Mapping
+funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy — EXC-2023 Internet of Production — 390621612."
+editor: 
+  markdown: 
+    wrap: sentence
+format:
+  html:
+    theme: cosmo
+---
+
+# Introduction
+
+The goal of the micro scenario approach is to gather the evaluation of a wide range of topics on few selected response variables and put the different evaluation into context.
+Hereto, the subjects are presented with a large number of different short scenarios and their evaluation of these is measured using a small set of response variables.
+The scenario presentation can be a short descriptive text, and/or images, or, in extreme cases, just a single word about an evaluated concept.
+We call the former "micro scenarios" and the latter "nano scenarios". The former offers the possibility to briefly explain the evaluated topic whereas the later essentially measures the participants' affective associations towards a single term.
+
+![Concept of a micro scenario survey compared to a conventional scenario-based survey.](figures/conceptcomparison.png){fig-align="center" #fig-conceptcomparison}
+
+
+Each scenario is evaluated on a the same small set of response items (see @fig-conceptcomparison).
+As many scenarios are evaluated by the participants, we suggest to use no more than three to five items.
+With a suitable set of dependent variables, the evaluations offer two different research perspectives:
+As the first research perspective, they can be understood, as user variables (individual differences between the participants) and correlations between age, gender, or other user factors can be investigated.
+As the second research perspective, the evaluations serve as topic evaluations and relationships between the evaluation dimensions across the different topics can be studied (differences and communalities between the queried topics).
+For example, one can explore the relationship between the perceived risk and the perceived utility for a range of different topics or technologies.
+
+We illustrate how studies using the micro scenario approach can be [analysed and visualized](analysis.qmd) and further we created a page that create [synthetic data](synthetic.qmd) for illustrating the analysis. 
+
+
+Details on this approach, a methodological justification, and practical guidelines can be found in the following article:
+
+> Visual Cognitive Mapping: Assessing Social Acceptance of Emerging Technologies through Micro Scenarios, Philipp Brauner & Julia Offermann (2024)
+
+# List of Studies
+
+Several studies based on this approach have been published or are in the making. We document them here, including the research context, sample size, number of topics queried, and dependent variables. If you use this approach, let us know and we can add your study as well. 
+
+
+```{r showTableOfStudies, echo=FALSE, warning=FALSE, message=FALSE}
+#| column: page
+
+library(tidyverse)
+library(rmarkdown)
+library(knitr)
+library(kableExtra)
+
+STUDIES <- read.csv2("studies.csv") %>%
+  dplyr::rename_with( tolower )
+
+kable(STUDIES %>%
+        dplyr::arrange(-published, -year) %>%
+        dplyr::select(publication, topics, dependents, samplesize) %>%
+        dplyr::relocate(publication, topics, dependents, samplesize),
+      col.names = c('Publication', '#Topics', 'Dependents', 'N')) %>%
+    kable_material(c("striped", "hover"))
+```
