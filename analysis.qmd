@@ -28,6 +28,11 @@ funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Fo
 editor: 
   markdown: 
     wrap: sentence
+format:
+    pdf:
+      toc: true
+      number-sections: true
+      fontfamily: libertinus
 ---
 
 # Introduction
