@@ -254,31 +254,31 @@ The following object is masked from 'package:readr':
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   100 obs. of  26 variables:
  $ id          : chr  "fakeparticipantid-1" "fakeparticipantid-2" "fakeparticipantid-3" "fakeparticipantid-4" ...
- $ uservariable: num  12.01 10.62 6.69 9.05 11.82 ...
- $ a1_matrix_1 : num  2 1 1 1 3 2 1 4 3 3 ...
- $ a2_matrix_1 : num  3 2 2 2 2 3 3 3 4 1 ...
- $ a3_matrix_1 : num  2 2 2 1 4 3 2 4 2 3 ...
- $ a4_matrix_1 : num  3 3 2 3 5 4 3 4 2 3 ...
- $ a5_matrix_1 : num  3 3 2 3 4 4 4 5 3 3 ...
- $ a6_matrix_1 : num  5 4 3 4 4 5 3 4 2 3 ...
- $ a7_matrix_1 : num  4 4 3 3 4 5 3 5 4 3 ...
- $ a8_matrix_1 : num  4 4 3 4 5 5 4 6 5 4 ...
- $ a9_matrix_1 : num  5 5 3 3 6 5 4 5 5 4 ...
- $ a10_matrix_1: num  6 5 5 4 4 6 5 6 5 4 ...
- $ a11_matrix_1: num  6 5 5 6 6 7 6 7 6 5 ...
- $ a12_matrix_1: num  5 5 5 4 6 7 5 7 5 6 ...
- $ a1_matrix_2 : num  1 3 3 3 2 1 1 2 3 2 ...
- $ a2_matrix_2 : num  1 2 3 3 2 2 2 1 3 3 ...
- $ a3_matrix_2 : num  1 2 2 1 2 2 2 1 2 2 ...
- $ a4_matrix_2 : num  2 2 4 4 2 2 2 1 2 3 ...
- $ a5_matrix_2 : num  4 4 5 4 4 3 5 4 6 4 ...
- $ a6_matrix_2 : num  3 3 3 3 2 1 3 2 4 3 ...
- $ a7_matrix_2 : num  3 3 4 3 4 3 2 3 4 3 ...
- $ a8_matrix_2 : num  2 4 4 4 3 3 3 2 2 2 ...
- $ a9_matrix_2 : num  3 4 5 3 3 3 3 1 3 4 ...
- $ a10_matrix_2: num  3 3 4 5 3 3 4 3 4 4 ...
- $ a11_matrix_2: num  3 3 4 4 3 4 4 2 3 4 ...
- $ a12_matrix_2: num  4 4 5 6 4 3 5 4 6 4 ...</code></pre>
+ $ uservariable: num  8.14 12.94 8.98 9.78 11.5 ...
+ $ a1_matrix_1 : num  2 3 2 2 3 2 2 1 1 3 ...
+ $ a2_matrix_1 : num  1 3 2 2 3 2 2 3 3 2 ...
+ $ a3_matrix_1 : num  2 3 2 2 3 3 2 1 2 4 ...
+ $ a4_matrix_1 : num  2 3 3 3 4 3 4 3 3 3 ...
+ $ a5_matrix_1 : num  3 3 3 2 4 3 2 2 4 4 ...
+ $ a6_matrix_1 : num  4 4 4 4 5 4 4 3 3 4 ...
+ $ a7_matrix_1 : num  4 4 4 4 5 5 3 3 3 5 ...
+ $ a8_matrix_1 : num  3 5 5 4 6 5 5 3 5 4 ...
+ $ a9_matrix_1 : num  5 6 4 5 5 6 4 5 4 5 ...
+ $ a10_matrix_1: num  5 5 5 4 6 5 5 5 5 5 ...
+ $ a11_matrix_1: num  3 5 6 5 7 5 5 5 6 5 ...
+ $ a12_matrix_1: num  6 7 5 5 6 7 6 5 5 6 ...
+ $ a1_matrix_2 : num  2 1 1 1 1 1 1 2 2 3 ...
+ $ a2_matrix_2 : num  2 2 1 3 1 2 1 3 3 2 ...
+ $ a3_matrix_2 : num  2 1 3 2 2 1 1 3 3 2 ...
+ $ a4_matrix_2 : num  3 3 4 2 2 2 2 3 2 2 ...
+ $ a5_matrix_2 : num  5 5 5 4 5 3 5 6 5 5 ...
+ $ a6_matrix_2 : num  3 3 2 3 2 3 2 3 3 3 ...
+ $ a7_matrix_2 : num  3 2 3 4 2 3 3 4 3 3 ...
+ $ a8_matrix_2 : num  4 3 4 3 2 4 3 4 3 4 ...
+ $ a9_matrix_2 : num  4 5 4 4 2 3 3 4 3 4 ...
+ $ a10_matrix_2: num  5 3 4 4 4 4 4 5 5 4 ...
+ $ a11_matrix_2: num  5 5 4 5 3 4 3 4 5 4 ...
+ $ a12_matrix_2: num  5 5 4 5 6 4 4 6 6 4 ...</code></pre>
 </div>
 </div>
 <p>The loaded dataset has various variables. Initially, there’s a unique user identifier (<code>id</code>), followed by a user variable (e.g., attitude towards a topic). Subsequently, there are an arbitrary number of topic assessments (<em>N</em> in our example) with variables for each evaluation dimension. In this instance, we use <em>perceived risk</em> and <em>perceived utility</em> as examples for the topic evaluations. However, one can employ different or additional evaluation dimensions (as detailed in the article).</p>
@@ -346,15 +346,15 @@ The following object is masked from 'package:readr':
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>risk_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--0.5278 -0.2500 -0.1111 -0.1303  0.0000  0.3333 </code></pre>
+-0.4444 -0.2222 -0.1111 -0.1153  0.0000  0.2500 </code></pre>
 </div>
 </div>
 <p>How is the average perceived <em>utility</em> of the participants?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>utility_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--0.05556  0.15972  0.30556  0.27583  0.36111  0.66667 </code></pre>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.1944  0.2778  0.2825  0.3611  0.6389 </code></pre>
 </div>
 </div>
 <p>Does <em>uservariable</em> from the survey correlate to <em>risk</em>?</p>
@@ -366,13 +366,13 @@ The following object is masked from 'package:readr':
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$risk_mean and evaluationByParticipant$uservariable
-t = 3.4023, df = 98, p-value = 0.0009689
+t = 4.0217, df = 98, p-value = 0.0001137
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.1373725 0.4901478
+ 0.1943293 0.5333683
 sample estimates:
-      cor 
-0.3250207 </code></pre>
+     cor 
+0.376381 </code></pre>
 </div>
 </div>
 <p>Does uservariable correlate with the average <em>perceived utility</em>?</p>
@@ -384,13 +384,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$utility_mean and evaluationByParticipant$uservariable
-t = 2.7281, df = 98, p-value = 0.007551
+t = 0.64479, df = 98, p-value = 0.5206
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.07306894 0.43917467
+ -0.1331213  0.2581192
 sample estimates:
-      cor 
-0.2656741 </code></pre>
+       cor 
+0.06499634 </code></pre>
 </div>
 </div>
 </section>
@@ -424,13 +424,13 @@ sample estimates:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">risk</td>
-<td style="text-align: right;">-0.13</td>
-<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">-0.12</td>
+<td style="text-align: right;">0.49</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">utility</td>
 <td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.41</td>
 </tr>
 </tbody>
 </table>
@@ -507,87 +507,87 @@ sample estimates:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Topic 1</td>
-<td style="text-align: right;">-0.65</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.67</td>
-<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-0.71</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">0.23</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 10</td>
-<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">0.30</td>
 <td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.27</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 11</td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">-0.02</td>
+<td style="text-align: right;">0.27</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 12</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">-0.12</td>
-<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">-0.09</td>
+<td style="text-align: right;">0.30</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 2</td>
-<td style="text-align: right;">-0.58</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.57</td>
-<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">-0.69</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.24</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 3</td>
-<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">-0.55</td>
 <td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.68</td>
-<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.24</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 4</td>
-<td style="text-align: right;">-0.45</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">-0.39</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.28</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 5 (deliberate outlier)</td>
 <td style="text-align: right;">-0.36</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">-0.26</td>
-<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">-0.20</td>
+<td style="text-align: right;">0.24</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 6</td>
-<td style="text-align: right;">-0.15</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.40</td>
-<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-0.19</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.23</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 7</td>
-<td style="text-align: right;">-0.15</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">-0.08</td>
+<td style="text-align: right;">0.28</td>
 <td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.23</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 8</td>
-<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.01</td>
 <td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 9</td>
-<td style="text-align: right;">0.17</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.21</td>
-<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.24</td>
 </tr>
 </tbody>
 </table>
@@ -640,13 +640,13 @@ sample estimates:
 <tr class="odd">
 <td style="text-align: left;">risk_mean</td>
 <td style="text-align: left;">utility_mean</td>
-<td style="text-align: right;">-0.6817385</td>
+<td style="text-align: right;">-0.7804982</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.9025261</td>
-<td style="text-align: right;">-0.1771451</td>
-<td style="text-align: right;">-2.946772</td>
+<td style="text-align: right;">-0.9354047</td>
+<td style="text-align: right;">-0.3742212</td>
+<td style="text-align: right;">-3.948045</td>
 <td style="text-align: right;">10</td>
-<td style="text-align: right;">0.0146152</td>
+<td style="text-align: right;">0.0027389</td>
 <td style="text-align: left;">Pearson correlation</td>
 <td style="text-align: right;">12</td>
 </tr>
