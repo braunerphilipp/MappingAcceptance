@@ -203,9 +203,10 @@ data <- data %>%
 
 # Save data
 
-Finally, we save the generated data to an RDS file for the actual analysis and visualization.
-The main notebook in the same folder utilizes this data.
+Finally, we save the generated data to an RDS file.
 
 ```{r SAVEDATA}
 saveRDS(data, "syntheticdata.rds")
 ```
+
+That file can be used for the actual [analysis and visualization](analysis.qmd) (this main notebook utilizes this data).
