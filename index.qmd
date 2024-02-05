@@ -48,10 +48,9 @@ For example, one can explore the relationship between the perceived risk and the
 
 We illustrate how studies using the micro scenario approach can be [analysed and visualized](analysis.qmd) and further we created a page that create [synthetic data](synthetic.qmd) for illustrating the analysis. 
 
-
 Details on this approach, a methodological justification, and practical guidelines can be found in the following article:
 
-> Visual Cognitive Mapping: Assessing Social Acceptance of Emerging Technologies through Micro Scenarios, Philipp Brauner & Julia Offermann (2024)
+> Mapping Acceptance: Assessing Emerging Technologies and Concepts through Micro Scenarios, Philipp Brauner, [http://arxiv.org/abs/2402.01551](http://arxiv.org/abs/2402.01551) (2024)
 
 # List of Studies
 

@@ -46,7 +46,7 @@ Is the comparability of risk-utility trade-offs consistent across different tech
 
 The main article provides comprehensive insights into this approach and outlines the methodology for designing and analyzing studies. You can locate and cite the main article here:
 
-> Visual Cognitive Mapping: Assessing Social Acceptance of Emerging Technologies through Micro Scenarios, Philipp Brauner & Julia Offermann (2024)
+> Mapping Acceptance: Assessing Emerging Technologies and Concepts through Micro Scenarios, Philipp Brauner, [http://arxiv.org/abs/2402.01551](http://arxiv.org/abs/2402.01551) (2024)
 
 This notebook demonstrates the calculation of data for the two research perspectives of the micro-scenario approach (Perspective 1: user factor and Perspective 2: topic factor) using R.
 Note that all transformations and calculations can also be performed using other software.
