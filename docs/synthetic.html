@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Philipp Brauner">
-<meta name="keywords" content="cognitive maps, technology acceptance, micro scenarios, psychometric paradigm, technology assessment, mental models, Topic Mapping">
+<meta name="keywords" content="Micro scenarios, R">
 
-<title>Mapping Acceptance - Creation of Synthetic Data for Demonstrating a Micro Scenario-Analysis and Visualisation</title>
+<title>Mapping Acceptance - Simulate Data for Micro Scenario-Analysis and Visualisation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Creation of Synthetic Data for Demonstrating a Micro Scenario-Analysis and Visualisation</h1>
+      <h1 class="title">Simulate Data for Micro Scenario-Analysis and Visualisation</h1>
                       </div>
   </div>
     
@@ -162,6 +162,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         
     
       
+      <div>
+      <div class="quarto-title-meta-heading">Doi</div>
+      <div class="quarto-title-meta-contents">
+        <p class="doi">
+          <a href="https://doi.org/not yet">not yet</a>
+        </p>
+      </div>
+    </div>
     </div>
     
   <div>
@@ -185,9 +193,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This notebook generates synthetic data to demonstrate the <a href="./analysis.html">analysis</a> of a micro-scenario based study. The corresponding analysis notebook is located in the same folder. For detailed information on this approach and guidance on designing and analysing studies, please refer to the main article. You can find and cite the main article here:.</p>
+<p>This notebook generates synthetic data to demonstrate the analysis of a micro-scenario based study. The corresponding analysis notebook is located in the same folder. For detailed information on this approach and guidance on designing and analysing studies, please refer to the main article. You can find and cite the main article here:.</p>
 <blockquote class="blockquote">
-<p>Visual Cognitive Mapping: Assessing Social Acceptance of Emerging Technologies through Micro Scenarios, Philipp Brauner &amp; Julia Offermann (2024)</p>
+<p>Mapping Acceptance: Assessing Emerging Technologies and Concepts through Micro Scenarios, Philipp Brauner, <a href="http://arxiv.org/abs/2402.01551">http://arxiv.org/abs/2402.01551</a> (2024)</p>
 </blockquote>
 <p>The general concept behind this simulated dataset is to mimic the data export from typical survey software systems, like Qualtrics. However, the data is clean, devoid of additional variables, speeders, or erroneous inputs requiring cleaning. Furthermore, the dataset is structured to exhibit the desired properties of a micro-scenario-based survey, showcasing specific patterns among topics and a defined correlation pattern for evaluation dimensions.</p>
 <p>For generating synthetic data, we use the <code>faux</code> package, and guidance for this can be found in the <a href="https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html">package vignette</a>.</p>
@@ -356,11 +364,10 @@ The following object is masked from 'package:readr':
 </section>
 <section id="save-data" class="level1">
 <h1>Save data</h1>
-<p>Finally, we save the generated data to an RDS file.</p>
+<p>Finally, we save the generated data to an RDS file for the actual analysis and visualization. The main notebook in the same folder utilizes this data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(data, <span class="st">"syntheticdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>That file can be used for the actual <a href="./analysis.html">analysis and visualization</a> (this main notebook utilizes this data).</p>
 
 
 </section>
@@ -369,7 +376,7 @@ The following object is masked from 'package:readr':
 This approach evolved over time and through several research projects.<br>
 I would like to thank all those who have directly or indirectly, consciously or unconsciously, inspired me to take a closer look at this approach and who have given me the opportunity to apply this approach in various contexts. In particular, I would like to thank:<br>
 Julia Offermann, for indispensable discussions about this approach and so much encouragement and constructive comments during the last meters of the manuscript.<br>
-Ralf Philipsen, without whom the very first study with that approach would never have happened, as we developed the crazy idea to explore the benefits of barriers of using questions in Limesurvey.<br>
+Ralf Philipsen, without whom the very first study with that approach would never have happened, as we developed the crazy idea to explore the benefits of barriers of using “side-by-side” questions in Limesurvey.<br>
 Martina Ziefle for igniting scientific curiosity and motivating me to embark on a journey of boundless creativity and exploration.<br>
 Felix Glawe, Luca Liehner, and Luisa Vervier for working on a study that took this concept to another level.<br>
 Julian Hildebrandt for in-depth discussions on the approach and for validating the accompanying code.<br>
