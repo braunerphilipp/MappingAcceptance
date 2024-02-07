@@ -9,7 +9,6 @@ author:
         country: Germany
         url: www.comm.rwth-aachen.de
 date-format: long
-doi: "not yet"
 title-block-banner: "true"
 abstract: > 
   This Quarto notebook is designed to generate synthetic data using the `faux` package, providing an illustration for the analysis and visualization of micro-scenarios. The generated dataset closely resembles datasets exported from Qualtrics and its Loop & Merge function. The data incorporates pre-defined characteristics, including well-defined means and correlations within and between the evaluation dimensions.
