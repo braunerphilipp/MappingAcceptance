@@ -1,5 +1,5 @@
 ---
-title: "Example Notebook to Analyse and Visualize Data from a Micro Scenario-based Study"
+title: "Example Notebook to Analyse and Visualize Data from Micro Scenario-based Studies"
 author:
   - name: "Philipp Brauner"
     orcid: 0000-0003-2837-5181
@@ -11,7 +11,7 @@ author:
 date-format: long
 title-block-banner: "true"
 abstract: > 
-  This R notebook serves as an example, demonstrating the analysis and visualization of micro-scenario-based studies. Micro-scenarios provide an approach for evaluating the social acceptance of technologies and the determining factors, along with a visual-spatial mapping of the results. They enable the simultaneous assessment of multiple technologies, ranking them based on different criteria, and analyzing how individual factors and technology-based attributions correlate with the overall assessment of technologies. Utilizing synthetic survey data (generated in a separate notebook), this notebook illustrates how to recode the data, aggregate scenario scores as user factors, calculate topic scores, and visualize them using the R programming language, along with `ggplot` and `tidyverse`.
+  This R notebook serves as an example, demonstrating the analysis and visualization of micro-scenario-based studies. Micro-scenarios provide an approach for evaluating the social acceptance of technologies and the determining factors, along with visuo-spatial mappings of the results. They enable a) the simultaneous assessment of multiple technologies, ranking them based on different criteria, and b) analyzing how individual factors and technology-based attributions correlate with the overall assessment of technologies. Utilizing synthetic survey data (generated in a separate notebook), this notebook illustrates how to recode the data, aggregate scenario scores as user factors, calculate topic scores, and visualize them using the R programming language, along with `ggplot` and `tidyverse`.
 keywords:
   - cognitive maps
   - technology acceptance
@@ -46,7 +46,7 @@ Is the comparability of risk-utility trade-offs consistent across different tech
 
 The main article provides comprehensive insights into this approach and outlines the methodology for designing and analyzing studies. You can locate and cite the main article here:
 
-> Mapping Acceptance: Assessing Emerging Technologies and Concepts through Micro Scenarios, Philipp Brauner, [http://arxiv.org/abs/2402.01551](http://arxiv.org/abs/2402.01551) (2024)
+> Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
 
 This notebook demonstrates the calculation of data for the two research perspectives of the micro-scenario approach (Perspective 1: user factor and Perspective 2: topic factor) using R.
 Note that all transformations and calculations can also be performed using other software.
@@ -234,6 +234,7 @@ knitr::kable(evaluationByDimension %>%
 ```{r PERSPECTIVE2_PLOTOVERVIEW}
 #| label: fig-evaluations
 #| fig-cap: "Mean evaluation across all topics and aggregated across all participants."
+
 overallDimension <- ggplot(evaluationByDimension,
   aes(x = dimension, y = mean)) + 
   geom_bar(stat = "identity") +
@@ -244,6 +245,33 @@ overallDimension <- ggplot(evaluationByDimension,
        title = "Average Evaluation across all Dimensions and Participants")
 overallDimension
 ```
+This can also be illustrated in form of a violin plot in combination with a boxplot. Then this graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).
+
+```{r PERSPECTIVE2_PLOTVIOLIN}
+#| label: fig-evaluationsviolin
+#| fig-cap: "Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations)."
+dataByDimensionQuestion <- evaluationsLong %>%
+  dplyr::group_by( question, dimension ) %>%
+  dplyr::summarise( mean = mean(value, na.rm = TRUE),
+                    sd = sd(value, na.rm = TRUE),
+        .groups = 'drop')
+
+overallDimension <- ggplot(dataByDimensionQuestion,
+  aes(x = factor(dimension, levels = c("risk", "utility", y = mean)), y= mean)) + 
+  geom_violin() +
+  geom_boxplot(width=0.2,
+               position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = percent_format(),
+                     limits=c( -1, +1 )) +
+  scale_x_discrete(
+      labels = c("risk" = "Risk",
+                 "utility" = "Utility")) +
+  labs(x = "Evaluation Dimension",
+       y = "Values",
+       title = "Average Evaluation across all Dimensions and Participants")
+overallDimension
+```
+
 
 ### Prepare Individual Topics
 
@@ -337,19 +365,19 @@ scatterPlot <- evaluationByTopic %>%
   geom_label(aes(x = -1, y = -1, label = "LOW RISK & LOW UTILITY"),
              vjust = "middle", hjust = "inward",
              size = 1.75,
-             label.size = NA, color="black", fill = "#c7ddf2") +
+             label.size = NA, color="black", fill = "#7CBF6C") +
   geom_label(aes(x = -1, y = +1, label = "LOW RISK & HIGH UTILITY"),
              vjust = "middle", hjust = "inward",
              size = 1.75,
-             label.size = NA, color="black", fill = "#c7ddf2") + 
+             label.size = NA, color="black", fill = "#7CBF6C") + 
   geom_label(aes(x = +1, y = -1, label = "HIGH RISK & LOW UTILITY"),
              vjust = "middle", hjust = "inward",
              size = 1.75,
-             label.size = NA, color="black", fill = "#c7ddf2") + 
+             label.size = NA, color="black", fill = "#7CBF6C") + 
   geom_label(aes(x = +1, y = +1, label = "HIGH RISK & HIGH UTILITY"),
              vjust = "middle", hjust = "inward",
              size = 1.75,
-             label.size = NA, color="black", fill = "#c7ddf2") + 
+             label.size = NA, color="black", fill = "#7CBF6C") + 
   # add the labels...
   geom_label_repel(
     max.time = 3,
@@ -359,7 +387,7 @@ scatterPlot <- evaluationByTopic %>%
     max.overlaps = Inf,
     ylim = c(-Inf, Inf),
     xlim = c(-Inf, Inf),
-    segment.color ="#00549f",
+    segment.color ="#3A6B2E",
     segment.size = 0.25,
     min.segment.length = 0,
     size = 2.5,
@@ -367,14 +395,15 @@ scatterPlot <- evaluationByTopic %>%
     label.padding = 0.105,
     box.padding = 0.125
   ) +
-  geom_smooth(method = "lm", se = TRUE) +
+  geom_smooth(method = "lm", se = TRUE, color="#3A6B2E") +
   geom_point() +      # geom for the data points
   labs( title = "Illustration of the risk-utility tradeoff ...",
         caption = "Based on synthetic data for illustrative purposes. See linked companion notebook under https://osf.io/96ep5/",
         x = "AVERAGE ESTIMATED RISK\n(without risk — very risky)",
         y = "AVERAGE ESTIMATED UTILITY\n(useless — useful)") +
   scale_x_continuous(labels = percent_format(), limits=c( -1, +1 )) +
-  scale_y_continuous(labels = percent_format(), limits=c( -1, +1 ))
+  scale_y_continuous(labels = percent_format(), limits=c( -1, +1 )) +
+  theme_bw()
 scatterPlot
 
 ggsave("simulatedriskutility.pdf",

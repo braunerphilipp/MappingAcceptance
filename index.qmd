@@ -1,5 +1,5 @@
 ---
-title: "Mapping Acceptance: Assessing Emerging Technologies and Concepts through Micro Scenarios"
+title: "Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception"
 author:
   - name: "Philipp Brauner"
     orcid: 0000-0003-2837-5181
@@ -11,7 +11,7 @@ author:
 date-format: long
 title-block-banner: "true"
 abstract: > 
-  As technology evolves rapidly, understanding public perception becomes increasingly crucial. This article introduces an integrative method for evaluating mental models and social acceptance of various technologies. Our approach utilizes micro scenarios coupled with visual-spatial mapping, offering a comprehensive perspective that contrasts with traditional methods focused on detailed assessments of limited scenarios. This methodology allows for simultaneous evaluation of multiple technologies on visio-spatial maps, facilitating a comparative ranking based on diverse criteria and an exploration of the interplay between individual factors and technology attributes in shaping public opinion. Our approach provides a framework for researchers and policymakers to gauge critical issues and to identify factors pivotal to acceptance. We illustrate this methodology with examples from our research, offering practical guidelines and R code to enable others in conducting similar studies. This paper aims to bridge the gap between technological advancement and societal perception, offering a tool for more informed decision-making in the realm of technology development and policy.
+  Understanding public perception of technology is crucial to aligning research, development, and governance of technology. This article introduces micro scenarios as an integrative method to evaluate mental models and social acceptance across numerous technologies and concepts using a few single-item scales within a single comprehensive survey. This approach contrasts with traditional methods that focus on detailed assessments of as few as one scenario. The data can be interpreted in two ways: Perspective 1) Average evaluations of each participant can be seen as individual differences, providing reflexive measurements across technologies or topics. This helps in understanding how perceptions of technology relate to other personality factors. Perspective 2) Average evaluations of each technology or topic can be interpreted as technology attributions. This makes it possible to position technologies on visuo-spatial maps to simplify identification of critical issues, conduct comparative rankings based on selected criteria, and to analyze the interplay between different attributions. This dual approach enables the modeling of acceptance-relevant factors that shape public opinion. It offers a framework for researchers, technology developers, and policymakers to identify pivotal factors for acceptance at both the individual and technology levels. I illustrate this methodology with examples from my research, provide practical guidelines, and include `R` code to enable others to conduct similar studies. This paper aims to bridge the gap between technological advancement and societal perception, offering a tool for more informed decision-making in technology development and policy-making.
 keywords:
   - cognitive maps
   - technology acceptance
@@ -50,7 +50,20 @@ We illustrate how studies using the micro scenario approach can be [analysed and
 
 Details on this approach, a methodological justification, and practical guidelines can be found in the following article:
 
-> Mapping Acceptance: Assessing Emerging Technologies and Concepts through Micro Scenarios, Philipp Brauner, [http://arxiv.org/abs/2402.01551](http://arxiv.org/abs/2402.01551) (2024)
+> Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
+
+# Real world application
+
+Here you find a araphical abstract from a refereed article that applied the micro scenario approach in the context of public risk-benefit perceptiopn of Artifical Intelligence.
+
+![Graphical abstract from a peer-reviewed article that applyed the micro scenario approach in the context of public perceptiopn of AI.](figures/figures-abstractPanel.png){fig-align="center" #fig-graphicalabstract}
+Link to the article: [https://doi.org/10.1016/j.techfore.2025.124304](https://doi.org/10.1016/j.techfore.2025.124304)
+
+# Slides
+
+If you prefer slides over websites, you can look at the english slidedeck on the appraoch here:
+[microscenarios_slides_2025.pdf](microscenarios_slides_2025.pdf)
+
 
 # List of Studies
 
@@ -66,12 +79,27 @@ library(knitr)
 library(kableExtra)
 
 STUDIES <- read.csv2("studies.csv") %>%
-  dplyr::rename_with( tolower )
+  dplyr::rename_with( tolower ) %>%
+  dplyr::mutate(
+    year = as.integer(year),
+    published = factor(published,
+                       levels = c(FALSE, TRUE),
+                       labels = c("(Preprint)", "Yes")))
 
-kable(STUDIES %>%
-        dplyr::arrange(-published, -year) %>%
-        dplyr::select(publication, topics, dependents, samplesize) %>%
-        dplyr::relocate(publication, topics, dependents, samplesize),
-      col.names = c('Publication', '#Topics', 'Dependents', 'N')) %>%
-    kable_material(c("striped", "hover"))
+STUDIES <- STUDIES %>% dplyr::mutate(titleLink = paste0(signature, ' (<a href="', str_trim(url, side = "right"), '" target="_blank">Visit</a>)'))
+
+tableContent <- STUDIES %>%
+    dplyr::arrange(-published) %>%
+    dplyr::select(titleLink, context, dependents, topics, samplesize, published) %>%
+    dplyr::relocate(titleLink, context, dependents, topics, samplesize, published)
+tableRowsBold <-which(tableContent$published == T)
+
+kbl(tableContent,
+    col.names = c('Publication', 'Context', 'Dependents Variables', 'Number of Topics', 'Sample Size', 'Published'),
+    escape = FALSE) %>%
+    kable_styling(full_width = T) %>%
+    row_spec(tableRowsBold, bold = TRUE) %>%
+    kable_material(c("striped", "hover")) %>%
+    column_spec(1, width = "40em", extra_css = "word-wrap: normal; white-space: normal;") %>%
+    column_spec(3, width = "30em", extra_css = "word-wrap: normal; white-space: normal;")
 ```
