@@ -77,6 +77,8 @@ library(tidyverse)
 library(rmarkdown)
 library(knitr)
 library(kableExtra)
+library(gt)
+
 
 STUDIES <- read.csv2("studies.csv") %>%
   dplyr::rename_with( tolower ) %>%
@@ -86,20 +88,37 @@ STUDIES <- read.csv2("studies.csv") %>%
                        levels = c(FALSE, TRUE),
                        labels = c("(Preprint)", "Yes")))
 
-STUDIES <- STUDIES %>% dplyr::mutate(titleLink = paste0(signature, ' (<a href="', str_trim(url, side = "right"), '" target="_blank">Visit</a>)'))
+
+#  dplyr::mutate(titleLink = paste0(signature, ' (<a href="', str_trim(url, side = "right"), '" target="_blank">Visit</a>)'))
 
 tableContent <- STUDIES %>%
-    dplyr::arrange(-published) %>%
-    dplyr::select(titleLink, context, dependents, topics, samplesize, published) %>%
-    dplyr::relocate(titleLink, context, dependents, topics, samplesize, published)
-tableRowsBold <-which(tableContent$published == T)
+    dplyr::arrange(-published)
 
-kbl(tableContent,
-    col.names = c('Publication', 'Context', 'Dependents Variables', 'Number of Topics', 'Sample Size', 'Published'),
-    escape = FALSE) %>%
-    kable_styling(full_width = T) %>%
-    row_spec(tableRowsBold, bold = TRUE) %>%
-    kable_material(c("striped", "hover")) %>%
-    column_spec(1, width = "40em", extra_css = "word-wrap: normal; white-space: normal;") %>%
-    column_spec(3, width = "30em", extra_css = "word-wrap: normal; white-space: normal;")
+tableContent %>%
+  dplyr::mutate(
+    titleLink = md(paste0("[", signature, "](", url, ")")) # build markdown link
+  ) %>%
+  gt() %>%
+  cols_label(
+    titleLink = "Title",
+    context = "Context",
+    dependents = "Dependents",
+    topics = "#Topics",
+    samplesize = "#Participants",
+  ) %>%
+  fmt_markdown(columns = titleLink) %>%   # render markdown
+  tab_style(
+    style = cell_text(size = pct(80)),
+    locations = cells_body(
+     rows = published != "Yes"
+    )) %>%
+  cols_width(
+    titleLink ~ px(300),   # first column
+    context   ~ px(100)    # second column, half the width
+  ) %>%
+  cols_align(align = "left", columns = c(titleLink)) %>%
+  cols_move_to_start(columns = titleLink) %>%
+  cols_hide(c("signature", "url", "published", "year"))
 ```
+
+Want to add your study? Drop me a message!
