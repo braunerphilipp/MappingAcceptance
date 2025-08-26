@@ -202,8 +202,8 @@ cor.test(evaluationByParticipant$utility_mean,
 
 ## Perspective 2: Topic factors
 
-Next, we delve into the analysis of topic evaluations: 
-Instead of looking at how individual participants perceive the topics as a whole, only all test subject assessments are assigned to the respective topics, for example in order to be able to rank the technologies in terms of the evaluation dimensions.
+Next, we switch to the analysis of topic evaluations: 
+Instead of looking at how individuals perceive the topics as a whole (individuals across all topics), we now interpret how all individuals assess the respective topics (topics across all individuals), for example, to rank the technologies in terms of the evaluation dimensions.
 We start with reporting the average evaluations (e.g., *risk* and *utility*) across all queried topics.
 
 ### Calculate Average evaluations
@@ -418,4 +418,8 @@ This notebook showcases the analysis and visualization of surveys using the micr
 It includes executable code for examining both research perspectives (individual differences and topic evaluation), which can be adjusted to suit your own survey and data.
 Ensure accurate coding and polarization of input variables.
 
-It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from topic sampling), and refer to the main articles for further guidance and strategies for mitigation.
+It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from the sampling of the topics (!)) and I refer to the [main article](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full) for further guidance and strategies for bias mitigation.
+
+A recent and decent article building on the method can be found here:
+
+> [Brauner P. et al. "Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance" in *Technology Forecasting and Social Change* (2025)](https://www.sciencedirect.com/science/article/pii/S004016252500335X)
