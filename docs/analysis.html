@@ -9,7 +9,7 @@
 <meta name="author" content="Philipp Brauner">
 <meta name="keywords" content="cognitive maps, technology acceptance, micro scenarios, psychometric paradigm, technology assessment, mental models, Topic Mapping">
 
-<title>Example Notebook to Analyse and Visualize Data from Micro Scenario-based Studies – Mapping Acceptance</title>
+<title>Example how to Analyse and Visualize Data from Micro Scenario-based Studies – Mapping Acceptance</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -136,7 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Example Notebook to Analyse and Visualize Data from Micro Scenario-based Studies</h1>
+      <h1 class="title">Example how to Analyse and Visualize Data from Micro Scenario-based Studies</h1>
                       </div>
   </div>
     
@@ -192,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>The micro-scenario approach simplifies measuring people’s opinions on different topics. It connects these opinions to individual user factors (research perspective 1), ranks the topics, and creates a visual map to pinpoint conflicting issues (research perspective 2), all within a single survey.</p>
+<p>The micro-scenario approach simplifies measuring people’s opinions on different topics (<a href="./index.html">see overview</a>. Based on a single survey the appraoch combines these participants’ responses to 0) a grand mean that servers as a general evaluation of the whole context, 1) individual user factors as reflexive measurements of latent constructs (research perspective 1), and 2) a technology evaluation to rank topics and to create a visual map to pinpoint conflicting issues (research perspective 2).</p>
 <p>For instance, consider analysing risk-utility trade-offs among various technologies: Do individuals attribute varying risks and utilities to distinct technologies? Are people predisposed to different risk or utility perceptions? Is the comparability of risk-utility trade-offs consistent across different technologies, and can these trade-offs be quantified? <a href="#fig-concept" class="quarto-xref">Figure&nbsp;1</a> illustrates the overall approach.</p>
 <div id="fig-concept" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -208,8 +208,8 @@ Figure&nbsp;1: The micro-scenario approach involves consolidating evaluations of
 <blockquote class="blockquote">
 <p>Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full">10.3389/fpsyg.2024.1419564</a></p>
 </blockquote>
-<p>This notebook demonstrates the calculation of data for the two research perspectives of the micro-scenario approach (Perspective 1: user factor and Perspective 2: topic factor) using R. Note that all transformations and calculations can also be performed using other software.</p>
-<p>In this example, we utilize <a href="./synthetic.html">synthetic data</a> generated to resemble real survey data. This choice simplifies the follow-through of our approach, eliminating the need for cleaning the data from irrelevant variables or erroneous participant inputs. Additionally, the synthetic data adheres to pre-specified properties. The creation of the synthetic data is detailed in the companion notebook within the same folder.</p>
+<p>This notebook demonstrates the calculation of data for the two research perspectives of micro scenario based surveys (Grand mean, Perspective 1: user factor, and Perspective 2: topic factor) using R. Note that all transformations and calculations can also be performed using other software.</p>
+<p>In this example, we utilize <a href="./synthetic.html">synthetic data</a> generated to resemble real survey data. This choice simplifies the follow-through of our approach, eliminating the need for cleaning the data from irrelevant variables or erroneous participant inputs. Additionally, the synthetic data adheres to pre-specified properties. The creation of the synthetic data is detailed in the companion notebook within the same folder (the the <a href="./synthetic.html">linked notebook</a> for details).</p>
 <p>The rest of this notebook is organized as follows: Firstly, we load the necessary packages, followed by loading the <a href="./synthetic.html">synthetic data</a> as our input (replace this with your actual data). Secondly, we transform the data into the long format (refer to, for instance, <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="uri">https://tidyr.tidyverse.org/reference/pivot_longer.html</a>), proceed to analyse the data as a user factor (research perspective 1), and subsequently as a topic factor which includes visualizing the outcomes (research perspective 2).</p>
 </section>
 <section id="preparation" class="level1">

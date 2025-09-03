@@ -86,13 +86,14 @@ STUDIES <- read.csv2("studies.csv") %>%
     year = as.integer(year),
     published = factor(published,
                        levels = c(FALSE, TRUE),
-                       labels = c("(Preprint)", "Yes")))
+                       labels = c("(Preprint)", "Yes"),
+                       ordered = TRUE))
 
 
 #  dplyr::mutate(titleLink = paste0(signature, ' (<a href="', str_trim(url, side = "right"), '" target="_blank">Visit</a>)'))
 
-tableContent <- STUDIES %>%
-    dplyr::arrange(-published)
+tableContent <- STUDIES
+#    dplyr::arrange(-published, -year)
 
 tableContent %>%
   dplyr::mutate(
