@@ -39,18 +39,31 @@ We call the former "micro scenarios" and the latter "nano scenarios". The former
 ![Concept of a micro scenario survey compared to a conventional scenario-based survey.](figures/conceptcomparison.png){fig-align="center" #fig-conceptcomparison}
 
 
-Each scenario is evaluated on a the same small set of response items (see @fig-conceptcomparison).
-As many scenarios are evaluated by the participants, we suggest to use no more than three to five items.
-With a suitable set of dependent variables, the evaluations offer two different research perspectives:
-As the first research perspective, they can be understood, as user variables (individual differences between the participants) and correlations between age, gender, or other user factors can be investigated.
-As the second research perspective, the evaluations serve as topic evaluations and relationships between the evaluation dimensions across the different topics can be studied (differences and communalities between the queried topics).
-For example, one can explore the relationship between the perceived risk and the perceived utility for a range of different topics or technologies.
+Each of potentially many scenarios is evaluated on the same small set of response items (see @fig-conceptcomparison).
+Because participants evaluate several scenarios, we recommend using no more than three to five dependent variables
+With a suitable set of items as dependent variables, these evaluations provide three complementary research perspectives:
 
-We illustrate how studies using the micro scenario approach can be [analysed and visualized](analysis.qmd) and further we created a page that create [synthetic data](synthetic.qmd) for illustrating the analysis. 
+**1. Individual differences:**
+The responses can be interpreted as reflexive measurements of latent personality states or traits. In this sense, they represent between-subject variables (or “user variables”).
+Correlations with other user factors such as age, gender, or background characteristics can then be explored.
 
-Details on this approach, a methodological justification, and practical guidelines can be found in the following article:
+**2.	Topic evaluations:**
+The responses also function as evaluations of the queried topics themselves. This perspective makes it possible to study differences and similarities between topics across the evaluation dimensions.
+
+**3.	Grand mean or overall sentiment:**
+Finally, the grand mean across topics and participants for each dimension can be understood as an overall evaluation of the topic field—an indicator of general sentiment.
+
+For example, one might query *perceived risk*, *perceived benefit*, and *overall value* across a range of topics.
+The first perspective highlights how *individuals* weigh risks and benefits to form personal value judgments.
+The second perspective shows how risks and benefits are distributed across the different topics. These assessments can easily be *mapped and visualized* as accessible scatter plots.
+The third perspective captures how the entire topic field is perceived in terms of risks, benefits, and value.
+
+Using easy-to-adapt R code this notebook demonstrates how studies using the micro scenario approach can be [prepared, analysed and visualized](analysis.qmd).
+An additional page shows how the [synthetic data](synthetic.qmd) for illustrating the analysis was created. 
+Details on this approach, the methodological justifications, and addtional practical guidelines can be found in the following research article:
 
 > Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
+
 
 # Real world application
 
@@ -122,4 +135,4 @@ tableContent %>%
   cols_hide(c("signature", "url", "published", "year"))
 ```
 
-Want to add your study? Drop me a message!
+Want to add your micro scenario study here? Drop me a message!
