@@ -65,74 +65,76 @@ Details on this approach, the methodological justifications, and addtional pract
 > Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
 
 
-# Real world application
+# Real world example of applying Micro Scenarios
 
-Here you find a araphical abstract from a refereed article that applied the micro scenario approach in the context of public risk-benefit perceptiopn of Artifical Intelligence.
+@fig-graphicalabstract shows a graphical abstract from a [refereed article]((https://doi.org/10.1016/j.techfore.2025.124304)) that applied the micro scenario approach in the context of public risk–benefit perception of Artificial Intelligence.
+On an absolute level, *Perceived Risks* of AI across many applications are high, while *Perceived Benefits* and *Perceived Value* are comparatively low.
+However, a multiple linear regression suggests that overall *Value* can be explained ($r^2 > .9$) by *Perceived Risks* ($\beta = .490$) and, to an even larger extent, *Perceived Benefits* ($\beta = .672$).
+Individual differences further shape these perceptions.
 
-![Graphical abstract from a peer-reviewed article that applyed the micro scenario approach in the context of public perceptiopn of AI.](figures/figures-abstractPanel.png){fig-align="center" #fig-graphicalabstract}
-Link to the article: [https://doi.org/10.1016/j.techfore.2025.124304](https://doi.org/10.1016/j.techfore.2025.124304)
+Link to the article: <br />
+[*Brauner P, et al. (2025) Mapping Public Perception of Artificial Intelligence: Expectations, Risk-Benefit Tradeoffs, and Value As Determinants for Societal Acceptance, in Technology Forecasting and Social Change (2025)*](https://doi.org/10.1016/j.techfore.2025.124304)
+
+![Graphical abstract from the article that used micro scenarios in the context of public perception of AI.](figures/figures-abstractPanel.png){#fig-graphicalabstract}
 
 # Slides
 
-If you prefer slides over websites, you can look at the english slidedeck on the appraoch here:
+If you prefer slides over websites, you can look at the english slidedeck on the appraoch here: <br />
 [microscenarios_slides_2025.pdf](microscenarios_slides_2025.pdf)
 
 
 # List of Studies
 
-Several studies based on this approach have been published or are in the making. We document them here, including the research context, sample size, number of topics queried, and dependent variables. If you use this approach, let us know and we can add your study as well. 
-
+Several studies based on this approach have been published or are in the making.
+We document them here in @tbl-listOfStudis, including the research context, sample size, number of topics queried, and the dependent variables.
+If you use this approach, let me know and I can add your study as well. Drop me a message!
 
 ```{r showTableOfStudies, echo=FALSE, warning=FALSE, message=FALSE}
 #| column: page
-
+#| label: tbl-listOfStudis
+#| tbl-cap: "List of studies using the micro scenario approach. Drop me a message if you build on the micro scenarios article and want to be listed."
 library(tidyverse)
 library(rmarkdown)
 library(knitr)
 library(kableExtra)
-library(gt)
-
+library(flextable)
 
 STUDIES <- read.csv2("studies.csv") %>%
   dplyr::rename_with( tolower ) %>%
   dplyr::mutate(
     year = as.integer(year),
-    published = factor(published,
-                       levels = c(FALSE, TRUE),
-                       labels = c("(Preprint)", "Yes"),
-                       ordered = TRUE))
+    type = factor(type, 
+         levels = c("peer-reviewed", "preprint", "report"),
+         labels = c("Peer-Reviewed articles", "Preprints", "Report"),
+         ordered = TRUE))
+
+tableContent <- STUDIES %>%
+  dplyr::arrange(type, -year) %>%
+  group_by(type)
+tableContent <- as_grouped_data(tableContent, groups = c("type"))
 
 
-#  dplyr::mutate(titleLink = paste0(signature, ' (<a href="', str_trim(url, side = "right"), '" target="_blank">Visit</a>)'))
-
-tableContent <- STUDIES
-#    dplyr::arrange(-published, -year)
-
-tableContent %>%
-  dplyr::mutate(
-    titleLink = md(paste0("[", signature, "](", url, ")")) # build markdown link
-  ) %>%
-  gt() %>%
-  cols_label(
-    titleLink = "Title",
+# create flextable
+ft <- as_flextable(tableContent) %>%
+#    col_keys = c("type", "signature", "context", "topics", "samplesize", "dependents", "href")
+#  ) %>%
+  flextable::set_header_labels(
+    signature = "Reference",
+    type= "Type",
+    year = "Year",
     context = "Context",
     dependents = "Dependents",
-    topics = "#Topics",
-    samplesize = "#Participants",
+    topics = "Topics",
+    samplesize = "Sample Size"
   ) %>%
-  fmt_markdown(columns = titleLink) %>%   # render markdown
-  tab_style(
-    style = cell_text(size = pct(80)),
-    locations = cells_body(
-     rows = published != "Yes"
-    )) %>%
-  cols_width(
-    titleLink ~ px(300),   # first column
-    context   ~ px(100)    # second column, half the width
-  ) %>%
-  cols_align(align = "left", columns = c(titleLink)) %>%
-  cols_move_to_start(columns = titleLink) %>%
-  cols_hide(c("signature", "url", "published", "year"))
+  flextable::delete_columns(j = "href") %>%
+  flextable::delete_columns(j = "year") %>%
+  flextable::compose(
+    j = "signature", 
+    value = as_paragraph(hyperlink_text(x = signature, url = href))) %>%
+#   bold(j = 1, i = ~ !is.na(type), bold = TRUE, part = "body") %>%
+  flextable::colformat_int(j = "samplesize") %>%
+  # Adjust group row style
+  flextable::autofit()
+ft
 ```
-
-Want to add your micro scenario study here? Drop me a message!

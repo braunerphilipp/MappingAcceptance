@@ -58,7 +58,38 @@ ul.task-list li input[type="checkbox"] {
         background: true;
       }
 </style>
+<link href="site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="site_libs/tabwid-1.1.3/tabwid.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -177,528 +208,42 @@ Figure&nbsp;1: Concept of a micro scenario survey compared to a conventional sce
 <p>Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full">10.3389/fpsyg.2024.1419564</a></p>
 </blockquote>
 </section>
-<section id="real-world-application" class="level1">
-<h1>Real world application</h1>
-<p>Here you find a araphical abstract from a refereed article that applied the micro scenario approach in the context of public risk-benefit perceptiopn of Artifical Intelligence.</p>
-<p><img src="figures/figures-abstractPanel.png" id="fig-graphicalabstract" class="img-fluid quarto-figure quarto-figure-center anchored" alt="Graphical abstract from a peer-reviewed article that applyed the micro scenario approach in the context of public perceptiopn of AI."> Link to the article: <a href="https://doi.org/10.1016/j.techfore.2025.124304">https://doi.org/10.1016/j.techfore.2025.124304</a></p>
+<section id="real-world-example-of-applying-micro-scenarios" class="level1">
+<h1>Real world example of applying Micro Scenarios</h1>
+<p><a href="#fig-graphicalabstract" class="quarto-xref">Figure&nbsp;2</a> shows a graphical abstract from a <a href="(https://doi.org/10.1016/j.techfore.2025.124304)">refereed article</a> that applied the micro scenario approach in the context of public risk–benefit perception of Artificial Intelligence. On an absolute level, <em>Perceived Risks</em> of AI across many applications are high, while <em>Perceived Benefits</em> and <em>Perceived Value</em> are comparatively low. However, a multiple linear regression suggests that overall <em>Value</em> can be explained (<span class="math inline">\(r^2 &gt; .9\)</span>) by <em>Perceived Risks</em> (<span class="math inline">\(\beta = .490\)</span>) and, to an even larger extent, <em>Perceived Benefits</em> (<span class="math inline">\(\beta = .672\)</span>). Individual differences further shape these perceptions.</p>
+<p>Link to the article: <br> <a href="https://doi.org/10.1016/j.techfore.2025.124304"><em>Brauner P, et al.&nbsp;(2025) Mapping Public Perception of Artificial Intelligence: Expectations, Risk-Benefit Tradeoffs, and Value As Determinants for Societal Acceptance, in Technology Forecasting and Social Change (2025)</em></a></p>
+<div id="fig-graphicalabstract" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-graphicalabstract-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/figures-abstractPanel.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-graphicalabstract-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Graphical abstract from the article that used micro scenarios in the context of public perception of AI.
+</figcaption>
+</figure>
+</div>
 </section>
 <section id="slides" class="level1">
 <h1>Slides</h1>
-<p>If you prefer slides over websites, you can look at the english slidedeck on the appraoch here: <a href="microscenarios_slides_2025.pdf">microscenarios_slides_2025.pdf</a></p>
+<p>If you prefer slides over websites, you can look at the english slidedeck on the appraoch here: <br> <a href="microscenarios_slides_2025.pdf">microscenarios_slides_2025.pdf</a></p>
 </section>
 <section id="list-of-studies" class="level1 page-columns page-full">
 <h1>List of Studies</h1>
-<p>Several studies based on this approach have been published or are in the making. We document them here, including the research context, sample size, number of topics queried, and dependent variables. If you use this approach, let us know and we can add your study as well.</p>
+<p>Several studies based on this approach have been published or are in the making. We document them here in <a href="#tbl-listOfStudis" class="quarto-xref">Table&nbsp;1</a>, including the research context, sample size, number of topics queried, and the dependent variables. If you use this approach, let me know and I can add your study as well. Drop me a message!</p>
 <div class="cell page-columns page-full">
+<div id="tbl-listOfStudis" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-listOfStudis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: List of studies using the micro scenario approach. Drop me a message if you build on the micro scenarios article and want to be listed.
+</figcaption>
+<div aria-describedby="tbl-listOfStudis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <div class="cell-output-display column-page">
-<div id="dksqxgiguy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dksqxgiguy table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#dksqxgiguy thead, #dksqxgiguy tbody, #dksqxgiguy tfoot, #dksqxgiguy tr, #dksqxgiguy td, #dksqxgiguy th {
-  border-style: none;
-}
-
-#dksqxgiguy p {
-  margin: 0;
-  padding: 0;
-}
-
-#dksqxgiguy .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#dksqxgiguy .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#dksqxgiguy .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#dksqxgiguy .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#dksqxgiguy .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#dksqxgiguy .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#dksqxgiguy .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#dksqxgiguy .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#dksqxgiguy .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#dksqxgiguy .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#dksqxgiguy .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#dksqxgiguy .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#dksqxgiguy .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#dksqxgiguy .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#dksqxgiguy .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dksqxgiguy .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#dksqxgiguy .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#dksqxgiguy .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#dksqxgiguy .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dksqxgiguy .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#dksqxgiguy .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dksqxgiguy .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#dksqxgiguy .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dksqxgiguy .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#dksqxgiguy .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dksqxgiguy .gt_left {
-  text-align: left;
-}
-
-#dksqxgiguy .gt_center {
-  text-align: center;
-}
-
-#dksqxgiguy .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#dksqxgiguy .gt_font_normal {
-  font-weight: normal;
-}
-
-#dksqxgiguy .gt_font_bold {
-  font-weight: bold;
-}
-
-#dksqxgiguy .gt_font_italic {
-  font-style: italic;
-}
-
-#dksqxgiguy .gt_super {
-  font-size: 65%;
-}
-
-#dksqxgiguy .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#dksqxgiguy .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#dksqxgiguy .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#dksqxgiguy .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#dksqxgiguy .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#dksqxgiguy .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#dksqxgiguy .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_col_headings header">
-<th id="Title" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Title</th>
-<th id="Context" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Context</th>
-<th id="#Topics" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">#Topics</th>
-<th id="#Participants" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">#Participants</th>
-<th id="Dependents" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Dependents</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="titleLink"><p><a href="https://doi.org/10.1016/j.techfore.2025.124304">Brauner P, et al.&nbsp;(2025) Mapping Public Perception of Artificial Intelligence: Expectations, Risk-Benefit Tradeoffs, and Value As Determinants for Societal Acceptance, in Technology Forecasting and Social Change (2025)</a></p></td>
-<td class="gt_row gt_left" headers="context">Artificial Intelligence</td>
-<td class="gt_row gt_right" headers="topics">71</td>
-<td class="gt_row gt_right" headers="samplesize">1100</td>
-<td class="gt_row gt_left" headers="dependents">Expectancy, Risk, Benefit, Value</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="titleLink"><p><a href="https://doi.org/10.1007/s00550-025-00574-0">Frank M., et al.&nbsp;(2025) Mapping behavioral restraint: a dual perspective on individual actions for climate and environmental sustainability, in Sustainability Nexus Forum</a></p></td>
-<td class="gt_row gt_left" headers="context">Sustainability and restraint</td>
-<td class="gt_row gt_right" headers="topics">45</td>
-<td class="gt_row gt_right" headers="samplesize">108</td>
-<td class="gt_row gt_left" headers="dependents">perceived climate effect, cost-benefit,perceived feasability</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="titleLink"><p><a href="https://doi.org/10.1007/s44206-024-00148-5">Brauner P. et al.&nbsp;(2024) Public Perception of Technologies in Society: Mapping Laypeople’s Mental Models in Terms of Risk and Valence</a></p></td>
-<td class="gt_row gt_left" headers="context">Various Technologies</td>
-<td class="gt_row gt_right" headers="topics">20</td>
-<td class="gt_row gt_right" headers="samplesize">120</td>
-<td class="gt_row gt_left" headers="dependents">Valence,Risk,Familiarity,Desire for Governance</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="titleLink"><p><a href="https://www.frontiersin.org/journals/computer-science/articles/10.3389/fcomp.2023.1113903/full">Brauner P, Hick A, Philipsen R and Ziefle M (2023) What does the public think about artificial intelligence? - A criticality map to understand bias in the public perception of AI. Front. Comput. Sci. 5:1113903.</a></p></td>
-<td class="gt_row gt_left" headers="context">Artificial Intelligence</td>
-<td class="gt_row gt_right" headers="topics">34</td>
-<td class="gt_row gt_right" headers="samplesize">122</td>
-<td class="gt_row gt_left" headers="dependents">Expectancy, Valence</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="titleLink" style="font-size: 80%"><p><a href="https://doi.org/10.48550/arXiv.2412.01459">Brauner P, et al.&nbsp;(2024) Misalignments in AI Percpetion: Quantitative Findings and Visual Mapping of How Experts and the Public Differ in Expectations and Risks, Benefits, and Value Judgements (Preprint)</a></p></td>
-<td class="gt_row gt_left" headers="context" style="font-size: 80%">Artificial Intelligence</td>
-<td class="gt_row gt_right" headers="topics" style="font-size: 80%">71</td>
-<td class="gt_row gt_right" headers="samplesize" style="font-size: 80%">1520</td>
-<td class="gt_row gt_left" headers="dependents" style="font-size: 80%">Expectancy, Risk, Benefit, Value</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="titleLink" style="font-size: 80%"><p><a href="https://arxiv.org/abs/2412.13841">Brauner P, et al.&nbsp;(2024) AI Perceptions Across Cultures: Similarities and Differences in Expectations, Risks, Benefits, Tradeoffs, and Value in Germany and China (Preprint)</a></p></td>
-<td class="gt_row gt_left" headers="context" style="font-size: 80%">Artificial Intelligence</td>
-<td class="gt_row gt_right" headers="topics" style="font-size: 80%">71</td>
-<td class="gt_row gt_right" headers="samplesize" style="font-size: 80%">110</td>
-<td class="gt_row gt_left" headers="dependents" style="font-size: 80%">Expectancy, Risk, Benefit, Value</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="titleLink" style="font-size: 80%"><p><a href="https://osf.io/preprints/socarxiv/cfvq9_v1">Brauner, P and Offermann, J. (2024) Perceived risk-utility tradeoffs of medical technology: A visual mapping (Preprint)</a></p></td>
-<td class="gt_row gt_left" headers="context" style="font-size: 80%">Health technology</td>
-<td class="gt_row gt_right" headers="topics" style="font-size: 80%">20</td>
-<td class="gt_row gt_right" headers="samplesize" style="font-size: 80%">193</td>
-<td class="gt_row gt_left" headers="dependents" style="font-size: 80%">Risk, Benefit, Value</td>
-</tr>
-</tbody>
-</table>
-
+<div class="tabwid"><style>.cl-e5c3e072{}.cl-e5c15eec{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e5c25716{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e5c25717{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e5c25eb4{width:16.327in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25eb5{width:2.077in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25eb6{width:0.735in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ebe{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ebf{width:4.191in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ec0{width:16.327in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ec8{width:2.077in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ec9{width:0.735in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25eca{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ecb{width:4.191in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ed2{width:16.327in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ed3{width:2.077in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ed4{width:0.735in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ed5{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25edc{width:4.191in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25edd{width:16.327in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ede{width:2.077in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25edf{width:0.735in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ee0{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ee6{width:4.191in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ee7{width:16.327in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ee8{width:2.077in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ee9{width:0.735in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ef0{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5c25ef1{width:4.191in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e5c3e072"><thead><tr style="overflow-wrap:break-word;"><th class="cl-e5c25eb4"><p class="cl-e5c25716"><span class="cl-e5c15eec">Reference</span></p></th><th class="cl-e5c25eb5"><p class="cl-e5c25716"><span class="cl-e5c15eec">Context</span></p></th><th class="cl-e5c25eb6"><p class="cl-e5c25717"><span class="cl-e5c15eec">Topics</span></p></th><th class="cl-e5c25ebe"><p class="cl-e5c25717"><span class="cl-e5c15eec">Sample Size</span></p></th><th class="cl-e5c25ebf"><p class="cl-e5c25716"><span class="cl-e5c15eec">Dependents</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ec0"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25ec8"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25ec9"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25eca"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25ecb"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ed2"><p class="cl-e5c25716"><a href="https://doi.org/10.1016/j.techfore.2025.124304"><span class="cl-e5c15eec">Brauner P, et al. (2025) Mapping Public Perception of Artificial Intelligence: Expectations, Risk-Benefit Tradeoffs, and Value As Determinants for Societal Acceptance, in Technology Forecasting and Social Change (2025)                            </span></a></p></td><td class="cl-e5c25ed3"><p class="cl-e5c25716"><span class="cl-e5c15eec">Artificial Intelligence </span></p></td><td class="cl-e5c25ed4"><p class="cl-e5c25717"><span class="cl-e5c15eec">71</span></p></td><td class="cl-e5c25ed5"><p class="cl-e5c25717"><span class="cl-e5c15eec">1,100</span></p></td><td class="cl-e5c25edc"><p class="cl-e5c25716"><span class="cl-e5c15eec">Expectancy, Risk, Benefit, Value</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ed2"><p class="cl-e5c25716"><a href="https://doi.org/10.1007/s00550-025-00574-0"><span class="cl-e5c15eec">Frank M., et al. (2025) Mapping behavioral restraint: a dual perspective on individual actions for climate and environmental sustainability, in Sustainability Nexus Forum</span></a></p></td><td class="cl-e5c25ed3"><p class="cl-e5c25716"><span class="cl-e5c15eec">Sustainability and restraint</span></p></td><td class="cl-e5c25ed4"><p class="cl-e5c25717"><span class="cl-e5c15eec">45</span></p></td><td class="cl-e5c25ed5"><p class="cl-e5c25717"><span class="cl-e5c15eec">108</span></p></td><td class="cl-e5c25edc"><p class="cl-e5c25716"><span class="cl-e5c15eec">perceived climate effect, cost-benefit,perceived feasability</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ed2"><p class="cl-e5c25716"><a href="https://doi.org/10.1007/s44206-024-00148-5"><span class="cl-e5c15eec">Brauner P. et al. (2024) Public Perception of Technologies in Society: Mapping Laypeople’s Mental Models in Terms of Risk and Valence                                                                              </span></a></p></td><td class="cl-e5c25ed3"><p class="cl-e5c25716"><span class="cl-e5c15eec">Various Technologies    </span></p></td><td class="cl-e5c25ed4"><p class="cl-e5c25717"><span class="cl-e5c15eec">20</span></p></td><td class="cl-e5c25ed5"><p class="cl-e5c25717"><span class="cl-e5c15eec">120</span></p></td><td class="cl-e5c25edc"><p class="cl-e5c25716"><span class="cl-e5c15eec">Valence,Risk,Familiarity,Desire for Governance</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ed2"><p class="cl-e5c25716"><a href="https://www.frontiersin.org/journals/computer-science/articles/10.3389/fcomp.2023.1113903/full"><span class="cl-e5c15eec">Brauner P, Hick A, Philipsen R and Ziefle M (2023) What does the public think about artificial intelligence? - A criticality map to understand bias in the public perception of AI. Front. Comput. Sci. 5:1113903. </span></a></p></td><td class="cl-e5c25ed3"><p class="cl-e5c25716"><span class="cl-e5c15eec">Artificial Intelligence </span></p></td><td class="cl-e5c25ed4"><p class="cl-e5c25717"><span class="cl-e5c15eec">34</span></p></td><td class="cl-e5c25ed5"><p class="cl-e5c25717"><span class="cl-e5c15eec">122</span></p></td><td class="cl-e5c25edc"><p class="cl-e5c25716"><span class="cl-e5c15eec">Expectancy, Valence</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ec0"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25ec8"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25ec9"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25eca"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td><td class="cl-e5c25ecb"><p class="cl-e5c25716"><span class="cl-e5c15eec"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ed2"><p class="cl-e5c25716"><a href="https://doi.org/10.48550/arXiv.2412.01459 "><span class="cl-e5c15eec">Brauner P, et al. (2024) Misalignments in AI Percpetion: Quantitative Findings and Visual Mapping of How Experts and the Public Differ in Expectations and Risks, Benefits, and Value Judgements (Preprint)  </span></a></p></td><td class="cl-e5c25ed3"><p class="cl-e5c25716"><span class="cl-e5c15eec">Artificial Intelligence </span></p></td><td class="cl-e5c25ed4"><p class="cl-e5c25717"><span class="cl-e5c15eec">71</span></p></td><td class="cl-e5c25ed5"><p class="cl-e5c25717"><span class="cl-e5c15eec">1,520</span></p></td><td class="cl-e5c25edc"><p class="cl-e5c25716"><span class="cl-e5c15eec">Expectancy, Risk, Benefit, Value</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25edd"><p class="cl-e5c25716"><a href="https://arxiv.org/abs/2412.13841"><span class="cl-e5c15eec">Brauner P, et al. (2024) AI Perceptions Across Cultures: Similarities and Differences in Expectations, Risks, Benefits, Tradeoffs, and Value in Germany and China (Preprint)                                     </span></a></p></td><td class="cl-e5c25ede"><p class="cl-e5c25716"><span class="cl-e5c15eec">Artificial Intelligence</span></p></td><td class="cl-e5c25edf"><p class="cl-e5c25717"><span class="cl-e5c15eec">71</span></p></td><td class="cl-e5c25ee0"><p class="cl-e5c25717"><span class="cl-e5c15eec">110</span></p></td><td class="cl-e5c25ee6"><p class="cl-e5c25716"><span class="cl-e5c15eec">Expectancy, Risk, Benefit, Value</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5c25ee7"><p class="cl-e5c25716"><a href="https://osf.io/preprints/socarxiv/cfvq9_v1"><span class="cl-e5c15eec">Brauner, P and Offermann, J. (2024) Perceived risk-utility tradeoffs of medical technology: A visual mapping (Preprint)</span></a></p></td><td class="cl-e5c25ee8"><p class="cl-e5c25716"><span class="cl-e5c15eec">Health technology</span></p></td><td class="cl-e5c25ee9"><p class="cl-e5c25717"><span class="cl-e5c15eec">20</span></p></td><td class="cl-e5c25ef0"><p class="cl-e5c25717"><span class="cl-e5c15eec">193</span></p></td><td class="cl-e5c25ef1"><p class="cl-e5c25716"><span class="cl-e5c15eec">Risk, Benefit, Value</span></p></td></tr></tbody></table></div>
 </div>
 </div>
+</figure>
 </div>
-<p>Want to add your micro scenario study here? Drop me a message!</p>
+</div>
 
 
 </section>
