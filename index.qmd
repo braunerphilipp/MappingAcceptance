@@ -31,7 +31,8 @@ format:
 
 # Introduction
 
-The goal of the micro scenario approach is to gather the evaluation of a wide range of topics on few selected response variables and put the different evaluation into context.
+The goal of the micro-scenario approach is to collect evaluations across a wide range of topics on a few selected response variables, interpret these in terms of both individual differences and topic-specific judgments, and situate the different evaluations within a broader, comperative context.
+ (see the [publication](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)).
 Hereto, the subjects are presented with a large number of different short scenarios and their evaluation of these is measured using a small set of response variables.
 The scenario presentation can be a short descriptive text, and/or images, or, in extreme cases, just a single word about an evaluated concept.
 We call the former "micro scenarios" and the latter "nano scenarios". The former offers the possibility to briefly explain the evaluated topic whereas the later essentially measures the participants' affective associations towards a single term.
@@ -63,6 +64,7 @@ An additional page shows how the [synthetic data](synthetic.qmd) for illustratin
 Details on this approach, the methodological justifications, and addtional practical guidelines can be found in the following research article:
 
 > Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
+([<code>.bib</code>](brauner2024micro.bib))
 
 
 # Real world example of applying Micro Scenarios
