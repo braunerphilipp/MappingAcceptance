@@ -31,11 +31,12 @@ The general concept behind this simulated dataset is to mimic the data export fr
 However, the data is clean, devoid of additional variables, speeders, or erroneous inputs requiring cleaning.
 Furthermore, the dataset is structured to exhibit the desired properties of a micro-scenario-based survey, showcasing specific patterns among topics and a defined correlation pattern for evaluation dimensions.
 
-For generating synthetic data, we use the `faux` package, and guidance for this can be found in the [package vignette](https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html).
+For generating synthetic data, I use the `faux` package, and guidance for this can be found in the [package vignette](https://cran.r-project.org/web/packages/faux/vignettes/rnorm_multi.html).
 
 # Load libraries
 
-In the analysis, we rely on the `tidyverse` and `ggplot` packages. Additionally, for generating synthetic data with specific properties (e.g., pre-defined means and correlations between variables), we utilize the `faux` package.
+In the analysis, I rely on the `tidyverse` and `ggplot` packages.
+Additionally, for generating synthetic data with specific properties (e.g., pre-defined means and correlations between variables), I utilize the `faux` package.
 
 ```{r LOADLIBRARIES}
 library(faux)    # create simulated data based on given properties
@@ -49,7 +50,8 @@ library(knitr)   # Tables
 
 # Create Synthetic Data
 
-In this section, we generate synthetic data that simulates properties akin to real survey data. Initially, we create a dataset resembling data from the survey tool Qualtrics. Figure @fig-surveysdatastructure illustrates the structure of a standard dataset from survey tools, where each row represents the responses from a single participant.
+In this section, I generate synthetic data that simulates properties akin to real survey data. Initially, I create a dataset resembling data from the survey tool Qualtrics.
+@fig-surveysdatastructure illustrates the structure of a standard dataset from survey tools, where each row represents the responses from a single participant.
 
 ![Illustration of typical survey data utilizing the micro-scenario approach, incorporating user demographics, additional user factors, and topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
 
@@ -59,7 +61,7 @@ Subsequently, *N=12* (adjustable) topic assessments are included, with two varia
 In this instance, *perceived risk* and *perceived utility* are used as examples for topic evaluations.
 However, one can utilize different or additional evaluation dimensions (as detailed in the article).
 
-For the synthetic data, we specify $N$ topics and two evaluation dimensions, defining that they should be inversely correlated with an intercept.
+For the synthetic data, I specify $N$ topics and two evaluation dimensions, defining that they should be inversely correlated with an intercept.
 
 ```{r DATAPOINTS}
 N <- 12  # number of topics to simulate
@@ -112,7 +114,7 @@ This is the naming scheme used by Quartics.
 varnames <- c(paste0("a", 1:N, "_matrix_1"), paste0("a", 1:N, "_matrix_2"))
 ```
 
-Additionally, we specify that the evaluations of the first and second evaluation dimensions are strongly correlated within topics and negatively correlated between topics.
+Additionally, I specify that the evaluations of the first and second evaluation dimensions are strongly correlated within topics and negatively correlated between topics.
 The data is randomized to approximately, but not exactly, align with this scheme, simulating a scenario as if it were randomly drawn from a population parametrized in this manner.
 
 ```{r DATACORRELATIONS}
@@ -152,7 +154,8 @@ cor_matrix[(N + 1):(2 * N), 1:N] <- t(cor_matrix_AB) #transposed for neg. covari
 
 # Check the validity of the data
 
-Before proceeding, let's perform a check. Why? We require a symmetric and positive-definite matrix to generate random data based on the defined parameters. A correlation matrix is, by definition, symmetric and positive semi-definite. If we encounter a correlation matrix that is not positive semi-definite, it could be due to numerical precision issues or errors in computation, particularly when dealing with very large matrices or near-linear dependencies between variables. If this occurs, repeat the steps above—it should work out after a few tries.
+Before proceeding, let's perform a check. Why? A symmetric and positive-definite matrix is required to generate random data based on the defined parameters. A correlation matrix is, by definition, symmetric and positive semi-definite.
+If we encounter a correlation matrix that is not positive semi-definite, it could be due to numerical precision issues or errors in computation, particularly when dealing with very large matrices or near-linear dependencies between variables. If this occurs, repeat the steps above—it should work out after a few tries.
 
 Request to the readers: Any suggestions on how to address this issue are appreciated. However, this step is not necessary if you already have real survey data, as it specifically pertains to the creation of synthetic data.
 

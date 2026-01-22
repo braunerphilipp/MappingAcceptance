@@ -11,7 +11,14 @@ author:
 date-format: long
 title-block-banner: "true"
 abstract: > 
-  Understanding public perception of technology is crucial to aligning research, development, and governance of technology. This article introduces micro scenarios as an integrative method to evaluate mental models and social acceptance across numerous technologies and concepts using a few single-item scales within a single comprehensive survey. This approach contrasts with traditional methods that focus on detailed assessments of as few as one scenario. The data can be interpreted in two ways: Perspective 1) Average evaluations of each participant can be seen as individual differences, providing reflexive measurements across technologies or topics. This helps in understanding how perceptions of technology relate to other personality factors. Perspective 2) Average evaluations of each technology or topic can be interpreted as technology attributions. This makes it possible to position technologies on visuo-spatial maps to simplify identification of critical issues, conduct comparative rankings based on selected criteria, and to analyze the interplay between different attributions. This dual approach enables the modeling of acceptance-relevant factors that shape public opinion. It offers a framework for researchers, technology developers, and policymakers to identify pivotal factors for acceptance at both the individual and technology levels. I illustrate this methodology with examples from my research, provide practical guidelines, and include `R` code to enable others to conduct similar studies. This paper aims to bridge the gap between technological advancement and societal perception, offering a tool for more informed decision-making in technology development and policy-making.
+  Understanding public perception of technology is crucial to aligning research, development, and governance of technology.
+  This article introduces micro scenarios as an integrative method to evaluate mental models and social acceptance across numerous technologies and concepts using a few single-item scales within a single comprehensive survey.
+  This approach contrasts with traditional methods that focus on detailed assessments of as few as one scenario. The data can be interpreted in three ways:
+  Perspective 1) Average evaluations of each participant can be seen as individual differences, providing reflexive measurements across technologies or topics. This helps in understanding how perceptions of technology relate to other personality factors.
+  Perspective 2) Average evaluations of each technology or topic can be interpreted as technology attributions. This makes it possible to position technologies on visuo-spatial maps to simplify identification of critical issues, conduct comparative rankings based on selected criteria, and to analyze the interplay between different attributions.
+  Perspective 3) Finally, the grand mean across topics and participants for each dimension can be understood as an overall evaluation of the whole topic field; as an indicator of general sentiment.
+  This multi-perspective approach enables the modeling of acceptance-relevant factors that shape public opinion. It offers a framework for researchers, technology developers, and policymakers to identify pivotal factors for acceptance at both the individual and technology levels.
+  I illustrate this methodology with examples from my research, provide practical guidelines, and include `R` code to enable others to conduct similar studies. This paper aims to bridge the gap between technological advancement and societal perception, offering a tool for more informed decision-making in technology development and policy-making.
 keywords:
   - cognitive maps
   - technology acceptance
@@ -35,13 +42,13 @@ The goal of the micro-scenario approach is to collect evaluations across a wide 
  (see the [publication](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)).
 Hereto, the subjects are presented with a large number of different short scenarios and their evaluation of these is measured using a small set of response variables.
 The scenario presentation can be a short descriptive text, and/or images, or, in extreme cases, just a single word about an evaluated concept.
-We call the former "micro scenarios" and the latter "nano scenarios". The former offers the possibility to briefly explain the evaluated topic whereas the later essentially measures the participants' affective associations towards a single term.
+I call the former "micro scenarios" and the latter "nano scenarios". The former offers the possibility to briefly explain the evaluated topic whereas the later essentially measures the participants' affective associations towards a single term.
 
 ![Concept of a micro scenario survey compared to a conventional scenario-based survey.](figures/conceptcomparison.png){fig-align="center" #fig-conceptcomparison}
 
 
 Each of potentially many scenarios is evaluated on the same small set of response items (see @fig-conceptcomparison).
-Because participants evaluate several scenarios, we recommend using no more than three to five dependent variables
+Because participants evaluate several scenarios, I recommend using no more than three to five dependent variables
 With a suitable set of items as dependent variables, these evaluations provide three complementary research perspectives:
 
 **1. Individual differences:**
@@ -88,7 +95,7 @@ If you prefer slides over websites, you can look at the english slidedeck on the
 # List of Studies
 
 Several studies based on this approach have been published or are in the making.
-We document them here in @tbl-listOfStudis, including the research context, sample size, number of topics queried, and the dependent variables.
+I document them here in @tbl-listOfStudis, including the research context, sample size, number of topics queried, and the dependent variables.
 If you build on this approach and the article, let me know and I can add your study as well. Drop me a message!
 
 ```{r showTableOfStudies, echo=FALSE, warning=FALSE, message=FALSE}

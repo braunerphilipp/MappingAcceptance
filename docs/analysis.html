@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Philipp Brauner">
 <meta name="keywords" content="cognitive maps, technology acceptance, micro scenarios, psychometric paradigm, technology assessment, mental models, Topic Mapping">
 
-<title>Example how to Analyse and Visualize Data from Micro Scenario-based Studies – Mapping Acceptance</title>
+<title>How to Analyse and Visualize Micro Scenario-based Studies – Mapping Acceptance</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,8 +23,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -35,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -62,15 +63,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -97,7 +100,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -123,7 +126,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./synthetic.html"> 
-<span class="menu-text">Generration of Demo Data</span></a>
+<span class="menu-text">Generation of Demo Data</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -136,7 +139,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Example how to Analyse and Visualize Data from Micro Scenario-based Studies</h1>
+      <h1 class="title">How to Analyse and Visualize Micro Scenario-based Studies</h1>
                       </div>
   </div>
     
@@ -218,23 +221,23 @@ Figure&nbsp;1: The micro-scenario approach involves consolidating evaluations of
 <h2 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h2>
 <p>In our analysis, we mainly use the <code>tidyverse</code> and <code>ggplot</code> packages.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'lubridate' was built under R version 4.3.3</code></pre>
+<pre><code>Warning: package 'ggplot2' was built under R version 4.5.2</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ forcats   1.0.1     ✔ stringr   1.5.2
+✔ ggplot2   4.0.1     ✔ tibble    3.3.0
 ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-✔ purrr     1.0.2     
+✔ purrr     1.1.0     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)  <span class="co"># format_percent</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)  <span class="co"># format_percent</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'scales'
@@ -247,12 +250,9 @@ The following object is masked from 'package:readr':
 
     col_factor</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># graphics</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># graphics</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel) <span class="co"># label placement in the scatter plot</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)   <span class="co"># Tables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'knitr' was built under R version 4.3.3</code></pre>
-</div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)   <span class="co"># Tables</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="load-data" class="level2">
@@ -270,38 +270,38 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 </div>
 <p>The data structure closely resembles the data export from the Qualtrics survey tool. The process of generating <a href="./synthetic.html">synthetic data</a> is documented in the companion notebook within the same folder.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"syntheticdata.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"syntheticdata.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The structure of the data looks as follows:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   100 obs. of  26 variables:
  $ id          : chr  "fakeparticipantid-1" "fakeparticipantid-2" "fakeparticipantid-3" "fakeparticipantid-4" ...
- $ uservariable: num  9.44 11.03 10.48 11.02 8.24 ...
- $ a1_matrix_1 : num  1 3 2 2 1 1 3 2 2 2 ...
- $ a2_matrix_1 : num  2 2 2 3 2 1 3 3 2 2 ...
- $ a3_matrix_1 : num  2 4 3 2 2 2 3 2 4 3 ...
- $ a4_matrix_1 : num  3 4 3 2 2 2 4 1 3 2 ...
- $ a5_matrix_1 : num  3 2 3 2 3 3 5 2 5 2 ...
- $ a6_matrix_1 : num  4 5 5 3 4 3 4 4 4 4 ...
- $ a7_matrix_1 : num  4 5 4 4 4 3 5 4 3 3 ...
- $ a8_matrix_1 : num  4 4 4 4 5 4 6 4 6 4 ...
- $ a9_matrix_1 : num  5 4 4 4 5 4 5 4 5 4 ...
- $ a10_matrix_1: num  6 6 5 5 5 5 7 5 5 5 ...
- $ a11_matrix_1: num  6 6 6 6 6 5 7 5 7 6 ...
- $ a12_matrix_1: num  4 6 6 6 5 6 7 6 7 5 ...
- $ a1_matrix_2 : num  2 3 2 2 2 1 1 3 1 2 ...
- $ a2_matrix_2 : num  1 2 2 2 3 1 1 3 1 3 ...
- $ a3_matrix_2 : num  2 1 2 2 2 2 2 2 1 3 ...
- $ a4_matrix_2 : num  3 2 3 3 3 2 2 1 2 3 ...
- $ a5_matrix_2 : num  4 4 4 5 4 5 4 6 4 5 ...
- $ a6_matrix_2 : num  2 2 3 3 4 3 3 3 2 4 ...
- $ a7_matrix_2 : num  2 2 4 3 3 3 3 5 3 2 ...
- $ a8_matrix_2 : num  2 2 3 3 3 2 2 3 2 4 ...
- $ a9_matrix_2 : num  3 3 4 5 4 3 4 4 3 5 ...
- $ a10_matrix_2: num  3 3 3 3 4 4 3 4 2 4 ...
- $ a11_matrix_2: num  3 4 5 3 4 4 3 4 5 5 ...
- $ a12_matrix_2: num  3 5 4 5 5 5 2 5 4 5 ...</code></pre>
+ $ uservariable: num  11.91 9.31 10.64 9.57 8.16 ...
+ $ a1_matrix_1 : num  2 1 1 2 1 2 1 2 2 2 ...
+ $ a2_matrix_1 : num  3 2 2 3 2 3 1 3 2 2 ...
+ $ a3_matrix_1 : num  2 3 3 2 2 3 3 3 3 2 ...
+ $ a4_matrix_1 : num  2 3 2 3 3 5 3 4 3 2 ...
+ $ a5_matrix_1 : num  2 3 3 2 4 5 2 3 4 3 ...
+ $ a6_matrix_1 : num  4 3 4 3 3 3 4 3 3 4 ...
+ $ a7_matrix_1 : num  4 4 4 3 4 4 4 4 3 4 ...
+ $ a8_matrix_1 : num  4 4 5 4 4 5 3 5 5 4 ...
+ $ a9_matrix_1 : num  4 4 5 4 4 6 3 5 5 5 ...
+ $ a10_matrix_1: num  5 5 4 5 5 6 5 5 5 4 ...
+ $ a11_matrix_1: num  6 5 5 5 5 6 5 6 6 5 ...
+ $ a12_matrix_1: num  6 5 6 5 5 6 5 6 6 6 ...
+ $ a1_matrix_2 : num  3 3 2 2 3 2 2 2 1 4 ...
+ $ a2_matrix_2 : num  2 2 3 2 3 1 2 1 1 2 ...
+ $ a3_matrix_2 : num  2 2 3 2 3 1 3 2 3 3 ...
+ $ a4_matrix_2 : num  3 3 3 2 3 1 2 3 3 4 ...
+ $ a5_matrix_2 : num  5 5 7 4 5 4 6 6 5 5 ...
+ $ a6_matrix_2 : num  3 2 4 3 4 3 4 3 3 4 ...
+ $ a7_matrix_2 : num  3 4 3 3 4 2 2 3 5 5 ...
+ $ a8_matrix_2 : num  3 4 4 3 4 3 2 2 2 4 ...
+ $ a9_matrix_2 : num  4 4 4 3 5 3 5 3 3 5 ...
+ $ a10_matrix_2: num  4 4 4 3 4 3 4 4 2 5 ...
+ $ a11_matrix_2: num  5 4 4 4 4 3 4 4 4 6 ...
+ $ a12_matrix_2: num  5 3 4 4 5 4 5 4 3 6 ...</code></pre>
 </div>
 </div>
 <p>The loaded dataset has various variables. Initially, there’s a unique user identifier (<code>id</code>), followed by a user variable (e.g., attitude towards a topic). Subsequently, there are an arbitrary number of topic assessments (<em>N</em> in our example) with variables for each evaluation dimension. In this instance, we use <em>perceived risk</em> and <em>perceived utility</em> as examples for the topic evaluations. However, one can employ different or additional evaluation dimensions (as detailed in the article).</p>
@@ -315,8 +315,8 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <p>Firstly, read the list of queried topics and their labels from a <code>.csv</code> file (adjustable based on your needs). Secondly, define the queried evaluation dimensions. In this instance, we have a vector of two dimensions, but one can define more based on your research questions and survey structure.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>TOPICS <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"matrixlabels.csv"</span>) </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>DIMENSIONS <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>TOPICS <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"matrixlabels.csv"</span>) </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>DIMENSIONS <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="long-format" class="level2">
@@ -324,246 +324,137 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 <p>Next, the topic evaluations from the survey data is transformed into the long format using <code>pivot_longer</code> (one row with a single value for each participant, topic, and evaluation dimension; one row per observation). Hereto, we use that the variables for the topic evaluations in the original data table have a systematic naming convention (see above).</p>
 <p>The resulting data set contains a participant identifier, identifier for the topic and the evaluation dimension, and lastly a column for the value. We use this format as the foundation for the later transformation steps.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># selects columns id and "aNUMBER_matrix_NUMBER" (scheme from loop&amp;merge)</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(id, <span class="fu">matches</span>(<span class="st">"a</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">_matrix</span><span class="sc">\\</span><span class="st">_</span><span class="sc">\\</span><span class="st">d+"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">matches</span>(<span class="st">"a</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">_matrix</span><span class="sc">\\</span><span class="st">_</span><span class="sc">\\</span><span class="st">d+"</span>), <span class="co"># topics and their evaluations</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"question"</span>, <span class="st">"dimension"</span>),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(.*)_matrix_(.*)"</span>,   <span class="co"># Separate topic ID and evaluation ID </span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span>,</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_drop_na =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">dimension =</span> <span class="fu">as.numeric</span>(dimension) ) <span class="sc">%&gt;%</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">dimension =</span> DIMENSIONS[dimension]) <span class="sc">%&gt;%</span>  <span class="co"># change to readable dimension names</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">value =</span> <span class="sc">-</span>(((value <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">/</span><span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>))  <span class="co"># rescale value from [ 1...7 ] to [ -100%...100% ]</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode some of the evaluation dimensions if necessary</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">value =</span> <span class="fu">if_else</span>(dimension<span class="sc">!=</span><span class="st">"risk"</span>, value, <span class="sc">-</span>value))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># selects columns id and "aNUMBER_matrix_NUMBER" (scheme from loop&amp;merge)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(id, <span class="fu">matches</span>(<span class="st">"a</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">_matrix</span><span class="sc">\\</span><span class="st">_</span><span class="sc">\\</span><span class="st">d+"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">matches</span>(<span class="st">"a</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">_matrix</span><span class="sc">\\</span><span class="st">_</span><span class="sc">\\</span><span class="st">d+"</span>), <span class="co"># topics and their evaluations</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"question"</span>, <span class="st">"dimension"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(.*)_matrix_(.*)"</span>,   <span class="co"># Separate topic ID and evaluation ID </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_drop_na =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">dimension =</span> <span class="fu">as.numeric</span>(dimension) ) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">dimension =</span> DIMENSIONS[dimension]) <span class="sc">%&gt;%</span>  <span class="co"># change to readable dimension names</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">value =</span> <span class="sc">-</span>(((value <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">/</span><span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>))  <span class="co"># rescale value from [ 1...7 ] to [ -100%...100% ]</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode some of the evaluation dimensions if necessary</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">value =</span> <span class="fu">if_else</span>(dimension<span class="sc">!=</span><span class="st">"risk"</span>, value, <span class="sc">-</span>value))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="perspective-1-as-user-factor" class="level2">
-<h2 class="anchored" data-anchor-id="perspective-1-as-user-factor">Perspective 1: As user factor</h2>
+<section id="perspective-1-as-user-factor-indiviudal-difference" class="level2">
+<h2 class="anchored" data-anchor-id="perspective-1-as-user-factor-indiviudal-difference">Perspective 1: As user factor (indiviudal difference)</h2>
 <p>The initial perspective provides a straightforward view of the data. The different presented scenarios serve as a basis for the repeated measurement of the same latent construct and the resulting score can be interpreted as a user factor (or individual differences).</p>
 <p>For each evaluation dimension (e.g., <em>risk</em> and <em>utility</em>), we compute average scores across all queried topics. Using these cores one can, for instance, investigate if the overall attributions differ among participants or if they correlate with other queried user factors. For example, exploring if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales.</p>
 <p>Subsequently, we rejoin these user factors with the original data using, for instance, <code>dplyr::left_join()</code>. Afterwards, the calculated average evaluations can be regarded as individual differences and correlated with other user factors obtained from the survey.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>evaluationByParticipant <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> dimension, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>( DIMENSIONS ),  <span class="co"># Select only evaluation dimensions</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>( <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#            median = ~median(., na.rm = TRUE),</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>  <span class="co"># Scheme to define column names</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups=</span><span class="st">"drop"</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(data, <span class="at">by=</span><span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>evaluationByParticipant <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> dimension, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>( DIMENSIONS ),  <span class="co"># Select only evaluation dimensions</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>( <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#            median = ~median(., na.rm = TRUE),</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>  <span class="co"># Scheme to define column names</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups=</span><span class="st">"drop"</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(data, <span class="at">by=</span><span class="st">"id"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="example-research-questions" class="level4">
 <h4 class="anchored" data-anchor-id="example-research-questions">Example research questions:</h4>
 <p>How is the average perceived <em>risk</em> of the participants?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>risk_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>risk_mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--0.50000 -0.19444 -0.06944 -0.06944  0.06250  0.30556 </code></pre>
+-0.52778 -0.20139 -0.11111 -0.10694 -0.02778  0.41667 </code></pre>
 </div>
 </div>
 <p>How is the average perceived <em>utility</em> of the participants?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>utility_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>utility_mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--0.1389  0.1875  0.2778  0.2872  0.3889  0.6944 </code></pre>
+-0.1667  0.1667  0.2778  0.2561  0.3403  0.5833 </code></pre>
 </div>
 </div>
 <p>Does <em>uservariable</em> from the survey correlate to <em>risk</em>?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(evaluationByParticipant<span class="sc">$</span>risk_mean,</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    evaluationByParticipant<span class="sc">$</span>uservariable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(evaluationByParticipant<span class="sc">$</span>risk_mean,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    evaluationByParticipant<span class="sc">$</span>uservariable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$risk_mean and evaluationByParticipant$uservariable
-t = 5.1568, df = 98, p-value = 1.308e-06
+t = 3.8209, df = 98, p-value = 0.0002335
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.2920793 0.6036350
+ 0.1761175 0.5197386
 sample estimates:
-     cor 
-0.461993 </code></pre>
+      cor 
+0.3600795 </code></pre>
 </div>
 </div>
-<p>Does uservariable correlate with the average <em>perceived utility</em>?</p>
+<p>Does the <em>uservariable</em> correlate with the average <em>perceived utility</em>?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(evaluationByParticipant<span class="sc">$</span>utility_mean,</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    evaluationByParticipant<span class="sc">$</span>uservariable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(evaluationByParticipant<span class="sc">$</span>utility_mean,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    evaluationByParticipant<span class="sc">$</span>uservariable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$utility_mean and evaluationByParticipant$uservariable
-t = 2.1131, df = 98, p-value = 0.03713
+t = 1.0814, df = 98, p-value = 0.2822
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.01286523 0.38921481
+ -0.08974512  0.29863579
 sample estimates:
       cor 
-0.2087558 </code></pre>
+0.1085871 </code></pre>
 </div>
 </div>
 </section>
 </section>
 <section id="perspective-2-topic-factors" class="level2">
 <h2 class="anchored" data-anchor-id="perspective-2-topic-factors">Perspective 2: Topic factors</h2>
-<p>Next, we switch to the analysis of topic evaluations: Instead of looking at how individuals perceive the topics as a whole (individuals across all topics), we now interpret how all individuals assess the respective topics (topics across all individuals), for example, to rank the technologies in terms of the evaluation dimensions. We start with reporting the average evaluations (e.g., <em>risk</em> and <em>utility</em>) across all queried topics.</p>
-<section id="calculate-average-evaluations" class="level3">
-<h3 class="anchored" data-anchor-id="calculate-average-evaluations">Calculate Average evaluations</h3>
-<p>Using the long format, we group by evaluation dimension and aggregate across all topics and participants. Note: For a complete sample, the results are equivalent to perspective 1 (see above). <a href="#tbl-dimensions" class="quarto-xref">Table&nbsp;1</a> and <a href="#fig-evaluations" class="quarto-xref">Figure&nbsp;3</a> show the outcome of this calculation.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MEAN and SD of all evaluation dimensions across all queried topics</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>evaluationByDimension <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( dimension ) <span class="sc">%&gt;%</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>( <span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> <span class="fu">sd</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div id="tbl-dimensions" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dimensions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Averages for each evaluation dimension across all queried topics and across all participants.
-</figcaption>
-<div aria-describedby="tbl-dimensions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">dimension</th>
-<th style="text-align: right;">mean</th>
-<th style="text-align: right;">sd</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">risk</td>
-<td style="text-align: right;">-0.07</td>
-<td style="text-align: right;">0.5</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">utility</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.4</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>overallDimension <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(evaluationByDimension,</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> dimension, <span class="at">y =</span> mean)) <span class="sc">+</span> </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(),</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Evaluation Dimension"</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Values"</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Average Evaluation across all Dimensions and Participants"</span>)</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>overallDimension</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-evaluations" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-evaluations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="analysis_files/figure-html/fig-evaluations-1.png" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-evaluations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Mean evaluation across all topics and aggregated across all participants.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>This can also be illustrated in form of a violin plot in combination with a boxplot. Then this graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dataByDimensionQuestion <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( question, dimension ) <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>( <span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> <span class="fu">sd</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>overallDimension <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dataByDimensionQuestion,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(dimension, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>, <span class="at">y =</span> mean)), <span class="at">y=</span> mean)) <span class="sc">+</span> </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.2</span>,</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.75</span>)) <span class="sc">+</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(),</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"risk"</span> <span class="ot">=</span> <span class="st">"Risk"</span>,</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"utility"</span> <span class="ot">=</span> <span class="st">"Utility"</span>)) <span class="sc">+</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Evaluation Dimension"</span>,</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Values"</span>,</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Average Evaluation across all Dimensions and Participants"</span>)</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>overallDimension</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-evaluationsviolin" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-evaluationsviolin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="analysis_files/figure-html/fig-evaluationsviolin-1.png" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-evaluationsviolin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations).
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
+<p>Next, we switch to the analysis of topic evaluations: Instead of looking at how individuals perceive the topics as a whole (individuals across all topics), we now interpret how all individuals assess the respective topics (topics across all individuals), for example, to rank the technologies in terms of the evaluation dimensions.</p>
 <section id="prepare-individual-topics" class="level3">
 <h3 class="anchored" data-anchor-id="prepare-individual-topics">Prepare Individual Topics</h3>
-<p>Now, we compute the average evaluations for each topic across all participants. The resulting data frame contains N rows for the number of topics queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., <em>risk</em> and <em>utility</em>). Finally, we associate labels with each topic using <code>dplyr::left_join()</code>. <a href="#fig-topicdatastructure" class="quarto-xref">Figure&nbsp;5</a> illustrates the structure of the resulting data.</p>
+<p>First, we compute the average evaluations for each topic across all participants. The resulting data frame contains N rows for the number of topics queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., <em>risk</em> and <em>utility</em>). Finally, we associate the labels with each topic using <code>dplyr::left_join()</code>. <a href="#fig-topicdatastructure" class="quarto-xref">Figure&nbsp;3</a> illustrates the structure of the resulting data.</p>
 <div id="fig-topicdatastructure" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-topicdatastructure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="figures/topicdata.png" class="img-fluid quarto-figure quarto-figure-center figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-topicdatastructure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: The resulting data format displays the evaluation of topics. Each row contains the mean evaluation (along with its dispersion) for a specific topic. This structured data can be subjected to further analysis.
+Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each row contains the mean evaluation (along with its dispersion) for a specific topic. This structured data can be subjected to further analysis.
 </figcaption>
 </figure>
 </div>
-<p>The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized. <a href="#tbl-topics" class="quarto-xref">Table&nbsp;2</a> displays the unsorted and unfiltered results.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>evaluationByTopic <span class="ot">&lt;-</span>  evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> dimension,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( question ) <span class="sc">%&gt;%</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>( DIMENSIONS ),  <span class="co"># Select the variables from var_names</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>    <span class="co"># Define column names for the results</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups=</span><span class="st">"drop"</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(TOPICS, <span class="at">by=</span><span class="st">"question"</span>) <span class="co"># attach question labels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>evaluationByTopic <span class="ot">&lt;-</span>  evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> dimension,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( question ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>( DIMENSIONS ),  <span class="co"># Select the variables from var_names</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>    <span class="co"># Define column names for the results</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups=</span><span class="st">"drop"</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(TOPICS, <span class="at">by=</span><span class="st">"question"</span>) <span class="co"># attach question labels</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
-<div id="tbl-topics" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-topics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Average evaluation of the queried topics.
-</figcaption>
-<div aria-describedby="tbl-topics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p>The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized. The following table displays the unsorted and unfiltered results.</p>
+<div class="cell" data-tbl-cap="Average evaluation of the queried topics.">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
+<caption>Average evaluation of the queried topics.</caption>
 <colgroup>
 <col style="width: 40%">
 <col style="width: 14%">
@@ -583,117 +474,109 @@ Table&nbsp;2: Average evaluation of the queried topics.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Topic 1</td>
-<td style="text-align: right;">-0.70</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">0.72</td>
-<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">-0.74</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">0.23</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 10</td>
-<td style="text-align: right;">0.48</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.14</td>
-<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 11</td>
-<td style="text-align: right;">0.51</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">-0.02</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">-0.03</td>
 <td style="text-align: right;">0.24</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 12</td>
-<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">0.50</td>
 <td style="text-align: right;">0.25</td>
-<td style="text-align: right;">-0.13</td>
-<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 2</td>
-<td style="text-align: right;">-0.60</td>
+<td style="text-align: right;">-0.55</td>
 <td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.71</td>
-<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 3</td>
-<td style="text-align: right;">-0.48</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.61</td>
-<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">-0.49</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">0.24</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 4</td>
-<td style="text-align: right;">-0.42</td>
-<td style="text-align: right;">0.30</td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">-0.36</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.23</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 5 (deliberate outlier)</td>
-<td style="text-align: right;">-0.25</td>
+<td style="text-align: right;">-0.32</td>
 <td style="text-align: right;">0.26</td>
-<td style="text-align: right;">-0.23</td>
-<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">-0.30</td>
+<td style="text-align: right;">0.26</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 6</td>
-<td style="text-align: right;">-0.14</td>
+<td style="text-align: right;">-0.16</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.34</td>
 <td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.24</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 7</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">0.23</td>
-<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">-0.10</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.29</td>
 <td style="text-align: right;">0.27</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 8</td>
-<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.26</td>
 <td style="text-align: right;">0.27</td>
-<td style="text-align: right;">0.35</td>
-<td style="text-align: right;">0.31</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 9</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">0.30</td>
-<td style="text-align: right;">0.15</td>
-<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-</figure>
-</div>
-</div>
 </section>
 <section id="topic-correlations" class="level3">
 <h3 class="anchored" data-anchor-id="topic-correlations">Topic Correlations</h3>
-<p>Next, we analyse the correlation between the evaluation dimensions across the topics. In the example in <a href="#tbl-topiccorrelations" class="quarto-xref">Table&nbsp;3</a>, we investigate if the attribute <em>risk</em> is related to the attributed <em>utility</em> for the different topics under consideration. In this example, we have only two target variables for the topic evaluations. With more variables, more complex analyses become possible: Such as determining if and to what degree a linear model with <em>risk</em> and <em>utility</em> explains the overall <em>valence</em> towards the queried topics.</p>
+<p>Next, we analyse the correlation between the evaluation dimensions across the topics. In the following example, we investigate if the attribute <em>risk</em> is related to the attributed <em>utility</em> for the different topics under consideration. In this example, we only have two target variables for the topic evaluations. With more variables, more complex and interesting analyses become possible: Such as determining if and to what degree a linear model with <em>risk</em> and <em>utility</em> explains the overall <em>value</em> towards the queried topics.</p>
 <p>Note: Our analysis focuses on the correlations between the topics as attributed by the participants, rather than individual differences among participants.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>evaluationByTopic <span class="sc">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"_mean"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  correlation<span class="sc">::</span><span class="fu">correlation</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-topiccorrelations" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-topiccorrelations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3: Correlations between the evaluation dimensions across all topics
-</figcaption>
-<div aria-describedby="tbl-topiccorrelations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-tbl-cap="Correlations between the evaluation dimensions across all topics">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>evaluationByTopic <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"_mean"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  correlation<span class="sc">::</span><span class="fu">correlation</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
+<caption>Correlations between the evaluation dimensions across all topics</caption>
 <colgroup>
 <col style="width: 9%">
 <col style="width: 11%">
-<col style="width: 9%">
+<col style="width: 7%">
 <col style="width: 4%">
 <col style="width: 9%">
 <col style="width: 9%">
@@ -722,13 +605,13 @@ Table&nbsp;3: Correlations between the evaluation dimensions across all topics
 <tr class="odd">
 <td style="text-align: left;">risk_mean</td>
 <td style="text-align: left;">utility_mean</td>
-<td style="text-align: right;">-0.7490801</td>
+<td style="text-align: right;">-0.72306</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.9252278</td>
-<td style="text-align: right;">-0.3072758</td>
-<td style="text-align: right;">-3.575657</td>
+<td style="text-align: right;">-0.9166031</td>
+<td style="text-align: right;">-0.2549564</td>
+<td style="text-align: right;">-3.310025</td>
 <td style="text-align: right;">10</td>
-<td style="text-align: right;">0.005048</td>
+<td style="text-align: right;">0.007879</td>
 <td style="text-align: left;">Pearson correlation</td>
 <td style="text-align: right;">12</td>
 </tr>
@@ -736,98 +619,162 @@ Table&nbsp;3: Correlations between the evaluation dimensions across all topics
 </table>
 </div>
 </div>
-</figure>
-</div>
-</div>
 </section>
 <section id="visualize-the-topics" class="level3">
 <h3 class="anchored" data-anchor-id="visualize-the-topics">Visualize the Topics</h3>
-<p>Finally, the results are presented through a scatter plot. The plot in <a href="#fig-topicscatterplot" class="quarto-xref">Figure&nbsp;6</a> allows for the visual identification of the dispersion of topics on a spatial map defined by the evaluation dimension. It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers).</p>
+<p>Finally, the results are presented through a scatter plot. The follwing plot allows for the visual identification of the placement and dispersion of topics on a spatial map defined by the evaluation dimension. It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers). We use <code>geom_label_repel()</code> from the <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a> package to place text labels near data points generated by <code>geom_point()</code> in a way that avoids overlap and improves readability.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>scatterPlot <span class="ot">&lt;-</span> evaluationByTopic <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>( <span class="fu">aes</span>( <span class="at">x =</span> risk_mean,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> utility_mean,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">label =</span> shortlabel)) <span class="sc">+</span> </span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"on"</span>) <span class="sc">+</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="fl">0.25</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">linetype=</span><span class="dv">1</span>) <span class="sc">+</span> </span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="fl">0.25</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">linetype=</span><span class="dv">1</span>) <span class="sc">+</span> </span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># diagonal line indicating where both dimensions are congruent </span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"segment"</span>,</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">+</span><span class="dv">1</span>,</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">xend =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">yend =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">colour =</span> <span class="st">"black"</span>,</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">linewidth =</span> <span class="fl">0.25</span>,</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Annotate the quadrants</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"LOW RISK &amp; LOW UTILITY"</span>),</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"LOW RISK &amp; HIGH UTILITY"</span>),</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span> </span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"HIGH RISK &amp; LOW UTILITY"</span>),</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span> </span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"HIGH RISK &amp; HIGH UTILITY"</span>),</span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span> </span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add the labels...</span></span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label_repel</span>(</span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.time =</span> <span class="dv">3</span>,</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"gray95"</span>,</span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">force_pull   =</span> <span class="dv">0</span>,</span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.overlaps =</span> <span class="cn">Inf</span>,</span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="cn">Inf</span>),</span>
-<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="cn">Inf</span>),</span>
-<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.color =</span><span class="st">"#3A6B2E"</span>,</span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.size =</span> <span class="fl">0.25</span>,</span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">min.segment.length =</span> <span class="dv">0</span>,</span>
-<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">2.5</span>,</span>
-<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.size =</span> <span class="cn">NA</span>,</span>
-<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fl">0.105</span>,</span>
-<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">box.padding =</span> <span class="fl">0.125</span></span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color=</span><span class="st">"#3A6B2E"</span>) <span class="sc">+</span></span>
-<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>      <span class="co"># geom for the data points</span></span>
-<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">title =</span> <span class="st">"Illustration of the risk-utility tradeoff ..."</span>,</span>
-<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Based on synthetic data for illustrative purposes. See linked companion notebook under https://osf.io/96ep5/"</span>,</span>
-<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"AVERAGE ESTIMATED RISK</span><span class="sc">\n</span><span class="st">(without risk — very risky)"</span>,</span>
-<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"AVERAGE ESTIMATED UTILITY</span><span class="sc">\n</span><span class="st">(useless — useful)"</span>) <span class="sc">+</span></span>
-<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(), <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
-<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(), <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
-<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
-<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>scatterPlot</span>
-<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"simulatedriskutility.pdf"</span>,</span>
-<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>       <span class="at">plot =</span> scatterPlot,</span>
-<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>,</span>
-<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">"in"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>scatterPlot <span class="ot">&lt;-</span> evaluationByTopic <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>( <span class="fu">aes</span>( <span class="at">x =</span> risk_mean,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> utility_mean,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">label =</span> shortlabel)) <span class="sc">+</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"on"</span>) <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="fl">0.25</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">linetype=</span><span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="fl">0.25</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">linetype=</span><span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># diagonal line indicating where both dimensions are congruent </span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"segment"</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">+</span><span class="dv">1</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">xend =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">yend =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">colour =</span> <span class="st">"black"</span>,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">linewidth =</span> <span class="fl">0.25</span>,</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Annotate the quadrants</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"LOW RISK &amp; LOW UTILITY"</span>),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"LOW RISK &amp; HIGH UTILITY"</span>),</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span> </span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"HIGH RISK &amp; LOW UTILITY"</span>),</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span> </span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">+</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"HIGH RISK &amp; HIGH UTILITY"</span>),</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="st">"middle"</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>,</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.75</span>,</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="cn">NA</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#7CBF6C"</span>) <span class="sc">+</span> </span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add the labels...</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label_repel</span>(</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.time =</span> <span class="dv">3</span>,</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"gray95"</span>,</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">force_pull   =</span> <span class="dv">0</span>,</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.overlaps =</span> <span class="cn">Inf</span>,</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="cn">Inf</span>),</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="cn">Inf</span>),</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.color =</span><span class="st">"#3A6B2E"</span>,</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.size =</span> <span class="fl">0.25</span>,</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">min.segment.length =</span> <span class="dv">0</span>,</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">2.5</span>,</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.size =</span> <span class="cn">NA</span>,</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fl">0.105</span>,</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">box.padding =</span> <span class="fl">0.125</span></span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color=</span><span class="st">"#3A6B2E"</span>) <span class="sc">+</span></span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>      <span class="co"># geom for the data points</span></span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">title =</span> <span class="st">"Illustration of the risk-utility tradeoff ..."</span>,</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Based on synthetic data for illustrative purposes. See linked companion notebook under https://osf.io/96ep5/"</span>,</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"AVERAGE ESTIMATED RISK</span><span class="sc">\n</span><span class="st">(without risk — very risky)"</span>,</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"AVERAGE ESTIMATED UTILITY</span><span class="sc">\n</span><span class="st">(useless — useful)"</span>) <span class="sc">+</span></span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(), <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(), <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>scatterPlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-topicscatterplot" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-topicscatterplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="analysis_files/figure-html/fig-topicscatterplot-1.png" class="img-fluid figure-img" width="672">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_files/figure-html/perspective2-topicscatterplot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Scatter plot of the evaluations of the micro scenarios.</figcaption>
+</figure>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-topicscatterplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Scatter plot of the evaluations of the micro scenarios.
-</figcaption>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"simulatedriskutility.pdf"</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">plot =</span> scatterPlot,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">"in"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="perspective-3-grand-mean---average-evaluation-of-the-field" class="level2">
+<h2 class="anchored" data-anchor-id="perspective-3-grand-mean---average-evaluation-of-the-field">Perspective 3: Grand Mean - Average evaluation of the field</h2>
+<p>Lastly, using the long format, we group by evaluation dimension and aggregate <em>across all topics</em> <strong><em>and</em></strong> <em>participants</em>. Note: For a complete sample, the results are equivalent to perspective 1 (see above). The following table and figure show the outcome of this calculation.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MEAN and SD of all evaluation dimensions across all queried topics</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>evaluationByDimension <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( dimension ) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>( <span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> <span class="fu">sd</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We start with reporting the average evaluations (e.g., <em>risk</em> and <em>utility</em>) across all queried topics and across all participants (“grand mean” or evaluation of the whole field of queried topics).</p>
+<div class="cell" data-tbl-cap="Averages for each evaluation dimension across all queried topics and across all participants.">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Averages for each evaluation dimension across all queried topics and across all participants.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">dimension</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">risk</td>
+<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">0.46</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">utility</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.40</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This can then be illustrated in form of a violin plot in combination with a boxplot: This graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>dataByDimensionQuestion <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( question, dimension ) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>( <span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> <span class="fu">sd</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>overallDimension <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dataByDimensionQuestion,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">factor</span>(dimension, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>)),</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> mean)) <span class="sc">+</span> </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>( <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.2</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.75</span>)) <span class="sc">+</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(),</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>                     <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"risk"</span> <span class="ot">=</span> <span class="st">"Risk"</span>,</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"utility"</span> <span class="ot">=</span> <span class="st">"Utility"</span>)) <span class="sc">+</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Evaluation Dimension"</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Values"</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Average Evaluation across all Dimensions and Participants"</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>overallDimension</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_files/figure-html/grandmeanevaluationsviolin-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations).</figcaption>
 </figure>
 </div>
 </div>
 </div>
-</section>
 </section>
 </section>
 <section id="closing-remarks" class="level1">
 <h1>Closing remarks</h1>
-<p>This notebook showcases the analysis and visualization of surveys using the micro-scenario approach. It includes executable code for examining both research perspectives (individual differences and topic evaluation), which can be adjusted to suit your own survey and data. Ensure accurate coding and polarization of input variables.</p>
+<p>This notebook demonstrates the analysis and visualization of surveys using the micro-scenario approach. It includes executable code for examining both research perspectives (individual differences and topic evaluation), which can be adjusted to suit your own survey and data. Ensure accurate coding and polarization of input variables.</p>
 <p>It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from the sampling of the topics (!)) and I refer to the <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full">main article</a> for further guidance and strategies for bias mitigation.</p>
-<p>A recent and decent article building on the method can be found here:</p>
+<p>A recent and decent article building on the method can be found below. The code of the analyisis is available as open data.</p>
 <blockquote class="blockquote">
 <p><a href="https://www.sciencedirect.com/science/article/pii/S004016252500335X">Brauner P. et al.&nbsp;“Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance” in <em>Technology Forecasting and Social Change</em> (2025)</a></p>
 </blockquote>
@@ -840,236 +787,243 @@ This approach evolved over time and through several research projects. I would l
 Throughout the process I received feedback from editors and reviewers that helped to question this approach and improve the foundation of this approach. No scientific method of the social sciences alone will fully answer all of our questions. I hope that this method provides a fresh perspective on exciting and relevant questions.<br>
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy – EXC- 2023 Internet of Production – 390621612.</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1077,185 +1031,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 
 

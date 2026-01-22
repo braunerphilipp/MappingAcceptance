@@ -17,7 +17,7 @@ website:
       - href: analysis.qmd
         text: Analysis of Micro Scenarios
       - href: synthetic.qmd
-        text: Generration of Demo Data
+        text: Generation of Demo Data
 format:
   html:
     theme: cosmo

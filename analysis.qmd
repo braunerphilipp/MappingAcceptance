@@ -1,5 +1,5 @@
 ---
-title: "Example how to Analyse and Visualize Data from Micro Scenario-based Studies"
+title: "How to Analyse and Visualize Micro Scenario-based Studies"
 author:
   - name: "Philipp Brauner"
     orcid: 0000-0003-2837-5181
@@ -144,7 +144,7 @@ evaluationsLong <- evaluationsLong %>%
   dplyr::mutate( value = if_else(dimension!="risk", value, -value))
 ```
 
-## Perspective 1: As user factor
+## Perspective 1: As user factor (indiviudal difference)
 
 The initial perspective provides a straightforward view of the data.
 The different presented scenarios serve as a basis for the repeated measurement of the same latent construct and the resulting score can be interpreted as a user factor (or individual differences).
@@ -193,7 +193,7 @@ cor.test(evaluationByParticipant$risk_mean,
     evaluationByParticipant$uservariable)
 ```
 
-Does uservariable correlate with the average *perceived utility*?
+Does the *uservariable* correlate with the average *perceived utility*?
 
 ```{r PERSPECTIVE1_USERVARIABLEUTILITY}
 cor.test(evaluationByParticipant$utility_mean,
@@ -204,87 +204,15 @@ cor.test(evaluationByParticipant$utility_mean,
 
 Next, we switch to the analysis of topic evaluations: 
 Instead of looking at how individuals perceive the topics as a whole (individuals across all topics), we now interpret how all individuals assess the respective topics (topics across all individuals), for example, to rank the technologies in terms of the evaluation dimensions.
-We start with reporting the average evaluations (e.g., *risk* and *utility*) across all queried topics.
-
-### Calculate Average evaluations
-
-Using the long format, we group by evaluation dimension and aggregate across all topics and participants.
-Note: For a complete sample, the results are equivalent to perspective 1 (see above).
-@tbl-dimensions and @fig-evaluations show the outcome of this calculation.
-
-```{r PERSPECTIVE2_OVERVIEW}
-# MEAN and SD of all evaluation dimensions across all queried topics
-evaluationByDimension <- evaluationsLong %>%
-  dplyr::group_by( dimension ) %>%
-  dplyr::summarise( mean = mean(value, na.rm = TRUE),
-                    sd = sd(value, na.rm = TRUE),
-                    .groups="drop")
-```
-
-```{r TABLEDIMENSIONS, echo=FALSE}
-#| label: tbl-dimensions
-#| tbl-cap: Averages for each evaluation dimension across all queried topics and across all participants.
-knitr::kable(evaluationByDimension %>%
-  dplyr::mutate(
-    mean = round(mean, 2), 
-    sd = round(sd, 2))
-)
-```
-
-```{r PERSPECTIVE2_PLOTOVERVIEW}
-#| label: fig-evaluations
-#| fig-cap: "Mean evaluation across all topics and aggregated across all participants."
-
-overallDimension <- ggplot(evaluationByDimension,
-  aes(x = dimension, y = mean)) + 
-  geom_bar(stat = "identity") +
-  scale_y_continuous(labels = percent_format(),
-                     limits=c( -1, +1 )) +
-  labs(x = "Evaluation Dimension",
-       y = "Values",
-       title = "Average Evaluation across all Dimensions and Participants")
-overallDimension
-```
-This can also be illustrated in form of a violin plot in combination with a boxplot. Then this graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).
-
-```{r PERSPECTIVE2_PLOTVIOLIN}
-#| label: fig-evaluationsviolin
-#| fig-cap: "Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations)."
-dataByDimensionQuestion <- evaluationsLong %>%
-  dplyr::group_by( question, dimension ) %>%
-  dplyr::summarise( mean = mean(value, na.rm = TRUE),
-                    sd = sd(value, na.rm = TRUE),
-        .groups = 'drop')
-
-overallDimension <- ggplot(dataByDimensionQuestion,
-  aes(x = factor(dimension, levels = c("risk", "utility", y = mean)), y= mean)) + 
-  geom_violin() +
-  geom_boxplot(width=0.2,
-               position = position_dodge(width = 0.75)) +
-  scale_y_continuous(labels = percent_format(),
-                     limits=c( -1, +1 )) +
-  scale_x_discrete(
-      labels = c("risk" = "Risk",
-                 "utility" = "Utility")) +
-  labs(x = "Evaluation Dimension",
-       y = "Values",
-       title = "Average Evaluation across all Dimensions and Participants")
-overallDimension
-```
-
 
 ### Prepare Individual Topics
 
-Now, we compute the average evaluations for each topic across all participants.
+First, we compute the average evaluations for each topic across all participants.
 The resulting data frame contains N rows for the number of topics queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., *risk* and *utility*).
-Finally, we associate labels with each topic using `dplyr::left_join()`.
+Finally, we associate the labels with each topic using `dplyr::left_join()`.
 @fig-topicdatastructure illustrates the structure of the resulting data.
 
 ![The resulting data format displays the evaluation of topics. Each row contains the mean evaluation (along with its dispersion) for a specific topic. This structured data can be subjected to further analysis.](figures/topicdata.png){fig-align="center" #fig-topicdatastructure}
-
-The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized.
-@tbl-topics displays the unsorted and unfiltered results.
-
 
 ```{r PERSPECTIVE2_TOPICFACTOR}
 evaluationByTopic <-  evaluationsLong %>%
@@ -303,9 +231,12 @@ evaluationByTopic <-  evaluationsLong %>%
   dplyr::left_join(TOPICS, by="question") # attach question labels
 ```
 
-```{r TABLETOPICS, echo=FALSE}
-#| label: tbl-topics
+The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized.
+The following table displays the unsorted and unfiltered results.
+
+```{r tabletopics, echo=FALSE}
 #| tbl-cap: Average evaluation of the queried topics.
+
 knitr::kable(
   evaluationByTopic %>%
     dplyr::select(-question, -shortlabel) %>%
@@ -321,14 +252,13 @@ knitr::kable(
 ### Topic Correlations
 
 Next, we analyse the correlation between the evaluation dimensions across the topics.
-In the example in @tbl-topiccorrelations, we investigate if the attribute *risk* is related to the attributed *utility* for the different topics under consideration.
-In this example, we have only two target variables for the topic evaluations.
-With more variables, more complex analyses become possible: Such as determining if and to what degree a linear model with *risk* and *utility* explains the overall *valence* towards the queried topics.
+In the following example, we investigate if the attribute *risk* is related to the attributed *utility* for the different topics under consideration.
+In this example, we only have two target variables for the topic evaluations.
+With more variables, more complex and interesting analyses become possible: Such as determining if and to what degree a linear model with *risk* and *utility* explains the overall *value* towards the queried topics.
 
 Note: Our analysis focuses on the correlations between the topics as attributed by the participants, rather than individual differences among participants.
 
-```{r TOPICCORRELATIONS}
-#| label: tbl-topiccorrelations
+```{r topiccorrelations}
 #| tbl-cap: Correlations between the evaluation dimensions across all topics
 evaluationByTopic %>%
   dplyr::select(ends_with("_mean")) %>%
@@ -339,11 +269,11 @@ evaluationByTopic %>%
 ### Visualize the Topics
 
 Finally, the results are presented through a scatter plot.
-The plot in @fig-topicscatterplot allows for the visual identification of the dispersion of topics on a spatial map defined by the evaluation dimension.
+The follwing plot  allows for the visual identification of the placement and dispersion of topics on a spatial map defined by the evaluation dimension.
 It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers).
+We use `geom_label_repel()` from the [`ggplot2`](https://ggplot2.tidyverse.org/) package to place text labels near data points generated by `geom_point()` in a way that avoids overlap and improves readability.
 
-```{r PERSPECTIVE2_EXAMPLEPLOT}
-#| label: fig-topicscatterplot
+```{r perspective2-topicscatterplot}
 #| fig-cap: "Scatter plot of the evaluations of the micro scenarios."
 #| warning: false
 
@@ -412,14 +342,69 @@ ggsave("simulatedriskutility.pdf",
        units = "in")
 ```
 
+## Perspective 3: Grand Mean - Average evaluation of the field
+
+Lastly, using the long format, we group by evaluation dimension and aggregate *across all topics* ***and*** *participants*.
+Note: For a complete sample, the results are equivalent to perspective 1 (see above).
+The following table and figure show the outcome of this calculation.
+
+```{r calculate_grand_mean}
+# MEAN and SD of all evaluation dimensions across all queried topics
+evaluationByDimension <- evaluationsLong %>%
+  dplyr::group_by( dimension ) %>%
+  dplyr::summarise( mean = mean(value, na.rm = TRUE),
+                    sd = sd(value, na.rm = TRUE),
+                    .groups="drop")
+```
+
+We start with reporting the average evaluations (e.g., *risk* and *utility*) across all queried topics and across all participants ("grand mean" or evaluation of the whole field of queried topics).
+
+```{r tabledimensions, echo=FALSE}
+#| tbl-cap: Averages for each evaluation dimension across all queried topics and across all participants.
+knitr::kable(evaluationByDimension %>%
+  dplyr::mutate(
+    mean = round(mean, 2), 
+    sd = round(sd, 2))
+)
+```
+
+This can then be illustrated in form of a violin plot in combination with a boxplot: This graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).
+
+```{r grandmeanevaluationsviolin}
+#| fig-cap: "Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations)."
+dataByDimensionQuestion <- evaluationsLong %>%
+  dplyr::group_by( question, dimension ) %>%
+  dplyr::summarise( mean = mean(value, na.rm = TRUE),
+                    sd = sd(value, na.rm = TRUE),
+        .groups = 'drop')
+
+overallDimension <- ggplot(dataByDimensionQuestion,
+  aes(
+    x = factor(dimension, levels = c("risk", "utility")),
+    y = mean)) + 
+  geom_violin( alpha=0.5) +
+  geom_boxplot(width=0.2,
+               position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = percent_format(),
+                     limits=c( -1, +1 )) +
+  scale_x_discrete(
+      labels = c("risk" = "Risk",
+                 "utility" = "Utility")) +
+  labs(x = "Evaluation Dimension",
+       y = "Values",
+       title = "Average Evaluation across all Dimensions and Participants")
+overallDimension
+```
+
+
 # Closing remarks
 
-This notebook showcases the analysis and visualization of surveys using the micro-scenario approach.
+This notebook demonstrates the analysis and visualization of surveys using the micro-scenario approach.
 It includes executable code for examining both research perspectives (individual differences and topic evaluation), which can be adjusted to suit your own survey and data.
 Ensure accurate coding and polarization of input variables.
 
 It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from the sampling of the topics (!)) and I refer to the [main article](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full) for further guidance and strategies for bias mitigation.
 
-A recent and decent article building on the method can be found here:
+A recent and decent article building on the method can be found below. The code of the analyisis is available as open data.
 
 > [Brauner P. et al. "Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance" in *Technology Forecasting and Social Change* (2025)](https://www.sciencedirect.com/science/article/pii/S004016252500335X)

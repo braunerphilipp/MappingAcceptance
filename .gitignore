@@ -10,3 +10,5 @@ simulatedriskutility.pdf
 
 /.quarto/
 *.bkp
+
+**/*.quarto_ipynb
