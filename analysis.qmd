@@ -1,5 +1,5 @@
 ---
-title: "How to Analyse and Visualize Micro Scenario-based Studies"
+title: "Analysis and Visualisation of Micro Scenario-based Studies"
 author:
   - name: "Philipp Brauner"
     orcid: 0000-0003-2837-5181
@@ -27,8 +27,6 @@ editor:
 format:
   html:
     theme: cosmo
-  pdf: 
-    fontfamily: libertinus
 ---
 
 # Introduction
