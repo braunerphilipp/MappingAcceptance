@@ -31,8 +31,8 @@ format:
 
 # Introduction
 
-The micro-scenario approach simplifies measuring people's opinions on different topics ([see overview](index.qmd). 
-Based on a single survey the appraoch combines these participants' responses to 0) a grand mean that servers as a general evaluation of the whole context, 1) individual user factors as reflexive measurements of latent constructs (research perspective 1), and 2) a technology evaluation to rank topics and to create a visual map to pinpoint conflicting issues (research perspective 2).
+The micro-scenario approach simplifies measuring people's opinions on different topics (see [overview](index.qmd)).
+Based on a single survey, the approach combines participants' responses into three complementary outputs: 0) a grand mean serving as a general evaluation of the whole topic field, 1) individual user factors as reflexive measurements of latent constructs (research perspective 1), and 2) topic-level evaluations for ranking topics and creating visual maps to pinpoint areas of concern (research perspective 2).
 
 For instance, consider analysing risk-utility trade-offs among various technologies:
 Do individuals attribute varying risks and utilities to distinct technologies?
@@ -46,17 +46,15 @@ The main article provides comprehensive insights into this approach and outlines
 
 > Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
 
-This notebook demonstrates the calculation of data for the two research perspectives of micro scenario based surveys (Grand mean, Perspective 1: user factor, and Perspective 2: topic factor) using R.
+This notebook demonstrates the analysis of all three research perspectives of micro scenario-based surveys (grand mean, perspective 1: user factor, and perspective 2: topic factor) using R.
 Note that all transformations and calculations can also be performed using other software.
 
-In this example, we utilize [synthetic data](synthetic.qmd) generated to resemble real survey data.
-This choice simplifies the follow-through of our approach, eliminating the need for cleaning the data from irrelevant variables or erroneous participant inputs.
-Additionally, the synthetic data adheres to pre-specified properties.
-The creation of the synthetic data is detailed in the companion notebook within the same folder (the the [linked notebook](synthetic.qmd) for details).
+We use [synthetic data](synthetic.qmd) generated to resemble real survey data, which avoids the need to clean irrelevant variables or erroneous participant inputs and allows the data to have well-defined statistical properties.
+How the synthetic data was generated is detailed in the [companion notebook](synthetic.qmd).
 
-The rest of this notebook is organized as follows:
-Firstly, we load the necessary packages, followed by loading the [synthetic data](synthetic.qmd) as our input (replace this with your actual data).
-Secondly, we transform the data into the long format (refer to, for instance, <https://tidyr.tidyverse.org/reference/pivot_longer.html>), proceed to analyse the data as a user factor (research perspective 1), and subsequently as a topic factor which includes visualizing the outcomes (research perspective 2). 
+This notebook is organized as follows:
+First, we load the necessary packages and the [synthetic data](synthetic.qmd) as input (replace this with your actual data).
+Then we transform the data into long format (see [`pivot_longer`](https://tidyr.tidyverse.org/reference/pivot_longer.html)), analyse it as a user factor (research perspective 1), and as topic-level scores including visualization (research perspective 2).
 
 # Preparation
 
@@ -74,13 +72,12 @@ library(knitr)   # Tables
 
 ## Load Data
 
-In this demonstration, we will load the synthetic data that emulates the properties found in real survey data. The other notebook demonstrates the creation of the [synthetic data](synthetic.qmd).
-@fig-surveysdatastructure illustrates the structure of a standard dataset from survey tools, where each row represents the responses from an individual participant.
+We load the synthetic data generated in the [companion notebook](synthetic.qmd).
+@fig-surveysdatastructure illustrates the structure of a standard dataset from survey tools, where each row represents one participant's responses.
 
 ![Illustration of typical survey data utilizing the micro-scenario approach, featuring user demographics, additional user factors, and topic evaluations.](figures/surveydata.png){fig-align="center" #fig-surveysdatastructure}
 
-The data structure closely resembles the data export from the Qualtrics survey tool.
-The process of generating [synthetic data](synthetic.qmd) is documented in the companion notebook within the same folder.
+The data structure closely resembles the export format of the Qualtrics survey tool.
 
 ```{r LOADDATA}
   data <- readRDS("syntheticdata.rds")
@@ -92,13 +89,12 @@ The structure of the data looks as follows:
   str(data)
 ```
 
-The loaded dataset has various variables.
-Initially, there's a unique user identifier (`id`), followed by a user variable (e.g., attitude towards a topic).
-Subsequently, there are an arbitrary number of topic assessments (*N* in our example) with variables for each evaluation dimension.
-In this instance, we use *perceived risk* and *perceived utility* as examples for the topic evaluations. However, one can employ different or additional evaluation dimensions (as detailed in the article).
+The dataset contains the following variables:
+a unique participant identifier (`id`), one or more user-level variables (e.g., attitude towards a topic), and *N* topic assessments with one column per evaluation dimension per topic.
+Here we use *perceived risk* and *perceived utility* as the two evaluation dimensions; different or additional dimensions can be used depending on the research questions (as detailed in the article).
 
 The variables for the topic evaluations adhere to a standardized naming scheme, i.e., `a01_matrix_02`, where `01` denotes the ID of the queried topic, `02` represents the queried evaluation dimension, and `matrix` stands for the name of the variable block in the survey tool.
-This naming scheme is employed by Quartics.
+This naming scheme is employed by Qualtrics.
 
 # Analysis of the data
 
@@ -106,68 +102,65 @@ Once the (synthetic) survey data is loaded into the variable `data`, we can comm
 
 ## Setup
 
-Firstly, read the list of queried topics and their labels from a `.csv` file (adjustable based on your needs).
-Secondly, define the queried evaluation dimensions.
-In this instance, we have a vector of two dimensions, but one can define more based on your research questions and survey structure.
+Read the list of queried topics and their display labels from a `.csv` file, and define the names of the evaluation dimensions in the order they appear in the survey.
+Both can be adjusted to match your own study.
 
 ```{r LOADLABELS}
-TOPICS <- read.csv2("matrixlabels.csv") 
-DIMENSIONS = c("risk", "utility")  
+TOPICS <- read.csv2("matrixlabels.csv")   # columns: question (ID), label, shortlabel
+DIMENSIONS = c("risk", "utility")         # dimension names in survey order (1 = risk, 2 = utility)
 ```
 
 ## Long Format
 
-Next, the topic evaluations from the survey data is transformed into the long format using `pivot_longer` (one row with a single value for each participant, topic, and evaluation dimension; one row per observation).
-Hereto, we use that the variables for the topic evaluations in the original data table have a systematic naming convention (see above).
+The topic evaluation columns are reshaped from wide to long format using `pivot_longer`, resulting in one row per participant–topic–dimension combination.
+This is possible because the column names follow the systematic naming convention described above, which encodes both the topic ID and the dimension index.
 
-The resulting data set contains a participant identifier, identifier for the topic and the evaluation dimension, and lastly a column for the value.
-We use this format as the foundation for the later transformation steps.
+The resulting data frame contains four columns: participant identifier, topic identifier, evaluation dimension name, and the numeric value.
+All subsequent analyses build on this long-format table.
 
 ```{r SURVEYTOLONG}
-evaluationsLong <- data %>% 
-  # selects columns id and "aNUMBER_matrix_NUMBER" (scheme from loop&merge)
+evaluationsLong <- data %>%
+  # Keep only participant ID and topic evaluation columns (pattern: a{topic}_matrix_{dim})
   dplyr::select(id, matches("a\\d+\\_matrix\\_\\d+")) %>%
   tidyr::pivot_longer(
-    cols = matches("a\\d+\\_matrix\\_\\d+"), # topics and their evaluations
-    names_to = c("question", "dimension"),
-    names_pattern = "(.*)_matrix_(.*)",   # Separate topic ID and evaluation ID 
+    cols = matches("a\\d+\\_matrix\\_\\d+"),
+    names_to = c("question", "dimension"),  # split column name into topic ID and dimension index
+    names_pattern = "(.*)_matrix_(.*)",     # regex: capture everything before and after "_matrix_"
     values_to = "value",
     values_drop_na = FALSE) %>%
-    dplyr::mutate( dimension = as.numeric(dimension) ) %>%
-    dplyr::mutate( dimension = DIMENSIONS[dimension]) %>%  # change to readable dimension names
-    dplyr::mutate( value = -(((value - 1)/3) - 1))  # rescale value from [ 1...7 ] to [ -100%...100% ]
+  dplyr::mutate(dimension = as.numeric(dimension)) %>%
+  dplyr::mutate(dimension = DIMENSIONS[dimension]) %>%   # replace numeric index with readable label
+  # Rescale from Likert 1–7 to percentage [-1, +1]:
+  # formula: -((x-1)/3 - 1)  →  1 maps to +1, 4 maps to 0, 7 maps to -1
+  dplyr::mutate(value = -(((value - 1)/3) - 1))
 
-# Recode some of the evaluation dimensions if necessary
+# Reverse-score "risk" so that higher values mean MORE risk (survey scale was reversed)
 evaluationsLong <- evaluationsLong %>%
-  dplyr::mutate( value = if_else(dimension!="risk", value, -value))
+  dplyr::mutate(value = if_else(dimension != "risk", value, -value))
 ```
 
-## Perspective 1: As user factor (indiviudal difference)
+## Perspective 1: As user factor (individual difference)
 
-The initial perspective provides a straightforward view of the data.
-The different presented scenarios serve as a basis for the repeated measurement of the same latent construct and the resulting score can be interpreted as a user factor (or individual differences).
+In this perspective, the repeated evaluations across scenarios serve as a multi-item measurement of the same latent construct, and the resulting average score is interpreted as a user factor (individual difference).
 
-For each evaluation dimension (e.g., *risk* and *utility*), we compute average scores across all queried topics.
-Using these cores one can, for instance, investigate if the overall attributions differ among participants or if they correlate with other queried user factors.
-For example, exploring if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales.
+For each evaluation dimension (e.g., *risk* and *utility*), we compute each participant's mean score across all queried topics.
+Using these scores one can, for instance, investigate whether the overall attributions differ among participants, or whether they correlate with other user-level variables from the survey—such as whether average attributed risk across all topics relates to a general risk disposition measured by a psychometric scale.
 
-Subsequently, we rejoin these user factors with the original data using, for instance, `dplyr::left_join()`.
-Afterwards, the calculated average evaluations can be regarded as individual differences and correlated with other user factors obtained from the survey.
+The computed per-participant averages are then rejoined with the original data using `dplyr::left_join()` to allow correlation with other survey variables.
 
 ```{r PERSPECTIVE1_USERFACTOR}
 evaluationByParticipant <- evaluationsLong %>%
-  tidyr::pivot_wider(names_from = dimension, values_from = value) %>%
+  tidyr::pivot_wider(names_from = dimension, values_from = value) %>%  # one column per dimension
   dplyr::group_by(id) %>%
   dplyr::summarize(
     across(
-      all_of( DIMENSIONS ),  # Select only evaluation dimensions
-      list( mean = ~mean(., na.rm = TRUE),
-#            median = ~median(., na.rm = TRUE),
-            sd = ~sd(., na.rm = TRUE)),
-      .names = "{.col}_{.fn}"  # Scheme to define column names
-    ), .groups="drop"
+      all_of(DIMENSIONS),   # compute summary stats for each evaluation dimension
+      list(mean = ~mean(., na.rm = TRUE),
+           sd   = ~sd(.,   na.rm = TRUE)),
+      .names = "{.col}_{.fn}"  # produces columns like risk_mean, risk_sd, utility_mean, ...
+    ), .groups = "drop"
   ) %>%
-  dplyr::left_join(data, by="id")
+  dplyr::left_join(data, by = "id")  # re-attach original survey variables (e.g., uservariable)
 ```
 
 #### Example research questions:
@@ -200,33 +193,31 @@ cor.test(evaluationByParticipant$utility_mean,
 
 ## Perspective 2: Topic factors
 
-Next, we switch to the analysis of topic evaluations: 
-Instead of looking at how individuals perceive the topics as a whole (individuals across all topics), we now interpret how all individuals assess the respective topics (topics across all individuals), for example, to rank the technologies in terms of the evaluation dimensions.
+Next, we switch to the analysis of topic-level evaluations.
+Instead of aggregating across topics per participant (perspective 1), we now aggregate across participants per topic—allowing us to rank topics and compare them on the evaluation dimensions.
 
 ### Prepare Individual Topics
 
-First, we compute the average evaluations for each topic across all participants.
-The resulting data frame contains N rows for the number of topics queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., *risk* and *utility*).
-Finally, we associate the labels with each topic using `dplyr::left_join()`.
+We compute the mean and standard deviation for each topic across all participants.
+The resulting data frame has one row per topic and columns for the mean and standard deviation of each evaluation dimension (e.g., *risk* and *utility*).
+Topic display labels are then attached using `dplyr::left_join()`.
 @fig-topicdatastructure illustrates the structure of the resulting data.
 
 ![The resulting data format displays the evaluation of topics. Each row contains the mean evaluation (along with its dispersion) for a specific topic. This structured data can be subjected to further analysis.](figures/topicdata.png){fig-align="center" #fig-topicdatastructure}
 
 ```{r PERSPECTIVE2_TOPICFACTOR}
-evaluationByTopic <-  evaluationsLong %>%
-  tidyr::pivot_wider(
-    names_from = dimension,
-    values_from = value) %>%
-  dplyr::group_by( question ) %>%
+evaluationByTopic <- evaluationsLong %>%
+  tidyr::pivot_wider(names_from = dimension, values_from = value) %>%  # one column per dimension
+  dplyr::group_by(question) %>%   # aggregate across all participants for each topic
   dplyr::summarize(
     across(
-      all_of( DIMENSIONS ),  # Select the variables from var_names
+      all_of(DIMENSIONS),
       list(mean = ~mean(., na.rm = TRUE),
-      	   sd = ~sd(., na.rm = TRUE)),
-      .names = "{.col}_{.fn}"    # Define column names for the results
-    ), .groups="drop"
+           sd   = ~sd(.,   na.rm = TRUE)),
+      .names = "{.col}_{.fn}"  # produces columns like risk_mean, risk_sd, utility_mean, ...
+    ), .groups = "drop"
   ) %>%
-  dplyr::left_join(TOPICS, by="question") # attach question labels
+  dplyr::left_join(TOPICS, by = "question")  # attach human-readable topic labels
 ```
 
 The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized.
@@ -249,12 +240,10 @@ knitr::kable(
 
 ### Topic Correlations
 
-Next, we analyse the correlation between the evaluation dimensions across the topics.
-In the following example, we investigate if the attribute *risk* is related to the attributed *utility* for the different topics under consideration.
-In this example, we only have two target variables for the topic evaluations.
-With more variables, more complex and interesting analyses become possible: Such as determining if and to what degree a linear model with *risk* and *utility* explains the overall *value* towards the queried topics.
+Here we examine the correlation between evaluation dimensions at the topic level—that is, whether topics perceived as risky also tend to be perceived as less useful.
+With only two dimensions, a single correlation can be computed; with more dimensions, richer analyses become possible, such as determining how well a linear combination of *risk* and *utility* explains an overall *value* rating across topics.
 
-Note: Our analysis focuses on the correlations between the topics as attributed by the participants, rather than individual differences among participants.
+Note: These are topic-level correlations (N = number of topics), not individual-level correlations (N = number of participants).
 
 ```{r topiccorrelations}
 #| tbl-cap: Correlations between the evaluation dimensions across all topics
@@ -267,7 +256,7 @@ evaluationByTopic %>%
 ### Visualize the Topics
 
 Finally, the results are presented through a scatter plot.
-The follwing plot  allows for the visual identification of the placement and dispersion of topics on a spatial map defined by the evaluation dimension.
+The following plot allows for the visual identification of the placement and dispersion of topics on a spatial map defined by the evaluation dimension.
 It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers).
 We use `geom_label_repel()` from the [`ggplot2`](https://ggplot2.tidyverse.org/) package to place text labels near data points generated by `geom_point()` in a way that avoids overlap and improves readability.
 
@@ -342,20 +331,22 @@ ggsave("simulatedriskutility.pdf",
 
 ## Perspective 3: Grand Mean - Average evaluation of the field
 
-Lastly, using the long format, we group by evaluation dimension and aggregate *across all topics* ***and*** *participants*.
-Note: For a complete sample, the results are equivalent to perspective 1 (see above).
-The following table and figure show the outcome of this calculation.
+Finally, we aggregate across all topics *and* all participants to obtain the grand mean for each dimension.
+This gives a single-number summary of how the entire topic field is perceived on each dimension—the overall sentiment.
+The following table and figure show the outcome.
 
 ```{r calculate_grand_mean}
-# MEAN and SD of all evaluation dimensions across all queried topics
+# Aggregate across all participants AND all topics for each dimension.
+# Each row in evaluationsLong is one (participant × topic) observation,
+# so this grand mean pools all observations regardless of topic or participant.
 evaluationByDimension <- evaluationsLong %>%
-  dplyr::group_by( dimension ) %>%
-  dplyr::summarise( mean = mean(value, na.rm = TRUE),
-                    sd = sd(value, na.rm = TRUE),
-                    .groups="drop")
+  dplyr::group_by(dimension) %>%
+  dplyr::summarise(mean = mean(value, na.rm = TRUE),
+                   sd   = sd(value,   na.rm = TRUE),
+                   .groups = "drop")
 ```
 
-We start with reporting the average evaluations (e.g., *risk* and *utility*) across all queried topics and across all participants ("grand mean" or evaluation of the whole field of queried topics).
+The table below reports the grand mean and standard deviation for each evaluation dimension across all topics and participants.
 
 ```{r tabledimensions, echo=FALSE}
 #| tbl-cap: Averages for each evaluation dimension across all queried topics and across all participants.
@@ -370,11 +361,12 @@ This can then be illustrated in form of a violin plot in combination with a boxp
 
 ```{r grandmeanevaluationsviolin}
 #| fig-cap: "Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations)."
+# Compute per-topic means first; the violin then shows the distribution of those topic means
 dataByDimensionQuestion <- evaluationsLong %>%
-  dplyr::group_by( question, dimension ) %>%
-  dplyr::summarise( mean = mean(value, na.rm = TRUE),
-                    sd = sd(value, na.rm = TRUE),
-        .groups = 'drop')
+  dplyr::group_by(question, dimension) %>%
+  dplyr::summarise(mean = mean(value, na.rm = TRUE),
+                   sd   = sd(value,   na.rm = TRUE),
+                   .groups = "drop")
 
 overallDimension <- ggplot(dataByDimensionQuestion,
   aes(
@@ -403,6 +395,6 @@ Ensure accurate coding and polarization of input variables.
 
 It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from the sampling of the topics (!)) and I refer to the [main article](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full) for further guidance and strategies for bias mitigation.
 
-A recent and decent article building on the method can be found below. The code of the analyisis is available as open data.
+A recent and decent article building on the method can be found below. The analysis code is available as open data.
 
-> [Brauner P. et al. "Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance" in *Technology Forecasting and Social Change* (2025)](https://www.sciencedirect.com/science/article/pii/S004016252500335X)
+> [Brauner P. et al. "Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance" in *Technology Forecasting and Social Change* (2025)](https://doi.org/10.1016/j.techfore.2025.124304)

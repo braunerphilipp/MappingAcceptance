@@ -38,37 +38,39 @@ format:
 
 # Introduction
 
-The goal of the micro-scenario approach is to collect evaluations across a wide range of topics on a few selected response variables, interpret these in terms of both individual differences and topic-specific judgments, and situate the different evaluations within a broader, comperative context.
- (see the [publication](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)).
-Hereto, the subjects are presented with a large number of different short scenarios and their evaluation of these is measured using a small set of response variables.
-The scenario presentation can be a short descriptive text, and/or images, or, in extreme cases, just a single word about an evaluated concept.
-I call the former "micro scenarios" and the latter "nano scenarios". The former offers the possibility to briefly explain the evaluated topic whereas the later essentially measures the participants' affective associations towards a single term.
+The goal of the micro-scenario approach is to collect evaluations across a wide range of topics on a few selected response variables, interpret these in terms of both 1) individual differences and 2) topic-specific judgments, and situate the different evaluations within a broader, comparative context
+(see the [publication](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)).
+To do so, participants are presented with a large number of short scenarios and their evaluations are measured using a small set of response variables.
+The scenario stimulus can be a short descriptive text, images, or, in extreme cases, just a single word representing the evaluated concept.
 
 ![Concept of a micro scenario survey compared to a conventional scenario-based survey.](figures/conceptcomparison.png){fig-align="center" #fig-conceptcomparison}
 
 
 Each of potentially many scenarios is evaluated on the same small set of response items (see @fig-conceptcomparison).
-Because participants evaluate several scenarios, I recommend using no more than three to five dependent variables
+Because participants evaluate several scenarios, I recommend using no more than three to five dependent variables.
 With a suitable set of items as dependent variables, these evaluations provide three complementary research perspectives:
 
-**1. Individual differences:**
-The responses can be interpreted as reflexive measurements of latent personality states or traits. In this sense, they represent between-subject variables (or “user variables”).
+**1.	Grand mean or overall sentiment:**
+First, the grand mean across topics and participants for each dimension can be understood as an overall evaluation of the topic field—an indicator of general sentiment.
+
+**2. Individual differences:**
+The responses can be interpreted as reflexive measurements of latent personality states or traits.
+In this sense, they represent between-subject variables (or “user variables”).
 Correlations with other user factors such as age, gender, or background characteristics can then be explored.
 
-**2.	Topic evaluations:**
-The responses also function as evaluations of the queried topics themselves. This perspective makes it possible to study differences and similarities between topics across the evaluation dimensions.
+**3.	Topic evaluations:**
+The responses also function as evaluations of the queried topics themselves.
+This perspective makes it possible to study differences and similarities between topics across the evaluation dimensions.
 
-**3.	Grand mean or overall sentiment:**
-Finally, the grand mean across topics and participants for each dimension can be understood as an overall evaluation of the topic field—an indicator of general sentiment.
 
 For example, one might query *perceived risk*, *perceived benefit*, and *overall value* across a range of topics.
 The first perspective highlights how *individuals* weigh risks and benefits to form personal value judgments.
 The second perspective shows how risks and benefits are distributed across the different topics. These assessments can easily be *mapped and visualized* as accessible scatter plots.
 The third perspective captures how the entire topic field is perceived in terms of risks, benefits, and value.
 
-Using easy-to-adapt R code this notebook demonstrates how studies using the micro scenario approach can be [prepared, analysed and visualized](analysis.qmd).
-An additional page shows how the [synthetic data](synthetic.qmd) for illustrating the analysis was created. 
-Details on this approach, the methodological justifications, and addtional practical guidelines can be found in the following research article:
+Using easy-to-adapt R code, this notebook demonstrates how studies using the micro scenario approach can be [prepared, analysed, and visualized](analysis.qmd).
+An additional page shows how the [synthetic data](synthetic.qmd) used to illustrate the analysis was created.
+Details on this approach, its methodological justifications, and additional practical guidelines can be found in the following research article:
 
 > Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
 ([<code>.bib</code>](brauner2024micro.bib))
@@ -76,9 +78,9 @@ Details on this approach, the methodological justifications, and addtional pract
 
 # Real world example of applying Micro Scenarios
 
-@fig-graphicalabstract shows a graphical abstract from a [refereed article]((https://doi.org/10.1016/j.techfore.2025.124304)) that applied the micro scenario approach in the context of public risk–benefit perception of Artificial Intelligence.
+@fig-graphicalabstract shows a graphical abstract from a [refereed article](https://doi.org/10.1016/j.techfore.2025.124304) that applied the micro scenario approach in the context of public risk–benefit perception of Artificial Intelligence.
 On an absolute level, *Perceived Risks* of AI across many applications are high, while *Perceived Benefits* and *Perceived Value* are comparatively low.
-However, a multiple linear regression suggests that overall *Value* can be explained ($r^2 > .9$) by *Perceived Risks* ($\beta = .490$) and, to an even larger extent, *Perceived Benefits* ($\beta = .672$).
+However, a multiple linear regression suggests that overall *Value* can be explained ($r^2 > .9$) by *Perceived Risks* ($\beta = -.490$) and, to an even larger extent, *Perceived Benefits* ($\beta = .672$).
 Individual differences further shape these perceptions.
 
 Link to the article: <br />
@@ -95,12 +97,12 @@ If you prefer slides over websites, you can look at the english slidedeck on the
 # List of Studies
 
 Several studies based on this approach have been published or are in the making.
-I document them here in @tbl-listOfStudis, including the research context, sample size, number of topics queried, and the dependent variables.
-If you build on this approach and the article, let me know and I can add your study as well. Drop me a message!
+I document them in @tbl-listOfStudies, including the research context, sample size, number of topics queried, and the dependent variables.
+If you build on this approach, let me know and I can add your study to the list — just drop me a message!
 
 ```{r showTableOfStudies, echo=FALSE, warning=FALSE, message=FALSE}
 #| column: page
-#| label: tbl-listOfStudis
+#| label: tbl-listOfStudies
 #| tbl-cap: "List of studies using the micro scenario approach. Drop me a message if you build on the micro scenarios article and want to be listed."
 library(tidyverse)
 library(rmarkdown)

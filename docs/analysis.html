@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,7 +70,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -193,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>The micro-scenario approach simplifies measuring people’s opinions on different topics (<a href="./index.html">see overview</a>. Based on a single survey the appraoch combines these participants’ responses to 0) a grand mean that servers as a general evaluation of the whole context, 1) individual user factors as reflexive measurements of latent constructs (research perspective 1), and 2) a technology evaluation to rank topics and to create a visual map to pinpoint conflicting issues (research perspective 2).</p>
+<p>The micro-scenario approach simplifies measuring people’s opinions on different topics (see <a href="./index.html">overview</a>). Based on a single survey, the approach combines participants’ responses into three complementary outputs: 0) a grand mean serving as a general evaluation of the whole topic field, 1) individual user factors as reflexive measurements of latent constructs (research perspective 1), and 2) topic-level evaluations for ranking topics and creating visual maps to pinpoint areas of concern (research perspective 2).</p>
 <p>For instance, consider analysing risk-utility trade-offs among various technologies: Do individuals attribute varying risks and utilities to distinct technologies? Are people predisposed to different risk or utility perceptions? Is the comparability of risk-utility trade-offs consistent across different technologies, and can these trade-offs be quantified? <a href="#fig-concept" class="quarto-xref">Figure&nbsp;1</a> illustrates the overall approach.</p>
 <div id="fig-concept" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -209,9 +209,9 @@ Figure&nbsp;1: The micro-scenario approach involves consolidating evaluations of
 <blockquote class="blockquote">
 <p>Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full">10.3389/fpsyg.2024.1419564</a></p>
 </blockquote>
-<p>This notebook demonstrates the calculation of data for the two research perspectives of micro scenario based surveys (Grand mean, Perspective 1: user factor, and Perspective 2: topic factor) using R. Note that all transformations and calculations can also be performed using other software.</p>
-<p>In this example, we utilize <a href="./synthetic.html">synthetic data</a> generated to resemble real survey data. This choice simplifies the follow-through of our approach, eliminating the need for cleaning the data from irrelevant variables or erroneous participant inputs. Additionally, the synthetic data adheres to pre-specified properties. The creation of the synthetic data is detailed in the companion notebook within the same folder (the the <a href="./synthetic.html">linked notebook</a> for details).</p>
-<p>The rest of this notebook is organized as follows: Firstly, we load the necessary packages, followed by loading the <a href="./synthetic.html">synthetic data</a> as our input (replace this with your actual data). Secondly, we transform the data into the long format (refer to, for instance, <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="uri">https://tidyr.tidyverse.org/reference/pivot_longer.html</a>), proceed to analyse the data as a user factor (research perspective 1), and subsequently as a topic factor which includes visualizing the outcomes (research perspective 2).</p>
+<p>This notebook demonstrates the analysis of all three research perspectives of micro scenario-based surveys (grand mean, perspective 1: user factor, and perspective 2: topic factor) using R. Note that all transformations and calculations can also be performed using other software.</p>
+<p>We use <a href="./synthetic.html">synthetic data</a> generated to resemble real survey data, which avoids the need to clean irrelevant variables or erroneous participant inputs and allows the data to have well-defined statistical properties. How the synthetic data was generated is detailed in the <a href="./synthetic.html">companion notebook</a>.</p>
+<p>This notebook is organized as follows: First, we load the necessary packages and the <a href="./synthetic.html">synthetic data</a> as input (replace this with your actual data). Then we transform the data into long format (see <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html"><code>pivot_longer</code></a>), analyse it as a user factor (research perspective 1), and as topic-level scores including visualization (research perspective 2).</p>
 </section>
 <section id="preparation" class="level1">
 <h1>Preparation</h1>
@@ -255,7 +255,7 @@ The following object is masked from 'package:readr':
 </section>
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
-<p>In this demonstration, we will load the synthetic data that emulates the properties found in real survey data. The other notebook demonstrates the creation of the <a href="./synthetic.html">synthetic data</a>. <a href="#fig-surveysdatastructure" class="quarto-xref">Figure&nbsp;2</a> illustrates the structure of a standard dataset from survey tools, where each row represents the responses from an individual participant.</p>
+<p>We load the synthetic data generated in the <a href="./synthetic.html">companion notebook</a>. <a href="#fig-surveysdatastructure" class="quarto-xref">Figure&nbsp;2</a> illustrates the structure of a standard dataset from survey tools, where each row represents one participant’s responses.</p>
 <div id="fig-surveysdatastructure" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-surveysdatastructure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -266,7 +266,7 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 </figcaption>
 </figure>
 </div>
-<p>The data structure closely resembles the data export from the Qualtrics survey tool. The process of generating <a href="./synthetic.html">synthetic data</a> is documented in the companion notebook within the same folder.</p>
+<p>The data structure closely resembles the export format of the Qualtrics survey tool.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"syntheticdata.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -275,35 +275,35 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   100 obs. of  26 variables:
  $ id          : chr  "fakeparticipantid-1" "fakeparticipantid-2" "fakeparticipantid-3" "fakeparticipantid-4" ...
- $ uservariable: num  7 3.84 5.96 6.17 8.59 ...
- $ a1_matrix_1 : num  2 2 1 1 2 1 1 1 1 1 ...
- $ a2_matrix_1 : num  2 1 1 2 1 2 2 1 2 2 ...
- $ a3_matrix_1 : num  2 3 1 3 2 2 3 1 2 2 ...
- $ a4_matrix_1 : num  3 3 1 2 1 2 3 3 3 3 ...
- $ a5_matrix_1 : num  3 3 2 2 2 3 3 3 3 2 ...
- $ a6_matrix_1 : num  3 3 3 3 2 4 2 3 4 2 ...
- $ a7_matrix_1 : num  3 4 5 4 3 4 3 4 5 4 ...
- $ a8_matrix_1 : num  5 4 4 4 4 4 4 4 4 4 ...
- $ a9_matrix_1 : num  5 4 5 4 3 4 4 5 4 3 ...
- $ a10_matrix_1: num  5 5 6 5 5 5 6 4 5 4 ...
- $ a11_matrix_1: num  5 5 4 4 3 4 5 4 3 4 ...
- $ a12_matrix_1: num  6 5 4 5 5 6 5 5 7 5 ...
- $ a1_matrix_2 : num  3 1 3 2 2 3 3 2 2 3 ...
- $ a2_matrix_2 : num  2 1 3 2 3 4 3 3 2 3 ...
- $ a3_matrix_2 : num  2 2 2 3 2 3 3 3 2 3 ...
- $ a4_matrix_2 : num  2 2 3 2 3 4 3 2 2 2 ...
- $ a5_matrix_2 : num  5 5 6 6 4 5 7 7 4 5 ...
- $ a6_matrix_2 : num  4 3 4 2 4 3 4 4 4 4 ...
- $ a7_matrix_2 : num  4 2 5 5 3 4 4 4 3 3 ...
- $ a8_matrix_2 : num  4 2 4 3 3 3 3 3 4 4 ...
- $ a9_matrix_2 : num  4 3 4 4 3 5 4 4 3 5 ...
- $ a10_matrix_2: num  5 4 5 4 4 4 4 5 3 5 ...
- $ a11_matrix_2: num  4 5 5 4 4 5 5 5 5 4 ...
- $ a12_matrix_2: num  5 4 4 5 4 4 5 5 4 5 ...</code></pre>
+ $ uservariable: num  4.27 11.57 6.74 10.94 8.36 ...
+ $ a1_matrix_1 : num  1 2 2 2 1 2 2 3 1 2 ...
+ $ a2_matrix_1 : num  1 2 1 4 3 1 2 3 2 2 ...
+ $ a3_matrix_1 : num  2 3 2 3 3 3 3 2 2 3 ...
+ $ a4_matrix_1 : num  2 3 2 4 3 1 3 3 3 2 ...
+ $ a5_matrix_1 : num  4 2 3 3 2 3 3 4 3 4 ...
+ $ a6_matrix_1 : num  3 4 3 3 4 4 4 4 3 3 ...
+ $ a7_matrix_1 : num  4 4 3 5 4 5 4 4 5 4 ...
+ $ a8_matrix_1 : num  3 4 2 5 4 6 4 4 5 5 ...
+ $ a9_matrix_1 : num  4 6 3 5 5 4 5 5 5 5 ...
+ $ a10_matrix_1: num  4 6 4 5 5 5 5 6 5 5 ...
+ $ a11_matrix_1: num  6 5 4 5 5 6 6 5 5 6 ...
+ $ a12_matrix_1: num  5 5 5 6 4 5 5 7 5 5 ...
+ $ a1_matrix_2 : num  2 1 1 1 2 2 2 1 2 2 ...
+ $ a2_matrix_2 : num  2 2 2 3 4 2 1 1 3 2 ...
+ $ a3_matrix_2 : num  3 2 3 1 1 2 2 2 2 2 ...
+ $ a4_matrix_2 : num  3 4 2 3 3 1 4 3 2 3 ...
+ $ a5_matrix_2 : num  4 5 5 3 5 3 4 5 4 5 ...
+ $ a6_matrix_2 : num  3 4 3 2 3 3 4 2 3 3 ...
+ $ a7_matrix_2 : num  3 3 3 2 4 3 4 3 3 3 ...
+ $ a8_matrix_2 : num  3 3 3 3 4 2 3 3 3 3 ...
+ $ a9_matrix_2 : num  4 3 2 3 4 4 4 3 4 3 ...
+ $ a10_matrix_2: num  4 3 4 4 5 3 4 5 5 4 ...
+ $ a11_matrix_2: num  5 4 4 4 5 4 4 4 4 4 ...
+ $ a12_matrix_2: num  4 5 4 4 4 3 6 5 4 4 ...</code></pre>
 </div>
 </div>
-<p>The loaded dataset has various variables. Initially, there’s a unique user identifier (<code>id</code>), followed by a user variable (e.g., attitude towards a topic). Subsequently, there are an arbitrary number of topic assessments (<em>N</em> in our example) with variables for each evaluation dimension. In this instance, we use <em>perceived risk</em> and <em>perceived utility</em> as examples for the topic evaluations. However, one can employ different or additional evaluation dimensions (as detailed in the article).</p>
-<p>The variables for the topic evaluations adhere to a standardized naming scheme, i.e., <code>a01_matrix_02</code>, where <code>01</code> denotes the ID of the queried topic, <code>02</code> represents the queried evaluation dimension, and <code>matrix</code> stands for the name of the variable block in the survey tool. This naming scheme is employed by Quartics.</p>
+<p>The dataset contains the following variables: a unique participant identifier (<code>id</code>), one or more user-level variables (e.g., attitude towards a topic), and <em>N</em> topic assessments with one column per evaluation dimension per topic. Here we use <em>perceived risk</em> and <em>perceived utility</em> as the two evaluation dimensions; different or additional dimensions can be used depending on the research questions (as detailed in the article).</p>
+<p>The variables for the topic evaluations adhere to a standardized naming scheme, i.e., <code>a01_matrix_02</code>, where <code>01</code> denotes the ID of the queried topic, <code>02</code> represents the queried evaluation dimension, and <code>matrix</code> stands for the name of the variable block in the survey tool. This naming scheme is employed by Qualtrics.</p>
 </section>
 </section>
 <section id="analysis-of-the-data" class="level1">
@@ -311,54 +311,55 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 <p>Once the (synthetic) survey data is loaded into the variable <code>data</code>, we can commence the actual analysis.</p>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<p>Firstly, read the list of queried topics and their labels from a <code>.csv</code> file (adjustable based on your needs). Secondly, define the queried evaluation dimensions. In this instance, we have a vector of two dimensions, but one can define more based on your research questions and survey structure.</p>
+<p>Read the list of queried topics and their display labels from a <code>.csv</code> file, and define the names of the evaluation dimensions in the order they appear in the survey. Both can be adjusted to match your own study.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>TOPICS <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"matrixlabels.csv"</span>) </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>DIMENSIONS <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>TOPICS <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"matrixlabels.csv"</span>)   <span class="co"># columns: question (ID), label, shortlabel</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>DIMENSIONS <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>)         <span class="co"># dimension names in survey order (1 = risk, 2 = utility)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="long-format" class="level2">
 <h2 class="anchored" data-anchor-id="long-format">Long Format</h2>
-<p>Next, the topic evaluations from the survey data is transformed into the long format using <code>pivot_longer</code> (one row with a single value for each participant, topic, and evaluation dimension; one row per observation). Hereto, we use that the variables for the topic evaluations in the original data table have a systematic naming convention (see above).</p>
-<p>The resulting data set contains a participant identifier, identifier for the topic and the evaluation dimension, and lastly a column for the value. We use this format as the foundation for the later transformation steps.</p>
+<p>The topic evaluation columns are reshaped from wide to long format using <code>pivot_longer</code>, resulting in one row per participant–topic–dimension combination. This is possible because the column names follow the systematic naming convention described above, which encodes both the topic ID and the dimension index.</p>
+<p>The resulting data frame contains four columns: participant identifier, topic identifier, evaluation dimension name, and the numeric value. All subsequent analyses build on this long-format table.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># selects columns id and "aNUMBER_matrix_NUMBER" (scheme from loop&amp;merge)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Keep only participant ID and topic evaluation columns (pattern: a{topic}_matrix_{dim})</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(id, <span class="fu">matches</span>(<span class="st">"a</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">_matrix</span><span class="sc">\\</span><span class="st">_</span><span class="sc">\\</span><span class="st">d+"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">matches</span>(<span class="st">"a</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">_matrix</span><span class="sc">\\</span><span class="st">_</span><span class="sc">\\</span><span class="st">d+"</span>), <span class="co"># topics and their evaluations</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"question"</span>, <span class="st">"dimension"</span>),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(.*)_matrix_(.*)"</span>,   <span class="co"># Separate topic ID and evaluation ID </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">matches</span>(<span class="st">"a</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">_matrix</span><span class="sc">\\</span><span class="st">_</span><span class="sc">\\</span><span class="st">d+"</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"question"</span>, <span class="st">"dimension"</span>),  <span class="co"># split column name into topic ID and dimension index</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(.*)_matrix_(.*)"</span>,     <span class="co"># regex: capture everything before and after "_matrix_"</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span>,</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_drop_na =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">dimension =</span> <span class="fu">as.numeric</span>(dimension) ) <span class="sc">%&gt;%</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">dimension =</span> DIMENSIONS[dimension]) <span class="sc">%&gt;%</span>  <span class="co"># change to readable dimension names</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">value =</span> <span class="sc">-</span>(((value <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">/</span><span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>))  <span class="co"># rescale value from [ 1...7 ] to [ -100%...100% ]</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode some of the evaluation dimensions if necessary</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">value =</span> <span class="fu">if_else</span>(dimension<span class="sc">!=</span><span class="st">"risk"</span>, value, <span class="sc">-</span>value))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">dimension =</span> <span class="fu">as.numeric</span>(dimension)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">dimension =</span> DIMENSIONS[dimension]) <span class="sc">%&gt;%</span>   <span class="co"># replace numeric index with readable label</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rescale from Likert 1–7 to percentage [-1, +1]:</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># formula: -((x-1)/3 - 1)  →  1 maps to +1, 4 maps to 0, 7 maps to -1</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">value =</span> <span class="sc">-</span>(((value <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">/</span><span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverse-score "risk" so that higher values mean MORE risk (survey scale was reversed)</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>evaluationsLong <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">if_else</span>(dimension <span class="sc">!=</span> <span class="st">"risk"</span>, value, <span class="sc">-</span>value))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="perspective-1-as-user-factor-indiviudal-difference" class="level2">
-<h2 class="anchored" data-anchor-id="perspective-1-as-user-factor-indiviudal-difference">Perspective 1: As user factor (indiviudal difference)</h2>
-<p>The initial perspective provides a straightforward view of the data. The different presented scenarios serve as a basis for the repeated measurement of the same latent construct and the resulting score can be interpreted as a user factor (or individual differences).</p>
-<p>For each evaluation dimension (e.g., <em>risk</em> and <em>utility</em>), we compute average scores across all queried topics. Using these cores one can, for instance, investigate if the overall attributions differ among participants or if they correlate with other queried user factors. For example, exploring if the average risk attributed to all topics relates to a general disposition to risk measured using other psychometric scales.</p>
-<p>Subsequently, we rejoin these user factors with the original data using, for instance, <code>dplyr::left_join()</code>. Afterwards, the calculated average evaluations can be regarded as individual differences and correlated with other user factors obtained from the survey.</p>
+<section id="perspective-1-as-user-factor-individual-difference" class="level2">
+<h2 class="anchored" data-anchor-id="perspective-1-as-user-factor-individual-difference">Perspective 1: As user factor (individual difference)</h2>
+<p>In this perspective, the repeated evaluations across scenarios serve as a multi-item measurement of the same latent construct, and the resulting average score is interpreted as a user factor (individual difference).</p>
+<p>For each evaluation dimension (e.g., <em>risk</em> and <em>utility</em>), we compute each participant’s mean score across all queried topics. Using these scores one can, for instance, investigate whether the overall attributions differ among participants, or whether they correlate with other user-level variables from the survey—such as whether average attributed risk across all topics relates to a general risk disposition measured by a psychometric scale.</p>
+<p>The computed per-participant averages are then rejoined with the original data using <code>dplyr::left_join()</code> to allow correlation with other survey variables.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>evaluationByParticipant <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> dimension, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> dimension, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span>  <span class="co"># one column per dimension</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>( DIMENSIONS ),  <span class="co"># Select only evaluation dimensions</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>( <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#            median = ~median(., na.rm = TRUE),</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>  <span class="co"># Scheme to define column names</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups=</span><span class="st">"drop"</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(data, <span class="at">by=</span><span class="st">"id"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>(DIMENSIONS),   <span class="co"># compute summary stats for each evaluation dimension</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">sd   =</span> <span class="sc">~</span><span class="fu">sd</span>(.,   <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>  <span class="co"># produces columns like risk_mean, risk_sd, utility_mean, ...</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(data, <span class="at">by =</span> <span class="st">"id"</span>)  <span class="co"># re-attach original survey variables (e.g., uservariable)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="example-research-questions" class="level4">
 <h4 class="anchored" data-anchor-id="example-research-questions">Example research questions:</h4>
@@ -366,16 +367,16 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>risk_mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--0.55556 -0.22917 -0.13889 -0.14389 -0.05556  0.25000 </code></pre>
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.472222 -0.277778 -0.138889 -0.134167  0.006944  0.222222 </code></pre>
 </div>
 </div>
 <p>How is the average perceived <em>utility</em> of the participants?</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>utility_mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--0.1389  0.1667  0.2778  0.2661  0.3611  0.7222 </code></pre>
+<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-0.05556  0.13889  0.25000  0.25306  0.36111  0.66667 </code></pre>
 </div>
 </div>
 <p>Does <em>uservariable</em> from the survey correlate to <em>risk</em>?</p>
@@ -387,13 +388,13 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$risk_mean and evaluationByParticipant$uservariable
-t = 1.8931, df = 98, p-value = 0.06129
+t = 4.954, df = 98, p-value = 3.038e-06
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- -0.008918469  0.370575181
+ 0.2753058 0.5919120
 sample estimates:
-      cor 
-0.1878287 </code></pre>
+     cor 
+0.447524 </code></pre>
 </div>
 </div>
 <p>Does the <em>uservariable</em> correlate with the average <em>perceived utility</em>?</p>
@@ -405,23 +406,23 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$utility_mean and evaluationByParticipant$uservariable
-t = 2.5702, df = 98, p-value = 0.01167
+t = 1.6225, df = 98, p-value = 0.1079
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.05772953 0.42665670
+ -0.0358129  0.3471329
 sample estimates:
-      cor 
-0.2512982 </code></pre>
+     cor 
+0.161743 </code></pre>
 </div>
 </div>
 </section>
 </section>
 <section id="perspective-2-topic-factors" class="level2">
 <h2 class="anchored" data-anchor-id="perspective-2-topic-factors">Perspective 2: Topic factors</h2>
-<p>Next, we switch to the analysis of topic evaluations: Instead of looking at how individuals perceive the topics as a whole (individuals across all topics), we now interpret how all individuals assess the respective topics (topics across all individuals), for example, to rank the technologies in terms of the evaluation dimensions.</p>
+<p>Next, we switch to the analysis of topic-level evaluations. Instead of aggregating across topics per participant (perspective 1), we now aggregate across participants per topic—allowing us to rank topics and compare them on the evaluation dimensions.</p>
 <section id="prepare-individual-topics" class="level3">
 <h3 class="anchored" data-anchor-id="prepare-individual-topics">Prepare Individual Topics</h3>
-<p>First, we compute the average evaluations for each topic across all participants. The resulting data frame contains N rows for the number of topics queried and rows for the arithmetic mean and standard deviation for each evaluated dimension (e.g., <em>risk</em> and <em>utility</em>). Finally, we associate the labels with each topic using <code>dplyr::left_join()</code>. <a href="#fig-topicdatastructure" class="quarto-xref">Figure&nbsp;3</a> illustrates the structure of the resulting data.</p>
+<p>We compute the mean and standard deviation for each topic across all participants. The resulting data frame has one row per topic and columns for the mean and standard deviation of each evaluation dimension (e.g., <em>risk</em> and <em>utility</em>). Topic display labels are then attached using <code>dplyr::left_join()</code>. <a href="#fig-topicdatastructure" class="quarto-xref">Figure&nbsp;3</a> illustrates the structure of the resulting data.</p>
 <div id="fig-topicdatastructure" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-topicdatastructure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -433,20 +434,18 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 </figure>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>evaluationByTopic <span class="ot">&lt;-</span>  evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> dimension,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( question ) <span class="sc">%&gt;%</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>( DIMENSIONS ),  <span class="co"># Select the variables from var_names</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>    <span class="co"># Define column names for the results</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups=</span><span class="st">"drop"</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(TOPICS, <span class="at">by=</span><span class="st">"question"</span>) <span class="co"># attach question labels</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>evaluationByTopic <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> dimension, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span>  <span class="co"># one column per dimension</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(question) <span class="sc">%&gt;%</span>   <span class="co"># aggregate across all participants for each topic</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>(DIMENSIONS),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">sd   =</span> <span class="sc">~</span><span class="fu">sd</span>(.,   <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>  <span class="co"># produces columns like risk_mean, risk_sd, utility_mean, ...</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(TOPICS, <span class="at">by =</span> <span class="st">"question"</span>)  <span class="co"># attach human-readable topic labels</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized. The following table displays the unsorted and unfiltered results.</p>
 <div class="cell" data-tbl-cap="Average evaluation of the queried topics.">
@@ -473,86 +472,86 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <tr class="odd">
 <td style="text-align: left;">Topic 1</td>
 <td style="text-align: right;">-0.74</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.66</td>
-<td style="text-align: right;">0.24</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Topic 10</td>
-<td style="text-align: right;">0.33</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.28</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Topic 11</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">0.77</td>
 <td style="text-align: right;">0.23</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Topic 10</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Topic 11</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-0.08</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">Topic 12</td>
-<td style="text-align: right;">0.46</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">-0.09</td>
+<td style="text-align: right;">0.45</td>
 <td style="text-align: right;">0.28</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">0.27</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 2</td>
-<td style="text-align: right;">-0.63</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">-0.59</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.60</td>
 <td style="text-align: right;">0.26</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 3</td>
-<td style="text-align: right;">-0.52</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-0.56</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">0.23</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 4</td>
-<td style="text-align: right;">-0.42</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">-0.49</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.44</td>
 <td style="text-align: right;">0.24</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 5 (deliberate outlier)</td>
-<td style="text-align: right;">-0.38</td>
+<td style="text-align: right;">-0.33</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">-0.23</td>
 <td style="text-align: right;">0.23</td>
-<td style="text-align: right;">-0.27</td>
-<td style="text-align: right;">0.27</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 6</td>
-<td style="text-align: right;">-0.24</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">-0.19</td>
+<td style="text-align: right;">0.28</td>
 <td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.26</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 7</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">-0.02</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 8</td>
 <td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.25</td>
 <td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.31</td>
 <td style="text-align: right;">0.26</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 9</td>
-<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.18</td>
 <td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.12</td>
-<td style="text-align: right;">0.27</td>
 </tr>
 </tbody>
 </table>
@@ -561,8 +560,8 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 </section>
 <section id="topic-correlations" class="level3">
 <h3 class="anchored" data-anchor-id="topic-correlations">Topic Correlations</h3>
-<p>Next, we analyse the correlation between the evaluation dimensions across the topics. In the following example, we investigate if the attribute <em>risk</em> is related to the attributed <em>utility</em> for the different topics under consideration. In this example, we only have two target variables for the topic evaluations. With more variables, more complex and interesting analyses become possible: Such as determining if and to what degree a linear model with <em>risk</em> and <em>utility</em> explains the overall <em>value</em> towards the queried topics.</p>
-<p>Note: Our analysis focuses on the correlations between the topics as attributed by the participants, rather than individual differences among participants.</p>
+<p>Here we examine the correlation between evaluation dimensions at the topic level—that is, whether topics perceived as risky also tend to be perceived as less useful. With only two dimensions, a single correlation can be computed; with more dimensions, richer analyses become possible, such as determining how well a linear combination of <em>risk</em> and <em>utility</em> explains an overall <em>value</em> rating across topics.</p>
+<p>Note: These are topic-level correlations (N = number of topics), not individual-level correlations (N = number of participants).</p>
 <div class="cell" data-tbl-cap="Correlations between the evaluation dimensions across all topics">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>evaluationByTopic <span class="sc">%&gt;%</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"_mean"</span>)) <span class="sc">%&gt;%</span></span>
@@ -574,10 +573,10 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <colgroup>
 <col style="width: 9%">
 <col style="width: 11%">
-<col style="width: 8%">
+<col style="width: 9%">
 <col style="width: 4%">
-<col style="width: 9%">
-<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 8%">
 <col style="width: 8%">
 <col style="width: 7%">
 <col style="width: 8%">
@@ -603,13 +602,13 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <tr class="odd">
 <td style="text-align: left;">risk_mean</td>
 <td style="text-align: left;">utility_mean</td>
-<td style="text-align: right;">-0.729722</td>
+<td style="text-align: right;">-0.7797145</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.9188286</td>
-<td style="text-align: right;">-0.2680959</td>
-<td style="text-align: right;">-3.374924</td>
+<td style="text-align: right;">-0.935154</td>
+<td style="text-align: right;">-0.372498</td>
+<td style="text-align: right;">-3.937925</td>
 <td style="text-align: right;">10</td>
-<td style="text-align: right;">0.0070627</td>
+<td style="text-align: right;">0.0027842</td>
 <td style="text-align: left;">Pearson correlation</td>
 <td style="text-align: right;">12</td>
 </tr>
@@ -620,7 +619,7 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 </section>
 <section id="visualize-the-topics" class="level3">
 <h3 class="anchored" data-anchor-id="visualize-the-topics">Visualize the Topics</h3>
-<p>Finally, the results are presented through a scatter plot. The follwing plot allows for the visual identification of the placement and dispersion of topics on a spatial map defined by the evaluation dimension. It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers). We use <code>geom_label_repel()</code> from the <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a> package to place text labels near data points generated by <code>geom_point()</code> in a way that avoids overlap and improves readability.</p>
+<p>Finally, the results are presented through a scatter plot. The following plot allows for the visual identification of the placement and dispersion of topics on a spatial map defined by the evaluation dimension. It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers). We use <code>geom_label_repel()</code> from the <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a> package to place text labels near data points generated by <code>geom_point()</code> in a way that avoids overlap and improves readability.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>scatterPlot <span class="ot">&lt;-</span> evaluationByTopic <span class="sc">%&gt;%</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>( <span class="fu">aes</span>( <span class="at">x =</span> risk_mean,</span>
@@ -697,16 +696,18 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 </section>
 <section id="perspective-3-grand-mean---average-evaluation-of-the-field" class="level2">
 <h2 class="anchored" data-anchor-id="perspective-3-grand-mean---average-evaluation-of-the-field">Perspective 3: Grand Mean - Average evaluation of the field</h2>
-<p>Lastly, using the long format, we group by evaluation dimension and aggregate <em>across all topics</em> <strong><em>and</em></strong> <em>participants</em>. Note: For a complete sample, the results are equivalent to perspective 1 (see above). The following table and figure show the outcome of this calculation.</p>
+<p>Finally, we aggregate across all topics <em>and</em> all participants to obtain the grand mean for each dimension. This gives a single-number summary of how the entire topic field is perceived on each dimension—the overall sentiment. The following table and figure show the outcome.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MEAN and SD of all evaluation dimensions across all queried topics</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>evaluationByDimension <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( dimension ) <span class="sc">%&gt;%</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>( <span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> <span class="fu">sd</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate across all participants AND all topics for each dimension.</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Each row in evaluationsLong is one (participant × topic) observation,</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># so this grand mean pools all observations regardless of topic or participant.</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>evaluationByDimension <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(dimension) <span class="sc">%&gt;%</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sd   =</span> <span class="fu">sd</span>(value,   <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We start with reporting the average evaluations (e.g., <em>risk</em> and <em>utility</em>) across all queried topics and across all participants (“grand mean” or evaluation of the whole field of queried topics).</p>
+<p>The table below reports the grand mean and standard deviation for each evaluation dimension across all topics and participants.</p>
 <div class="cell" data-tbl-cap="Averages for each evaluation dimension across all queried topics and across all participants.">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -721,13 +722,13 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">risk</td>
-<td style="text-align: right;">-0.14</td>
-<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">-0.13</td>
+<td style="text-align: right;">0.47</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">utility</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.40</td>
 </tr>
 </tbody>
 </table>
@@ -735,28 +736,29 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 </div>
 <p>This can then be illustrated in form of a violin plot in combination with a boxplot: This graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>dataByDimensionQuestion <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>( question, dimension ) <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>( <span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> <span class="fu">sd</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>overallDimension <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dataByDimensionQuestion,</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">factor</span>(dimension, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>)),</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> mean)) <span class="sc">+</span> </span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>( <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.2</span>,</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.75</span>)) <span class="sc">+</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(),</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>                     <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"risk"</span> <span class="ot">=</span> <span class="st">"Risk"</span>,</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"utility"</span> <span class="ot">=</span> <span class="st">"Utility"</span>)) <span class="sc">+</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Evaluation Dimension"</span>,</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Values"</span>,</span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Average Evaluation across all Dimensions and Participants"</span>)</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>overallDimension</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute per-topic means first; the violin then shows the distribution of those topic means</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dataByDimensionQuestion <span class="ot">&lt;-</span> evaluationsLong <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(question, dimension) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sd   =</span> <span class="fu">sd</span>(value,   <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>overallDimension <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dataByDimensionQuestion,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">factor</span>(dimension, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"risk"</span>, <span class="st">"utility"</span>)),</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> mean)) <span class="sc">+</span> </span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>( <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.2</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.75</span>)) <span class="sc">+</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(),</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">limits=</span><span class="fu">c</span>( <span class="sc">-</span><span class="dv">1</span>, <span class="sc">+</span><span class="dv">1</span> )) <span class="sc">+</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"risk"</span> <span class="ot">=</span> <span class="st">"Risk"</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"utility"</span> <span class="ot">=</span> <span class="st">"Utility"</span>)) <span class="sc">+</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Evaluation Dimension"</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Values"</span>,</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Average Evaluation across all Dimensions and Participants"</span>)</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>overallDimension</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -772,9 +774,9 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <h1>Closing remarks</h1>
 <p>This notebook demonstrates the analysis and visualization of surveys using the micro-scenario approach. It includes executable code for examining both research perspectives (individual differences and topic evaluation), which can be adjusted to suit your own survey and data. Ensure accurate coding and polarization of input variables.</p>
 <p>It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from the sampling of the topics (!)) and I refer to the <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full">main article</a> for further guidance and strategies for bias mitigation.</p>
-<p>A recent and decent article building on the method can be found below. The code of the analyisis is available as open data.</p>
+<p>A recent and decent article building on the method can be found below. The analysis code is available as open data.</p>
 <blockquote class="blockquote">
-<p><a href="https://www.sciencedirect.com/science/article/pii/S004016252500335X">Brauner P. et al.&nbsp;“Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance” in <em>Technology Forecasting and Social Change</em> (2025)</a></p>
+<p><a href="https://doi.org/10.1016/j.techfore.2025.124304">Brauner P. et al.&nbsp;“Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance” in <em>Technology Forecasting and Social Change</em> (2025)</a></p>
 </blockquote>
 
 
