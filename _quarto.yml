@@ -20,7 +20,4 @@ website:
         text: Generation of Demo Data
 format:
   html:
-    theme: cosmo
-    css: styles.css
-  pdf:
-    documentclass: report
+    theme: Zephyr
