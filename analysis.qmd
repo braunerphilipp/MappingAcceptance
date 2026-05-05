@@ -24,9 +24,6 @@ funding: "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Fo
 editor: 
   markdown: 
     wrap: sentence
-format:
-  html:
-    theme: cosmo
 ---
 
 # Introduction
