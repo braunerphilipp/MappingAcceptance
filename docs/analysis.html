@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>Analysis and Visualisation of Micro Scenario-based Studies – Mapping Acceptance</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -65,15 +68,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-1c2b39b91d62c1bd2d977d21438fc985.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -97,7 +99,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -221,13 +222,13 @@ Figure&nbsp;1: The micro-scenario approach involves consolidating evaluations of
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'ggplot2' was built under R version 4.5.2</code></pre>
+<pre><code>Warning: Paket 'ggplot2' wurde unter R Version 4.5.2 erstellt</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.1     ✔ stringr   1.5.2
-✔ ggplot2   4.0.1     ✔ tibble    3.3.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.0
 ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
 ✔ purrr     1.1.0     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -238,13 +239,13 @@ Figure&nbsp;1: The micro-scenario approach involves consolidating evaluations of
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)  <span class="co"># format_percent</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
-Attaching package: 'scales'
+Attache Paket: 'scales'
 
-The following object is masked from 'package:purrr':
+Das folgende Objekt ist maskiert 'package:purrr':
 
     discard
 
-The following object is masked from 'package:readr':
+Das folgende Objekt ist maskiert 'package:readr':
 
     col_factor</code></pre>
 </div>
@@ -275,31 +276,31 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   100 obs. of  26 variables:
  $ id          : chr  "fakeparticipantid-1" "fakeparticipantid-2" "fakeparticipantid-3" "fakeparticipantid-4" ...
- $ uservariable: num  4.27 11.57 6.74 10.94 8.36 ...
- $ a1_matrix_1 : num  1 2 2 2 1 2 2 3 1 2 ...
- $ a2_matrix_1 : num  1 2 1 4 3 1 2 3 2 2 ...
- $ a3_matrix_1 : num  2 3 2 3 3 3 3 2 2 3 ...
- $ a4_matrix_1 : num  2 3 2 4 3 1 3 3 3 2 ...
- $ a5_matrix_1 : num  4 2 3 3 2 3 3 4 3 4 ...
- $ a6_matrix_1 : num  3 4 3 3 4 4 4 4 3 3 ...
- $ a7_matrix_1 : num  4 4 3 5 4 5 4 4 5 4 ...
- $ a8_matrix_1 : num  3 4 2 5 4 6 4 4 5 5 ...
- $ a9_matrix_1 : num  4 6 3 5 5 4 5 5 5 5 ...
- $ a10_matrix_1: num  4 6 4 5 5 5 5 6 5 5 ...
- $ a11_matrix_1: num  6 5 4 5 5 6 6 5 5 6 ...
- $ a12_matrix_1: num  5 5 5 6 4 5 5 7 5 5 ...
- $ a1_matrix_2 : num  2 1 1 1 2 2 2 1 2 2 ...
- $ a2_matrix_2 : num  2 2 2 3 4 2 1 1 3 2 ...
- $ a3_matrix_2 : num  3 2 3 1 1 2 2 2 2 2 ...
- $ a4_matrix_2 : num  3 4 2 3 3 1 4 3 2 3 ...
- $ a5_matrix_2 : num  4 5 5 3 5 3 4 5 4 5 ...
- $ a6_matrix_2 : num  3 4 3 2 3 3 4 2 3 3 ...
- $ a7_matrix_2 : num  3 3 3 2 4 3 4 3 3 3 ...
- $ a8_matrix_2 : num  3 3 3 3 4 2 3 3 3 3 ...
- $ a9_matrix_2 : num  4 3 2 3 4 4 4 3 4 3 ...
- $ a10_matrix_2: num  4 3 4 4 5 3 4 5 5 4 ...
- $ a11_matrix_2: num  5 4 4 4 5 4 4 4 4 4 ...
- $ a12_matrix_2: num  4 5 4 4 4 3 6 5 4 4 ...</code></pre>
+ $ uservariable: num  7.9 7.83 11.27 13.88 8.4 ...
+ $ a1_matrix_1 : num  1 1 2 3 2 2 2 2 2 3 ...
+ $ a2_matrix_1 : num  2 3 3 2 2 2 3 3 2 3 ...
+ $ a3_matrix_1 : num  3 2 3 3 2 3 1 2 2 3 ...
+ $ a4_matrix_1 : num  3 3 4 3 2 3 2 3 3 4 ...
+ $ a5_matrix_1 : num  3 5 2 2 2 3 3 3 3 4 ...
+ $ a6_matrix_1 : num  4 4 4 3 4 3 3 3 4 4 ...
+ $ a7_matrix_1 : num  4 3 4 4 3 4 4 4 4 3 ...
+ $ a8_matrix_1 : num  4 5 4 5 4 6 4 5 5 5 ...
+ $ a9_matrix_1 : num  6 5 5 3 5 3 5 5 5 5 ...
+ $ a10_matrix_1: num  5 5 6 4 5 5 5 5 4 5 ...
+ $ a11_matrix_1: num  6 6 6 4 6 4 5 5 5 6 ...
+ $ a12_matrix_1: num  5 5 6 6 5 6 6 6 6 5 ...
+ $ a1_matrix_2 : num  1 2 3 3 2 1 3 1 1 2 ...
+ $ a2_matrix_2 : num  1 2 3 4 2 1 2 3 3 1 ...
+ $ a3_matrix_2 : num  2 3 2 2 2 3 3 1 1 2 ...
+ $ a4_matrix_2 : num  1 3 2 3 2 1 3 1 2 2 ...
+ $ a5_matrix_2 : num  5 4 5 6 5 4 6 4 5 4 ...
+ $ a6_matrix_2 : num  4 3 2 4 2 1 3 3 3 2 ...
+ $ a7_matrix_2 : num  2 3 2 4 2 2 4 2 4 2 ...
+ $ a8_matrix_2 : num  4 3 4 3 2 2 4 2 3 4 ...
+ $ a9_matrix_2 : num  3 3 5 4 4 3 4 3 3 2 ...
+ $ a10_matrix_2: num  4 3 4 5 4 2 4 4 3 4 ...
+ $ a11_matrix_2: num  4 3 4 5 5 3 4 3 3 3 ...
+ $ a12_matrix_2: num  4 4 4 5 5 4 5 4 4 3 ...</code></pre>
 </div>
 </div>
 <p>The dataset contains the following variables: a unique participant identifier (<code>id</code>), one or more user-level variables (e.g., attitude towards a topic), and <em>N</em> topic assessments with one column per evaluation dimension per topic. Here we use <em>perceived risk</em> and <em>perceived utility</em> as the two evaluation dimensions; different or additional dimensions can be used depending on the research questions (as detailed in the article).</p>
@@ -367,16 +368,16 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>risk_mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.472222 -0.277778 -0.138889 -0.134167  0.006944  0.222222 </code></pre>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-0.3611 -0.1944 -0.1111 -0.0900  0.0000  0.3056 </code></pre>
 </div>
 </div>
 <p>How is the average perceived <em>utility</em> of the participants?</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(evaluationByParticipant<span class="sc">$</span>utility_mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--0.05556  0.13889  0.25000  0.25306  0.36111  0.66667 </code></pre>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-0.1389  0.1667  0.2778  0.2897  0.3889  0.6944 </code></pre>
 </div>
 </div>
 <p>Does <em>uservariable</em> from the survey correlate to <em>risk</em>?</p>
@@ -388,13 +389,13 @@ Figure&nbsp;2: Illustration of typical survey data utilizing the micro-scenario 
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$risk_mean and evaluationByParticipant$uservariable
-t = 4.954, df = 98, p-value = 3.038e-06
+t = 2.9654, df = 98, p-value = 0.003796
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.2753058 0.5919120
+ 0.09594397 0.45758181
 sample estimates:
-     cor 
-0.447524 </code></pre>
+      cor 
+0.2869544 </code></pre>
 </div>
 </div>
 <p>Does the <em>uservariable</em> correlate with the average <em>perceived utility</em>?</p>
@@ -406,13 +407,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  evaluationByParticipant$utility_mean and evaluationByParticipant$uservariable
-t = 1.6225, df = 98, p-value = 0.1079
+t = 2.5442, df = 98, p-value = 0.01252
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- -0.0358129  0.3471329
+ 0.05519007 0.42457061
 sample estimates:
-     cor 
-0.161743 </code></pre>
+      cor 
+0.2489099 </code></pre>
 </div>
 </div>
 </section>
@@ -471,87 +472,87 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Topic 1</td>
-<td style="text-align: right;">-0.74</td>
-<td style="text-align: right;">0.23</td>
-<td style="text-align: right;">0.77</td>
-<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">-0.64</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 10</td>
 <td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.08</td>
 <td style="text-align: right;">0.27</td>
-<td style="text-align: right;">-0.06</td>
-<td style="text-align: right;">0.29</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 11</td>
 <td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">-0.08</td>
-<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">-0.01</td>
+<td style="text-align: right;">0.26</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 12</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">-0.06</td>
-<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">0.22</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 2</td>
-<td style="text-align: right;">-0.59</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">-0.57</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">0.63</td>
 <td style="text-align: right;">0.26</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 3</td>
-<td style="text-align: right;">-0.56</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">-0.47</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.65</td>
 <td style="text-align: right;">0.23</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 4</td>
-<td style="text-align: right;">-0.49</td>
+<td style="text-align: right;">-0.40</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.57</td>
 <td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.44</td>
-<td style="text-align: right;">0.24</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 5 (deliberate outlier)</td>
-<td style="text-align: right;">-0.33</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">-0.23</td>
-<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">0.26</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 6</td>
 <td style="text-align: right;">-0.19</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.41</td>
 <td style="text-align: right;">0.26</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 7</td>
-<td style="text-align: right;">-0.02</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-0.01</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.24</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Topic 8</td>
-<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.10</td>
 <td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.27</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Topic 9</td>
-<td style="text-align: right;">0.16</td>
-<td style="text-align: right;">0.26</td>
 <td style="text-align: right;">0.18</td>
-<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.26</td>
 </tr>
 </tbody>
 </table>
@@ -575,8 +576,8 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <col style="width: 11%">
 <col style="width: 9%">
 <col style="width: 4%">
-<col style="width: 8%">
-<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 9%">
 <col style="width: 8%">
 <col style="width: 7%">
 <col style="width: 8%">
@@ -602,13 +603,13 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <tr class="odd">
 <td style="text-align: left;">risk_mean</td>
 <td style="text-align: left;">utility_mean</td>
-<td style="text-align: right;">-0.7797145</td>
+<td style="text-align: right;">-0.7120996</td>
 <td style="text-align: right;">0.95</td>
-<td style="text-align: right;">-0.935154</td>
-<td style="text-align: right;">-0.372498</td>
-<td style="text-align: right;">-3.937925</td>
+<td style="text-align: right;">-0.9129154</td>
+<td style="text-align: right;">-0.2337091</td>
+<td style="text-align: right;">-3.207415</td>
 <td style="text-align: right;">10</td>
-<td style="text-align: right;">0.0027842</td>
+<td style="text-align: right;">0.0093731</td>
 <td style="text-align: left;">Pearson correlation</td>
 <td style="text-align: right;">12</td>
 </tr>
@@ -722,13 +723,13 @@ Figure&nbsp;3: The resulting data format displays the evaluation of topics. Each
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">risk</td>
-<td style="text-align: right;">-0.13</td>
-<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">-0.09</td>
+<td style="text-align: right;">0.46</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">utility</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.39</td>
 </tr>
 </tbody>
 </table>
