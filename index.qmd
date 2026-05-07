@@ -81,7 +81,8 @@ However, a multiple linear regression suggests that overall *Value* can be expla
 Individual differences further shape these perceptions.
 
 Link to the article: <br />
-[*Brauner P, et al. (2025) Mapping Public Perception of Artificial Intelligence: Expectations, Risk-Benefit Tradeoffs, and Value As Determinants for Societal Acceptance, in Technology Forecasting and Social Change (2025)*](https://doi.org/10.1016/j.techfore.2025.124304)
+
+> Brauner P, et al. (2025) Mapping Public Perception of Artificial Intelligence: Expectations, Risk-Benefit Tradeoffs, and Value As Determinants for Societal Acceptance, in Technology Forecasting and Social Change (2025). doi: [10.1016/j.techfore.2025.124304](https://doi.org/10.1016/j.techfore.2025.124304) ([<code>.bib</code>](brauner2025techfore.bib))
 
 ![Graphical abstract from the article that used micro scenarios in the context of public perception of AI.](figures/figures-abstractPanel.png){#fig-graphicalabstract}
 
@@ -94,54 +95,68 @@ If you prefer slides over websites, you can look at the english slidedeck on the
 # List of Studies
 
 Several studies based on this approach have been published or are in the making.
-I document them in @tbl-listOfStudies, including the research context, sample size, number of topics queried, and the dependent variables.
+I document them in @tbl-studies, including the research context, sample size, number of topics queried, and the dependent variables.
 If you build on this approach, let me know and I can add your study to the list — just drop me a message!
 
-```{r showTableOfStudies, echo=FALSE, warning=FALSE, message=FALSE}
+```{r studiesTable2, echo=FALSE, warning=FALSE, message=FALSE}
 #| column: page
-#| label: tbl-listOfStudies
+#| label: tbl-studies
 #| tbl-cap: "List of studies using the micro scenario approach. Drop me a message if you build on the micro scenarios article and want to be listed."
 library(tidyverse)
-library(rmarkdown)
-library(knitr)
-library(kableExtra)
 library(flextable)
 
-STUDIES <- read.csv2("studies.csv") %>%
-  dplyr::rename_with( tolower ) %>%
+STUDIES2 <- read.csv2("studies.csv") %>%
+  dplyr::rename_with(tolower) %>%
   dplyr::mutate(
     year = as.integer(year),
-    type = factor(type, 
+    type = factor(type,
          levels = c("peer-reviewed", "preprint", "report"),
-         labels = c("Peer-Reviewed articles", "Preprints", "Report"),
+         labels = c("Peer-reviewed articles", "Preprints", "Report"),
          ordered = TRUE))
 
-tableContent <- STUDIES %>%
-  dplyr::arrange(type, -year) %>%
-  dplyr::group_by(type)
-tableContent <- as_grouped_data(tableContent, groups = c("type"))
+peer_rows <- STUDIES2 %>%
+  dplyr::filter(type == "Peer-reviewed articles") %>%
+  dplyr::arrange(-year) %>%
+  dplyr::mutate(type = as.character(type))
 
-# create flextable
-ft <- as_flextable(tableContent) %>%
-#    col_keys = c("type", "signature", "context", "topics", "samplesize", "dependents", "href")
-#  ) %>%
+pre_rows <- STUDIES2 %>%
+  dplyr::filter(type == "Preprints") %>%
+  dplyr::arrange(-year) %>%
+  dplyr::mutate(type = as.character(type))
+
+n_peer <- nrow(peer_rows)
+n_pre  <- nrow(pre_rows)
+header_rows <- c(1L, n_peer + 2L)
+
+make_header_row <- function(label) {
+  tibble(year = NA_integer_, type = NA_character_, signature = label,
+         href = NA_character_, context = NA_character_,
+         dependents = NA_character_, samplesize = NA_integer_)
+}
+
+combined <- dplyr::bind_rows(
+  make_header_row("Peer-reviewed articles"),
+  peer_rows,
+  make_header_row("Preprints"),
+  pre_rows
+)
+
+ft_new <- flextable(combined,
+                    col_keys = c("signature", "context", "dependents", "samplesize")) %>%
   flextable::set_header_labels(
-    signature = "Reference",
-    type= "Type",
-    year = "Year",
-    context = "Context",
+    signature  = "Reference",
+    context    = "Topic",
     dependents = "Dependents",
-    topics = "Topics",
-    samplesize = "Sample Size"
+    samplesize = "Sample"
   ) %>%
-  flextable::delete_columns(j = "href") %>%
-  flextable::delete_columns(j = "year") %>%
   flextable::compose(
-    j = "signature", 
+    i = ~ !is.na(href), j = "signature",
     value = as_paragraph(hyperlink_text(x = signature, url = href))) %>%
-#   bold(j = 1, i = ~ !is.na(type), bold = TRUE, part = "body") %>%
+  flextable::merge_h(i = header_rows) %>%
   flextable::colformat_int(j = "samplesize") %>%
-  # Adjust group row style
+  flextable::theme_zebra() %>%
+  flextable::bg(i = header_rows, bg = "transparent", part = "body") %>%
+  flextable::bold(i = header_rows, bold = TRUE, part = "body") %>%
   flextable::autofit()
-ft
+ft_new
 ```
