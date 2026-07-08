@@ -40,6 +40,7 @@ Additionally, for generating synthetic data with specific properties (e.g., pre-
 ```{r LOADLIBRARIES}
 library(faux)       # generate correlated multivariate normal data
 library(matrixcalc) # check positive-definiteness of matrices
+library(Matrix)     # nearPD() repairs a near-valid correlation matrix
 library(tidyverse)
 library(scales)     # percent_format() for axis labels
 library(ggplot2)    # graphics
@@ -157,15 +158,23 @@ cor_matrix[1:N, 1:N] <- cor_matrix_A                          # upper-left:  A�
 cor_matrix[(N+1):(2*N), (N+1):(2*N)] <- cor_matrix_B          # lower-right: B–B
 cor_matrix[1:N, (N+1):(2*N)] <- cor_matrix_AB                 # upper-right: A–B
 cor_matrix[(N+1):(2*N), 1:N] <- t(cor_matrix_AB)              # lower-left:  B–A (transpose for symmetry)
+
+# Random block assembly has no guarantee of producing a mathematically valid
+# (positive-definite) correlation matrix, so rnorm_multi() can occasionally fail
+# with "correlation matrix not positive definite" here. Instead of looping and
+# hoping a re-drawn matrix happens to be valid, project it onto the nearest
+# valid positive-definite correlation matrix; this is deterministic, always
+# succeeds, and only nudges the requested correlations slightly.
+cor_matrix <- as.matrix(Matrix::nearPD(cor_matrix, corr = TRUE, keepDiag = TRUE)$mat)
 ```
 
 # Check the validity of the data
 
 Before proceeding, we verify that the assembled correlation matrix is symmetric and positive-definite—both required by `rnorm_multi`.
 A valid correlation matrix is symmetric by definition, but the block assembly above can occasionally produce a matrix that is not positive-definite due to numerical issues or near-linear dependencies between the blocks.
-If the check fails, simply re-run the correlation matrix generation steps; the random elements will differ slightly and the result will usually be valid.
+The `Matrix::nearPD()` repair step above corrects this automatically, so the diagnostics below should always report success; no re-running or looping is needed.
 
-Request to the readers: Any suggestions on how to address this issue more robustly are appreciated. However, this step is not necessary if you already have real survey data, as it specifically pertains to the creation of synthetic data.
+This step is not necessary if you already have real survey data, as it specifically pertains to the creation of synthetic data.
 
 ```{r CHECKVALIDITY, include=FALSE}
 print(paste0("Diagnostics for simulated correlation matrix:"))

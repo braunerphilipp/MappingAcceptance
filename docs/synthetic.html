@@ -244,7 +244,8 @@ https://scienceverse.github.io/faux/
 ************</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(matrixcalc) <span class="co"># check positive-definiteness of matrices</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Matrix)     <span class="co"># nearPD() repairs a near-valid correlation matrix</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Paket 'ggplot2' wurde unter R Version 4.5.2 erstellt</code></pre>
 </div>
@@ -252,14 +253,17 @@ https://scienceverse.github.io/faux/
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.1     ✔ stringr   1.5.2
-✔ ggplot2   4.0.2     ✔ tibble    3.3.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.0
 ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
 ✔ purrr     1.1.0     </code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::expand() masks Matrix::expand()
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
+✖ tidyr::pack()   masks Matrix::pack()
+✖ tidyr::unpack() masks Matrix::unpack()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)     <span class="co"># percent_format() for axis labels</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -276,8 +280,11 @@ Das folgende Objekt ist maskiert 'package:readr':
     col_factor</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)    <span class="co"># graphics</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)    <span class="co"># non-overlapping text labels in scatter plots</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)      <span class="co"># kable() for tables</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)    <span class="co"># non-overlapping text labels in scatter plots</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Paket 'ggrepel' wurde unter R Version 4.5.2 erstellt</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)      <span class="co"># kable() for tables</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="create-synthetic-data" class="level1">
@@ -296,27 +303,27 @@ Figure&nbsp;1: Illustration of typical survey data utilizing the micro-scenario 
 <p>The dataset contains a unique participant identifier (<code>id</code>), a user-level variable (e.g., attitude towards a topic), and <em>N=12</em> (adjustable) topic assessments with two columns per topic—one for each evaluation dimension. Here, <em>perceived risk</em> and <em>perceived utility</em> are used as the two dimensions; these can be replaced or extended as needed.</p>
 <p>The two dimensions are constructed to be inversely correlated across topics (with a non-zero intercept), mimicking a typical risk–utility trade-off pattern.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">12</span>  <span class="co"># number of topics to simulate</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>TOPICS <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"matrixlabels.csv"</span>)  <span class="co"># topic labels for the scatter plot</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define population means for dimensions A and B on a [-1, +1] scale.</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The sequences are inversely correlated (A increases, B increases more slowly),</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># with a shared positive intercept so not all topics are at zero.</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>evaluationA <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.75</span>, <span class="fl">0.50</span>, <span class="at">length.out =</span> N)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>evaluationB <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.75</span>, <span class="fl">0.10</span>, <span class="at">length.out =</span> N)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Add small random noise to each mean to make the pattern more realistic</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N) {</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  evaluationA[i] <span class="ot">&lt;-</span> evaluationA[i] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.05</span>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  evaluationB[i] <span class="ot">&lt;-</span> evaluationB[i] <span class="sc">-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.05</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually override one topic to act as an outlier (high B, moderate-low A)</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>evaluationA[<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>evaluationB[<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="sc">+</span><span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate means for both dimensions into a single vector (required by rnorm_multi)</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>combinedMeans <span class="ot">=</span> <span class="fu">c</span>(evaluationA, evaluationB)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">12</span>  <span class="co"># number of topics to simulate</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>TOPICS <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"matrixlabels.csv"</span>)  <span class="co"># topic labels for the scatter plot</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define population means for dimensions A and B on a [-1, +1] scale.</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The sequences are inversely correlated (A increases, B increases more slowly),</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># with a shared positive intercept so not all topics are at zero.</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>evaluationA <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.75</span>, <span class="fl">0.50</span>, <span class="at">length.out =</span> N)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>evaluationB <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.75</span>, <span class="fl">0.10</span>, <span class="at">length.out =</span> N)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Add small random noise to each mean to make the pattern more realistic</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N) {</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  evaluationA[i] <span class="ot">&lt;-</span> evaluationA[i] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.05</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  evaluationB[i] <span class="ot">&lt;-</span> evaluationB[i] <span class="sc">-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.05</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually override one topic to act as an outlier (high B, moderate-low A)</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>evaluationA[<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>evaluationB[<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="sc">+</span><span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate means for both dimensions into a single vector (required by rnorm_multi)</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>combinedMeans <span class="ot">=</span> <span class="fu">c</span>(evaluationA, evaluationB)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -334,93 +341,101 @@ Figure&nbsp;2: Target topic evaluations. Noise due to random sampling will be ad
 </div>
 <p>The variables for the topic evaluations must adhere to a standardized naming scheme, i.e., <code>a01_matrix_02</code>, where <code>01</code> represents the ID of the queried topic, <code>02</code> stands for the queried evaluation dimension, and <code>matrix</code> denotes the name of the variable block in the survey tool. This is the naming scheme used by Qualtrics.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build variable names following the Qualtrics Loop &amp; Merge scheme:</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># "a{topic}_matrix_{dimension}", e.g. a1_matrix_1, a1_matrix_2, ..., a12_matrix_2</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>varnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"a"</span>, <span class="dv">1</span><span class="sc">:</span>N, <span class="st">"_matrix_1"</span>), <span class="fu">paste0</span>(<span class="st">"a"</span>, <span class="dv">1</span><span class="sc">:</span>N, <span class="st">"_matrix_2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build variable names following the Qualtrics Loop &amp; Merge scheme:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># "a{topic}_matrix_{dimension}", e.g. a1_matrix_1, a1_matrix_2, ..., a12_matrix_2</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>varnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"a"</span>, <span class="dv">1</span><span class="sc">:</span>N, <span class="st">"_matrix_1"</span>), <span class="fu">paste0</span>(<span class="st">"a"</span>, <span class="dv">1</span><span class="sc">:</span>N, <span class="st">"_matrix_2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The two evaluation dimensions are specified to be positively correlated within each dimension across topics (i.e., topics that score high on risk tend to score similarly across participants), and negatively correlated between dimensions (topics perceived as risky tend to be perceived as less useful). The sampled data will approximate but not exactly match these population parameters, as expected from random sampling.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper: generate an n×n correlation matrix with off-diagonal values</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># drawn uniformly from `range`. The matrix is made symmetric by copying</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the lower triangle to the upper triangle, and the diagonal is set to 1.</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>generate_cor_matrix <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>)) {</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  corr_values <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(n<span class="sc">^</span><span class="dv">2</span>, range[<span class="dv">1</span>], range[<span class="dv">2</span>]), <span class="at">nrow =</span> n)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      corr_values[i,j] <span class="ot">=</span> <span class="fu">max</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fu">min</span>(<span class="dv">1</span>, corr_values[i,j])) <span class="co"># clip to [-1, 1]</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>      corr_values[i,j] <span class="ot">=</span> corr_values[j,i] <span class="co"># enforce symmetry</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">diag</span>(corr_values) <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># a variable is perfectly correlated with itself</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  corr_values</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Within-dimension correlation matrices:</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Topics within the same dimension are moderately positively correlated.</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>cor_matrix_A <span class="ot">&lt;-</span> <span class="fu">generate_cor_matrix</span>(N)</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>cor_matrix_B <span class="ot">&lt;-</span> <span class="fu">generate_cor_matrix</span>(N, <span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.5</span>))</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Between-dimension correlation matrix:</span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Risk and utility are negatively correlated across topics (r = -0.25).</span></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>negative_corr <span class="ot">&lt;-</span> <span class="sc">-</span>.<span class="dv">25</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>cor_matrix_AB <span class="ot">&lt;-</span> <span class="fu">matrix</span>(negative_corr, <span class="at">nrow =</span> N, <span class="at">ncol =</span> N)</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Assemble the full 2N × 2N block correlation matrix:</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   [ cor_A   cor_AB ]</span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   [ cor_AB' cor_B  ]</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="co"># This must be symmetric and positive-definite for rnorm_multi to work.</span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">2</span> <span class="sc">*</span> N, <span class="at">ncol =</span> <span class="dv">2</span> <span class="sc">*</span> N)</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>cor_matrix[<span class="dv">1</span><span class="sc">:</span>N, <span class="dv">1</span><span class="sc">:</span>N] <span class="ot">&lt;-</span> cor_matrix_A                          <span class="co"># upper-left:  A–A</span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>cor_matrix[(N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N), (N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N)] <span class="ot">&lt;-</span> cor_matrix_B          <span class="co"># lower-right: B–B</span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>cor_matrix[<span class="dv">1</span><span class="sc">:</span>N, (N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N)] <span class="ot">&lt;-</span> cor_matrix_AB                 <span class="co"># upper-right: A–B</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>cor_matrix[(N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N), <span class="dv">1</span><span class="sc">:</span>N] <span class="ot">&lt;-</span> <span class="fu">t</span>(cor_matrix_AB)              <span class="co"># lower-left:  B–A (transpose for symmetry)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper: generate an n×n correlation matrix with off-diagonal values</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># drawn uniformly from `range`. The matrix is made symmetric by copying</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the lower triangle to the upper triangle, and the diagonal is set to 1.</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>generate_cor_matrix <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>)) {</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  corr_values <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(n<span class="sc">^</span><span class="dv">2</span>, range[<span class="dv">1</span>], range[<span class="dv">2</span>]), <span class="at">nrow =</span> n)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      corr_values[i,j] <span class="ot">=</span> <span class="fu">max</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fu">min</span>(<span class="dv">1</span>, corr_values[i,j])) <span class="co"># clip to [-1, 1]</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      corr_values[i,j] <span class="ot">=</span> corr_values[j,i] <span class="co"># enforce symmetry</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">diag</span>(corr_values) <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># a variable is perfectly correlated with itself</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  corr_values</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Within-dimension correlation matrices:</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Topics within the same dimension are moderately positively correlated.</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>cor_matrix_A <span class="ot">&lt;-</span> <span class="fu">generate_cor_matrix</span>(N)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>cor_matrix_B <span class="ot">&lt;-</span> <span class="fu">generate_cor_matrix</span>(N, <span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.5</span>))</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Between-dimension correlation matrix:</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Risk and utility are negatively correlated across topics (r = -0.25).</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>negative_corr <span class="ot">&lt;-</span> <span class="sc">-</span>.<span class="dv">25</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>cor_matrix_AB <span class="ot">&lt;-</span> <span class="fu">matrix</span>(negative_corr, <span class="at">nrow =</span> N, <span class="at">ncol =</span> N)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Assemble the full 2N × 2N block correlation matrix:</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   [ cor_A   cor_AB ]</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   [ cor_AB' cor_B  ]</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co"># This must be symmetric and positive-definite for rnorm_multi to work.</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">2</span> <span class="sc">*</span> N, <span class="at">ncol =</span> <span class="dv">2</span> <span class="sc">*</span> N)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>cor_matrix[<span class="dv">1</span><span class="sc">:</span>N, <span class="dv">1</span><span class="sc">:</span>N] <span class="ot">&lt;-</span> cor_matrix_A                          <span class="co"># upper-left:  A–A</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>cor_matrix[(N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N), (N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N)] <span class="ot">&lt;-</span> cor_matrix_B          <span class="co"># lower-right: B–B</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>cor_matrix[<span class="dv">1</span><span class="sc">:</span>N, (N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N)] <span class="ot">&lt;-</span> cor_matrix_AB                 <span class="co"># upper-right: A–B</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>cor_matrix[(N<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>N), <span class="dv">1</span><span class="sc">:</span>N] <span class="ot">&lt;-</span> <span class="fu">t</span>(cor_matrix_AB)              <span class="co"># lower-left:  B–A (transpose for symmetry)</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Random block assembly has no guarantee of producing a mathematically valid</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="co"># (positive-definite) correlation matrix, so rnorm_multi() can occasionally fail</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="co"># with "correlation matrix not positive definite" here. Instead of looping and</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="co"># hoping a re-drawn matrix happens to be valid, project it onto the nearest</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="co"># valid positive-definite correlation matrix; this is deterministic, always</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="co"># succeeds, and only nudges the requested correlations slightly.</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(Matrix<span class="sc">::</span><span class="fu">nearPD</span>(cor_matrix, <span class="at">corr =</span> <span class="cn">TRUE</span>, <span class="at">keepDiag =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>mat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="check-the-validity-of-the-data" class="level1">
 <h1>Check the validity of the data</h1>
-<p>Before proceeding, we verify that the assembled correlation matrix is symmetric and positive-definite—both required by <code>rnorm_multi</code>. A valid correlation matrix is symmetric by definition, but the block assembly above can occasionally produce a matrix that is not positive-definite due to numerical issues or near-linear dependencies between the blocks. If the check fails, simply re-run the correlation matrix generation steps; the random elements will differ slightly and the result will usually be valid.</p>
-<p>Request to the readers: Any suggestions on how to address this issue more robustly are appreciated. However, this step is not necessary if you already have real survey data, as it specifically pertains to the creation of synthetic data.</p>
+<p>Before proceeding, we verify that the assembled correlation matrix is symmetric and positive-definite—both required by <code>rnorm_multi</code>. A valid correlation matrix is symmetric by definition, but the block assembly above can occasionally produce a matrix that is not positive-definite due to numerical issues or near-linear dependencies between the blocks. The <code>Matrix::nearPD()</code> repair step above corrects this automatically, so the diagnostics below should always report success; no re-running or looping is needed.</p>
+<p>This step is not necessary if you already have real survey data, as it specifically pertains to the creation of synthetic data.</p>
 <p>Now we draw a random sample from the population defined by the means and correlation matrix above. Variables are named following the required Qualtrics naming scheme defined earlier.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rnorm_multi</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">varnames =</span> varnames,   <span class="co"># column names following the Qualtrics scheme</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">100</span>,               <span class="co"># number of simulated participants</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> combinedMeans,    <span class="co"># per-topic population means on [-1, +1] scale</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="fl">0.25</span>,             <span class="co"># within-topic standard deviation</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">r =</span> cor_matrix,        <span class="co"># full block correlation matrix</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">FALSE</span>      <span class="co"># sample from population parameters (not fix sample stats exactly)</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rnorm_multi</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">varnames =</span> varnames,   <span class="co"># column names following the Qualtrics scheme</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">100</span>,               <span class="co"># number of simulated participants</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> combinedMeans,    <span class="co"># per-topic population means on [-1, +1] scale</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="fl">0.25</span>,             <span class="co"># within-topic standard deviation</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">r =</span> cor_matrix,        <span class="co"># full block correlation matrix</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">FALSE</span>      <span class="co"># sample from population parameters (not fix sample stats exactly)</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="recode-data" class="level1">
 <h1>Recode data</h1>
 <p>Finally, we recode the continuous simulated values to resemble typical Likert-scale survey responses. First, values are clipped to <span class="math inline">\([-1, +1]\)</span> (random sampling can occasionally exceed these bounds). Then they are linearly transformed and rounded to discrete integer values from <span class="math inline">\(1\)</span> to <span class="math inline">\(7\)</span>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(data) <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">ifelse</span>(. <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="fu">ifelse</span>(. <span class="sc">&gt;</span> <span class="dv">1</span>, <span class="dv">1</span>, .)))) <span class="sc">%&gt;%</span>  <span class="co"># clip to [-1, +1]</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> (.<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span>   <span class="co"># shift to [0, 1]:   x' = (x+1)/2</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> (<span class="dv">6</span><span class="sc">*</span>.))) <span class="sc">%&gt;%</span>     <span class="co"># stretch to [0, 6]: x' = 6x</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">round</span>(.)))  <span class="co"># round and shift to {1,...,7}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(data) <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">ifelse</span>(. <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="fu">ifelse</span>(. <span class="sc">&gt;</span> <span class="dv">1</span>, <span class="dv">1</span>, .)))) <span class="sc">%&gt;%</span>  <span class="co"># clip to [-1, +1]</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> (.<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span>   <span class="co"># shift to [0, 1]:   x' = (x+1)/2</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> (<span class="dv">6</span><span class="sc">*</span>.))) <span class="sc">%&gt;%</span>     <span class="co"># stretch to [0, 6]: x' = 6x</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">round</span>(.)))  <span class="co"># round and shift to {1,...,7}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Finally, we add a participant ID and a simulated user-level variable. The user variable is derived from the already-simulated topic scores and is therefore moderately correlated with them.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">paste0</span>(<span class="st">"fakeparticipantid-"</span>, <span class="fu">row_number</span>())) <span class="sc">%&gt;%</span>  <span class="co"># unique participant ID</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># uservariable is correlated (r = 0.5) with the sum of two topic scores,</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># simulating a user trait related to the evaluated dimensions</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">uservariable =</span> <span class="fu">rnorm_pre</span>(a1_matrix_1<span class="sc">+</span>a2_matrix_1, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="fl">0.5</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">relocate</span>(id, uservariable)  <span class="co"># move id and uservariable to the front</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">paste0</span>(<span class="st">"fakeparticipantid-"</span>, <span class="fu">row_number</span>())) <span class="sc">%&gt;%</span>  <span class="co"># unique participant ID</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># uservariable is correlated (r = 0.5) with the sum of two topic scores,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># simulating a user trait related to the evaluated dimensions</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">uservariable =</span> <span class="fu">rnorm_pre</span>(a1_matrix_1<span class="sc">+</span>a2_matrix_1, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="fl">0.5</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">relocate</span>(id, uservariable)  <span class="co"># move id and uservariable to the front</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="save-data" class="level1">
 <h1>Save data</h1>
 <p>Finally, we save the generated data to an RDS file.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(data, <span class="st">"syntheticdata.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(data, <span class="st">"syntheticdata.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>That file is used as input for the <a href="./analysis.html">analysis and visualization notebook</a>.</p>
 
