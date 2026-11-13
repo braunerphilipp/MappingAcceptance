@@ -37,7 +37,8 @@ For generating synthetic data, I use the `faux` package; guidance can be found i
 In the analysis, I rely on the `tidyverse` and `ggplot` packages.
 Additionally, for generating synthetic data with specific properties (e.g., pre-defined means and correlations between variables), I utilize the `faux` package.
 
-```{r LOADLIBRARIES}
+```{r}
+#| label: load-libraries
 library(faux)       # generate correlated multivariate normal data
 library(matrixcalc) # check positive-definiteness of matrices
 library(Matrix)     # nearPD() repairs a near-valid correlation matrix
@@ -60,15 +61,19 @@ Here, *perceived risk* and *perceived utility* are used as the two dimensions; t
 
 The two dimensions are constructed to be inversely correlated across topics (with a non-zero intercept), mimicking a typical risk–utility trade-off pattern.
 
-```{r DATAPOINTS}
+```{r}
+#| label: data-points
+set.seed(2024)  # fix the random number generator so every render produces the same data
 N <- 12  # number of topics to simulate
 TOPICS <- read.csv2("matrixlabels.csv")  # topic labels for the scatter plot
 
-# Define population means for dimensions A and B on a [-1, +1] scale.
-# The sequences are inversely correlated (A increases, B increases more slowly),
-# with a shared positive intercept so not all topics are at zero.
+# Define population means for dimensions A (risk) and B (utility) on a [-1, +1] scale,
+# where higher values mean more risk or more utility.
+# The sequences run in opposite directions, so risk and utility are inversely
+# related across topics (riskier topics are perceived as less useful).
+# Utility is shifted upwards (positive intercept), so the trend does not pass through the origin.
 evaluationA <- seq(-0.75, 0.50, length.out = N)
-evaluationB <- seq(-0.75, 0.10, length.out = N)
+evaluationB <- seq(+0.60, -0.30, length.out = N)
 
 # Add small random noise to each mean to make the pattern more realistic
 for (i in 1:N) {
@@ -76,16 +81,17 @@ for (i in 1:N) {
   evaluationB[i] <- evaluationB[i] - rnorm(1, mean=0, sd=0.05)
 }
 
-# Manually override one topic to act as an outlier (high B, moderate-low A)
-evaluationA[5] <- -1/3
-evaluationB[5] <- +1/4
+# Manually override one topic to act as an outlier off the trend (high risk and high utility)
+evaluationA[5] <- +0.40
+evaluationB[5] <- +0.50
 
 # Concatenate means for both dimensions into a single vector (required by rnorm_multi)
 combinedMeans = c(evaluationA, evaluationB)
 ```
 
-```{r ILLUSTRATION, echo=FALSE}
-#| label: fig-targettopicevaluations
+```{r}
+#| label: fig-target-topic-evaluations
+#| echo: false
 #| fig-cap: "Target topic evaluations. Noise due to random sampling will be added in a later step."
 # Create a data frame from the vectors
 labels = TOPICS$label[1:N]
@@ -97,8 +103,8 @@ ggplot(data, aes(x = evaluationA,
                  label = labels)) +
   geom_point() +
   geom_text(size = 3, vjust = -1) +  # Labels for points
-  labs(x = "Evaluation A",
-       y = "Evaluation B",
+  labs(x = "Evaluation A (risk)",
+       y = "Evaluation B (utility)",
        title = "Scatter Plot of the Targeted Evaluations A and B",
        subtitle = "This is the basis for the generated survey data which contains additional noise") +
   scale_x_continuous(labels = percent_format(),
@@ -110,16 +116,18 @@ ggplot(data, aes(x = evaluationA,
 The variables for the topic evaluations must adhere to a standardized naming scheme, i.e., `a01_matrix_02`, where `01` represents the ID of the queried topic, `02` stands for the queried evaluation dimension, and `matrix` denotes the name of the variable block in the survey tool.
 This is the naming scheme used by Qualtrics.
 
-```{r DEFINEVARIABLENAMES}
+```{r}
+#| label: define-variable-names
 # Build variable names following the Qualtrics Loop & Merge scheme:
 # "a{topic}_matrix_{dimension}", e.g. a1_matrix_1, a1_matrix_2, ..., a12_matrix_2
 varnames <- c(paste0("a", 1:N, "_matrix_1"), paste0("a", 1:N, "_matrix_2"))
 ```
 
-The two evaluation dimensions are specified to be positively correlated within each dimension across topics (i.e., topics that score high on risk tend to score similarly across participants), and negatively correlated between dimensions (topics perceived as risky tend to be perceived as less useful).
+At the participant level, ratings within each dimension are specified to be positively correlated across topics (participants who see one topic as risky tend to see other topics as risky, too), and ratings are negatively correlated between dimensions (participants who perceive more risk tend to perceive less utility).
 The sampled data will approximate but not exactly match these population parameters, as expected from random sampling.
 
-```{r DATACORRELATIONS}
+```{r}
+#| label: data-correlations
 # Helper: generate an n×n correlation matrix with off-diagonal values
 # drawn uniformly from `range`. The matrix is made symmetric by copying
 # the lower triangle to the upper triangle, and the diagonal is set to 1.
@@ -176,7 +184,9 @@ The `Matrix::nearPD()` repair step above corrects this automatically, so the dia
 
 This step is not necessary if you already have real survey data, as it specifically pertains to the creation of synthetic data.
 
-```{r CHECKVALIDITY, include=FALSE}
+```{r}
+#| label: check-validity
+#| include: false
 print(paste0("Diagnostics for simulated correlation matrix:"))
 print(paste0(" - isSymmetric: ", isSymmetric(cor_matrix)))
 print(paste0(" - is positive-definite: ", is.positive.definite(cor_matrix)))
@@ -185,7 +195,8 @@ print(paste0(" - is positive-definite: ", is.positive.definite(cor_matrix)))
 Now we draw a random sample from the population defined by the means and correlation matrix above.
 Variables are named following the required Qualtrics naming scheme defined earlier.
 
-```{r GENERATEDATAMATRIX}
+```{r}
+#| label: generate-data-matrix
 data <- rnorm_multi(
   varnames = varnames,   # column names following the Qualtrics scheme
   n = 100,               # number of simulated participants
@@ -201,8 +212,10 @@ data <- rnorm_multi(
 Finally, we recode the continuous simulated values to resemble typical Likert-scale survey responses.
 First, values are clipped to $[-1, +1]$ (random sampling can occasionally exceed these bounds).
 Then they are linearly transformed and rounded to discrete integer values from $1$ to $7$.
+Higher values mean more of the construct (1 = no risk / useless, 7 = very risky / very useful), which is the polarity the [analysis notebook](analysis.qmd) expects.
 
-```{r BOUNDSANDDISCRETISATION}
+```{r}
+#| label: bounds-and-discretisation
 data <- as.data.frame(data) %>%
   dplyr::mutate(across(everything(), ~ ifelse(. < -1, -1, ifelse(. > 1, 1, .)))) %>%  # clip to [-1, +1]
   dplyr::mutate(across(everything(), ~ (.+1)/2)) %>%   # shift to [0, 1]:   x' = (x+1)/2
@@ -212,7 +225,8 @@ data <- as.data.frame(data) %>%
 
 Finally, we add a participant ID and a simulated user-level variable. The user variable is derived from the already-simulated topic scores and is therefore moderately correlated with them.
 
-```{r ADDEXTRAVARIABLES}
+```{r}
+#| label: add-extra-variables
 data <- data %>%
   dplyr::mutate(id = paste0("fakeparticipantid-", row_number())) %>%  # unique participant ID
   # uservariable is correlated (r = 0.5) with the sum of two topic scores,
@@ -225,7 +239,8 @@ data <- data %>%
 
 Finally, we save the generated data to an RDS file.
 
-```{r SAVEDATA}
+```{r}
+#| label: save-data
 saveRDS(data, "syntheticdata.rds")
 ```
 

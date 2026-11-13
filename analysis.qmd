@@ -29,7 +29,7 @@ editor:
 # Introduction
 
 The micro-scenario approach simplifies measuring people's opinions on different topics (see [overview](index.qmd)).
-Based on a single survey, the approach combines participants' responses into three complementary outputs: 0) a grand mean serving as a general evaluation of the whole topic field, 1) individual user factors as reflexive measurements of latent constructs (research perspective 1), and 2) topic-level evaluations for ranking topics and creating visual maps to pinpoint areas of concern (research perspective 2).
+Based on a single survey, the approach combines participants' responses into three complementary outputs: 0) a grand mean serving as a general evaluation of the whole topic field (research perspective 0), 1) individual user factors as reflexive measurements of latent constructs (research perspective 1), and 2) topic-level evaluations for ranking topics and creating visual maps to pinpoint areas of concern (research perspective 2).
 
 For instance, consider analysing risk-utility trade-offs among various technologies:
 Do individuals attribute varying risks and utilities to distinct technologies?
@@ -43,7 +43,7 @@ The main article provides comprehensive insights into this approach and outlines
 
 > Brauner, Philipp (2024) Mapping acceptance: micro scenarios as a dual-perspective approach for assessing public opinion and individual differences in technology perception. Frontiers in Psychology 15:1419564. doi: [10.3389/fpsyg.2024.1419564](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full)
 
-This notebook demonstrates the analysis of all three research perspectives of micro scenario-based surveys (grand mean, perspective 1: user factor, and perspective 2: topic factor) using R.
+This notebook demonstrates the analysis of all three research perspectives of micro scenario-based surveys (perspective 0: grand mean, perspective 1: user factor, and perspective 2: topic factor) using R.
 Note that all transformations and calculations can also be performed using other software.
 
 We use [synthetic data](synthetic.qmd) generated to resemble real survey data, which avoids the need to clean irrelevant variables or erroneous participant inputs and allows the data to have well-defined statistical properties.
@@ -51,7 +51,7 @@ How the synthetic data was generated is detailed in the [companion notebook](syn
 
 This notebook is organized as follows:
 First, we load the necessary packages and the [synthetic data](synthetic.qmd) as input (replace this with your actual data).
-Then we transform the data into long format (see [`pivot_longer`](https://tidyr.tidyverse.org/reference/pivot_longer.html)), analyse it as a user factor (research perspective 1), and as topic-level scores including visualization (research perspective 2).
+Then we transform the data into long format (see [`pivot_longer`](https://tidyr.tidyverse.org/reference/pivot_longer.html)), compute the grand mean (research perspective 0), analyse it as a user factor (research perspective 1), and as topic-level scores including visualization (research perspective 2).
 
 # Preparation
 
@@ -59,7 +59,8 @@ Then we transform the data into long format (see [`pivot_longer`](https://tidyr.
 
 In our analysis, we mainly use the `tidyverse` and `ggplot` packages.
 
-```{r LOADLIBRARIES}
+```{r}
+#| label: load-libraries
 library(tidyverse)
 library(scales)  # format_percent
 library(ggplot2) # graphics
@@ -76,13 +77,16 @@ We load the synthetic data generated in the [companion notebook](synthetic.qmd).
 
 The data structure closely resembles the export format of the Qualtrics survey tool.
 
-```{r LOADDATA}
+```{r}
+#| label: load-data
   data <- readRDS("syntheticdata.rds")
 ```
 
 The structure of the data looks as follows:
 
-```{r PRINTSTRUCTURE, echo=FALSE}
+```{r}
+#| label: print-structure
+#| echo: false
   str(data)
 ```
 
@@ -102,7 +106,12 @@ Once the (synthetic) survey data is loaded into the variable `data`, we can comm
 Read the list of queried topics and their display labels from a `.csv` file, and define the names of the evaluation dimensions in the order they appear in the survey.
 Both can be adjusted to match your own study.
 
-```{r LOADLABELS}
+**Polarity:** In this example, all evaluation dimensions are coded so that higher values mean *more* of the construct (1 = no risk / useless, 7 = very risky / very useful).
+We rescale them linearly to $[-1, +1]$ (displayed as $-100\,\%$ to $+100\,\%$), so that 0 is the scale midpoint.
+If items in your survey are coded in the opposite direction (e.g., 1 = very useful), reverse them first (`8 - x` on a 7-point scale), so that all dimensions share the same polarity before averaging.
+
+```{r}
+#| label: load-labels
 TOPICS <- read.csv2("matrixlabels.csv")   # columns: question (ID), label, shortlabel
 DIMENSIONS = c("risk", "utility")         # dimension names in survey order (1 = risk, 2 = utility)
 ```
@@ -115,7 +124,8 @@ This is possible because the column names follow the systematic naming conventio
 The resulting data frame contains four columns: participant identifier, topic identifier, evaluation dimension name, and the numeric value.
 All subsequent analyses build on this long-format table.
 
-```{r SURVEYTOLONG}
+```{r}
+#| label: survey-to-long
 evaluationsLong <- data %>%
   # Keep only participant ID and topic evaluation columns (pattern: a{topic}_matrix_{dim})
   dplyr::select(id, matches("a\\d+\\_matrix\\_\\d+")) %>%
@@ -127,13 +137,70 @@ evaluationsLong <- data %>%
     values_drop_na = FALSE) %>%
   dplyr::mutate(dimension = as.numeric(dimension)) %>%
   dplyr::mutate(dimension = DIMENSIONS[dimension]) %>%   # replace numeric index with readable label
-  # Rescale from Likert 1–7 to percentage [-1, +1]:
-  # formula: -((x-1)/3 - 1)  →  1 maps to +1, 4 maps to 0, 7 maps to -1
-  dplyr::mutate(value = -(((value - 1)/3) - 1))
+  # Rescale from the 7-point scale (1 = low, 7 = high) to [-1, +1]:
+  # formula: (x - 4) / 3  →  1 maps to -1, 4 maps to 0, 7 maps to +1
+  dplyr::mutate(value = (value - 4) / 3)
+```
 
-# Reverse-score "risk" so that higher values mean MORE risk (survey scale was reversed)
-evaluationsLong <- evaluationsLong %>%
-  dplyr::mutate(value = if_else(dimension != "risk", value, -value))
+## Perspective 0: Grand mean (average evaluation of the field)
+
+First, we aggregate across all topics *and* all participants to obtain the grand mean for each dimension.
+This gives a single-number summary of how the entire topic field is perceived on each dimension—the overall sentiment.
+The following table and figure show the outcome.
+
+```{r}
+#| label: calculate-grand-mean
+# Aggregate across all participants AND all topics for each dimension.
+# Each row in evaluationsLong is one (participant × topic) observation,
+# so this grand mean pools all observations regardless of topic or participant.
+evaluationByDimension <- evaluationsLong %>%
+  dplyr::group_by(dimension) %>%
+  dplyr::summarise(mean = mean(value, na.rm = TRUE),
+                   sd   = sd(value,   na.rm = TRUE),
+                   .groups = "drop")
+```
+
+The table below reports the grand mean and standard deviation for each evaluation dimension across all topics and participants.
+
+```{r}
+#| label: table-dimensions
+#| echo: false
+#| tbl-cap: Averages for each evaluation dimension across all queried topics and across all participants.
+knitr::kable(evaluationByDimension %>%
+  dplyr::mutate(
+    mean = round(mean, 2), 
+    sd = round(sd, 2))
+)
+```
+
+This can then be illustrated in form of a violin plot in combination with a boxplot: This graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).
+
+```{r}
+#| label: grand-mean-evaluations-violin
+#| fig-cap: "Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations)."
+# Compute per-topic means first; the violin then shows the distribution of those topic means
+dataByDimensionQuestion <- evaluationsLong %>%
+  dplyr::group_by(question, dimension) %>%
+  dplyr::summarise(mean = mean(value, na.rm = TRUE),
+                   sd   = sd(value,   na.rm = TRUE),
+                   .groups = "drop")
+
+overallDimension <- ggplot(dataByDimensionQuestion,
+  aes(
+    x = factor(dimension, levels = c("risk", "utility")),
+    y = mean)) + 
+  geom_violin( alpha=0.5) +
+  geom_boxplot(width=0.2,
+               position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = percent_format(),
+                     limits=c( -1, +1 )) +
+  scale_x_discrete(
+      labels = c("risk" = "Risk",
+                 "utility" = "Utility")) +
+  labs(x = "Evaluation Dimension",
+       y = "Values",
+       title = "Average Evaluation across all Dimensions and Participants")
+overallDimension
 ```
 
 ## Perspective 1: As user factor (individual difference)
@@ -145,7 +212,8 @@ Using these scores one can, for instance, investigate whether the overall attrib
 
 The computed per-participant averages are then rejoined with the original data using `dplyr::left_join()` to allow correlation with other survey variables.
 
-```{r PERSPECTIVE1_USERFACTOR}
+```{r}
+#| label: perspective1-user-factor
 evaluationByParticipant <- evaluationsLong %>%
   tidyr::pivot_wider(names_from = dimension, values_from = value) %>%  # one column per dimension
   dplyr::group_by(id) %>%
@@ -164,26 +232,30 @@ evaluationByParticipant <- evaluationsLong %>%
 
 How is the average perceived *risk* of the participants?
 
-```{r PERSPECTIVE1_VARIABLESUMMARYRISK}
+```{r}
+#| label: perspective1-variable-summary-risk
 summary(evaluationByParticipant$risk_mean)
 ```
 
 How is the average perceived *utility* of the participants?
 
-```{r PERSPECTIVE1_VARIABLESUMMARYUZTILITY}
+```{r}
+#| label: perspective1-variable-summary-utility
 summary(evaluationByParticipant$utility_mean)
 ```
 
 Does *uservariable* from the survey correlate to *risk*?
 
-```{r PERSPECTIVE1_USERVARIABLERISK}
+```{r}
+#| label: perspective1-user-variable-risk
 cor.test(evaluationByParticipant$risk_mean,
     evaluationByParticipant$uservariable)
 ```
 
 Does the *uservariable* correlate with the average *perceived utility*?
 
-```{r PERSPECTIVE1_USERVARIABLEUTILITY}
+```{r}
+#| label: perspective1-user-variable-utility
 cor.test(evaluationByParticipant$utility_mean,
     evaluationByParticipant$uservariable)
 ```
@@ -202,7 +274,8 @@ Topic display labels are then attached using `dplyr::left_join()`.
 
 ![The resulting data format displays the evaluation of topics. Each row contains the mean evaluation (along with its dispersion) for a specific topic. This structured data can be subjected to further analysis.](figures/topicdata.png){fig-align="center" #fig-topicdatastructure}
 
-```{r PERSPECTIVE2_TOPICFACTOR}
+```{r}
+#| label: perspective2-topic-factor
 evaluationByTopic <- evaluationsLong %>%
   tidyr::pivot_wider(names_from = dimension, values_from = value) %>%  # one column per dimension
   dplyr::group_by(question) %>%   # aggregate across all participants for each topic
@@ -220,7 +293,9 @@ evaluationByTopic <- evaluationsLong %>%
 The output can be tabulated, sorted, or filtered based on highest/lowest evaluations, and visualized.
 The following table displays the unsorted and unfiltered results.
 
-```{r tabletopics, echo=FALSE}
+```{r}
+#| label: table-topics
+#| echo: false
 #| tbl-cap: Average evaluation of the queried topics.
 
 knitr::kable(
@@ -242,7 +317,8 @@ With only two dimensions, a single correlation can be computed; with more dimens
 
 Note: These are topic-level correlations (N = number of topics), not individual-level correlations (N = number of participants).
 
-```{r topiccorrelations}
+```{r}
+#| label: topic-correlations
 #| tbl-cap: Correlations between the evaluation dimensions across all topics
 evaluationByTopic %>%
   dplyr::select(ends_with("_mean")) %>%
@@ -257,7 +333,8 @@ The following plot allows for the visual identification of the placement and dis
 It helps assess if there is a (linear) relationship between the queried evaluation dimensions of the topics, the slope and intercept of that relationship, and if some topics exhibit significantly different evaluations compared to others (outliers).
 We use `geom_label_repel()` from the [`ggplot2`](https://ggplot2.tidyverse.org/) package to place text labels near data points generated by `geom_point()` in a way that avoids overlap and improves readability.
 
-```{r perspective2-topicscatterplot}
+```{r}
+#| label: perspective2-topic-scatter-plot
 #| fig-cap: "Scatter plot of the evaluations of the micro scenarios."
 #| warning: false
 
@@ -276,22 +353,15 @@ scatterPlot <- evaluationByTopic %>%
            linewidth = 0.25,
            linetype = 2) +
   # Annotate the quadrants
-  geom_label(aes(x = -1, y = -1, label = "LOW RISK & LOW UTILITY"),
-             vjust = "middle", hjust = "inward",
-             size = 1.75,
-             label.size = NA, color="black", fill = "#7CBF6C") +
-  geom_label(aes(x = -1, y = +1, label = "LOW RISK & HIGH UTILITY"),
-             vjust = "middle", hjust = "inward",
-             size = 1.75,
-             label.size = NA, color="black", fill = "#7CBF6C") + 
-  geom_label(aes(x = +1, y = -1, label = "HIGH RISK & LOW UTILITY"),
-             vjust = "middle", hjust = "inward",
-             size = 1.75,
-             label.size = NA, color="black", fill = "#7CBF6C") + 
-  geom_label(aes(x = +1, y = +1, label = "HIGH RISK & HIGH UTILITY"),
-             vjust = "middle", hjust = "inward",
-             size = 1.75,
-             label.size = NA, color="black", fill = "#7CBF6C") + 
+  # (annotate() draws each label once; geom_label() would draw it once per topic)
+  annotate("label",
+           x = c(-1, -1, +1, +1),
+           y = c(-1, +1, -1, +1),
+           label = c("LOW RISK & LOW UTILITY", "LOW RISK & HIGH UTILITY",
+                     "HIGH RISK & LOW UTILITY", "HIGH RISK & HIGH UTILITY"),
+           vjust = "middle", hjust = "inward",
+           size = 1.75,
+           label.size = NA, color = "black", fill = "#7CBF6C") +
   # add the labels...
   geom_label_repel(
     max.time = 3,
@@ -326,72 +396,14 @@ ggsave("simulatedriskutility.pdf",
        units = "in")
 ```
 
-## Perspective 3: Grand Mean - Average evaluation of the field
-
-Finally, we aggregate across all topics *and* all participants to obtain the grand mean for each dimension.
-This gives a single-number summary of how the entire topic field is perceived on each dimension—the overall sentiment.
-The following table and figure show the outcome.
-
-```{r calculate_grand_mean}
-# Aggregate across all participants AND all topics for each dimension.
-# Each row in evaluationsLong is one (participant × topic) observation,
-# so this grand mean pools all observations regardless of topic or participant.
-evaluationByDimension <- evaluationsLong %>%
-  dplyr::group_by(dimension) %>%
-  dplyr::summarise(mean = mean(value, na.rm = TRUE),
-                   sd   = sd(value,   na.rm = TRUE),
-                   .groups = "drop")
-```
-
-The table below reports the grand mean and standard deviation for each evaluation dimension across all topics and participants.
-
-```{r tabledimensions, echo=FALSE}
-#| tbl-cap: Averages for each evaluation dimension across all queried topics and across all participants.
-knitr::kable(evaluationByDimension %>%
-  dplyr::mutate(
-    mean = round(mean, 2), 
-    sd = round(sd, 2))
-)
-```
-
-This can then be illustrated in form of a violin plot in combination with a boxplot: This graph nicely illustrates the distribution of the topic evaluations and its key parameters (median, quartiles).
-
-```{r grandmeanevaluationsviolin}
-#| fig-cap: "Mean evaluation across all topics aggregated across all participants illustrated as violin plot (showing the distribution of the topic evaluations)."
-# Compute per-topic means first; the violin then shows the distribution of those topic means
-dataByDimensionQuestion <- evaluationsLong %>%
-  dplyr::group_by(question, dimension) %>%
-  dplyr::summarise(mean = mean(value, na.rm = TRUE),
-                   sd   = sd(value,   na.rm = TRUE),
-                   .groups = "drop")
-
-overallDimension <- ggplot(dataByDimensionQuestion,
-  aes(
-    x = factor(dimension, levels = c("risk", "utility")),
-    y = mean)) + 
-  geom_violin( alpha=0.5) +
-  geom_boxplot(width=0.2,
-               position = position_dodge(width = 0.75)) +
-  scale_y_continuous(labels = percent_format(),
-                     limits=c( -1, +1 )) +
-  scale_x_discrete(
-      labels = c("risk" = "Risk",
-                 "utility" = "Utility")) +
-  labs(x = "Evaluation Dimension",
-       y = "Values",
-       title = "Average Evaluation across all Dimensions and Participants")
-overallDimension
-```
-
-
 # Closing remarks
 
 This notebook demonstrates the analysis and visualization of surveys using the micro-scenario approach.
-It includes executable code for examining both research perspectives (individual differences and topic evaluation), which can be adjusted to suit your own survey and data.
+It includes executable code for examining all three research perspectives (grand mean, individual differences, and topic evaluation), which can be adjusted to suit your own survey and data.
 Ensure accurate coding and polarization of input variables.
 
 It is crucial to recognize the limitations of this approach (e.g., when point estimations are acceptable, potential bias from the sampling of the topics (!)) and I refer to the [main article](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1419564/full) for further guidance and strategies for bias mitigation.
 
 A recent and decent article building on the method can be found below. The analysis code is available as open data.
 
-> [Brauner P. et al. "Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance" in *Technology Forecasting and Social Change* (2025)](https://doi.org/10.1016/j.techfore.2025.124304)
+> [Brauner P. et al. "Mapping public perception of artificial intelligence: Expectations, risk–benefit tradeoffs, and value as determinants for societal acceptance" in *Technological Forecasting and Social Change* (2025)](https://doi.org/10.1016/j.techfore.2025.124304)
